@@ -50,7 +50,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(40px,7vw,
   backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:999px;padding:9px 12px;
   display:flex;flex-wrap:wrap;gap:6px;justify-content:center;box-shadow:var(--shadow)}
 .nav a{color:var(--ink);text-decoration:none;font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px;transition:.2s}
-.nav a:hover,.nav a:active{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+.nav a:hover{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
 
 /* cards */
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}
@@ -107,85 +107,14 @@ h2 .tag{font-family:Inter;font-size:12px;font-weight:800;padding:5px 12px;border
 .probbar span{position:relative;z-index:2;font-size:12px;font-weight:800;padding-left:8px;line-height:20px;color:var(--ink)}
 
 .footer{text-align:center;color:var(--muted);padding:40px 20px;font-size:13px}
-/* ── Tablet ── */
-@media(max-width:900px){
-  .cards,.grid-2{grid-template-columns:1fr 1fr}
-  .cl-grid{grid-template-columns:1fr 1fr}
-  .hero-band{padding:24px 22px}
-  section{padding:20px}
-  .hero-art{height:240px}
-}
-/* ── Mobile ── */
-@media(max-width:680px){
-  .nav{
-    justify-content:flex-start;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    flex-wrap:nowrap;
-    border-radius:14px;
-    padding:7px 10px;
-    margin:-26px 0 22px;
-    scrollbar-width:none;
-    gap:4px;
-  }
-  .nav::-webkit-scrollbar{display:none}
-  .nav a{flex-shrink:0;font-size:12px;padding:8px 11px}
-  .hero-art{height:160px}
-  .hero-band{padding:14px 16px 20px}
-  .subtitle{font-size:14px}
-  section{padding:14px;border-radius:16px;margin:14px 0}
-  h2{font-size:24px;gap:8px}
-  h2 .tag{font-size:11px;padding:4px 9px}
-  .cards{grid-template-columns:1fr 1fr;gap:10px}
-  .card{padding:14px}
-  .metric-value{font-size:30px}
-  .metric-label{font-size:11px}
-  .metric-sub{font-size:12px}
-  .cl-grid{grid-template-columns:1fr 1fr !important}
-  .cl-card{padding:12px}
-  .grid-2{grid-template-columns:1fr !important}
-  .insight{padding:12px 14px;font-size:13px;line-height:1.5}
-  .note{font-size:12px}
-  .table-wrap{max-height:380px}
-  .data-table{font-size:12px}
-  .data-table th{font-size:10px;padding:8px 6px;letter-spacing:0}
-  .data-table td{padding:7px 6px}
-  .tbl-tools{flex-direction:column;gap:8px}
-  .tbl-search{width:100%;min-width:unset}
-  .tbl-count{margin-left:0}
-  .probbar{min-width:70px}
-  .probbar span{font-size:11px}
-  .net-ctrl button{font-size:12px;padding:7px 11px}
-  .legend-net{font-size:12px;gap:10px}
-  #plot_corr{height:260px !important}
-  #plot_pca{height:320px !important}
-  #plot_donut{height:200px !important}
-  #plot_quad{height:290px !important}
-  #plot_net{height:300px !important}
-  #plot_merito{height:320px !important}
-  #plot_sim{height:370px !important}
-}
-/* ── Small mobile ── */
-@media(max-width:420px){
-  .cards{grid-template-columns:1fr}
-  .metric-value{font-size:26px}
-  h2{font-size:20px}
-  #plot_pca{height:260px !important}
-  #plot_net{height:250px !important}
-  #plot_merito{height:270px !important}
-  #plot_sim{height:320px !important}
-  #plot_corr{height:220px !important}
-}
-/* ── Esconde coluna xGA em telas muito estreitas ── */
-@media(max-width:480px){
-  .data-table th:nth-child(6),.data-table td:nth-child(6){display:none}
-}
+@media(max-width:900px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr 1fr} .hero-band{padding:24px 22px} section{padding:20px} .hero-art{height:240px}}
+@media(max-width:560px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr}}
 
 /* progress bar */
 #progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:50;
   background:linear-gradient(90deg,var(--can),var(--mex),var(--usa));transition:width .1s linear}
 /* active nav link */
-.nav a.active{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+.nav a.active,.nav a:active{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
 /* table toolbar */
 .tbl-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 16px}
 .tbl-search{flex:1;min-width:200px;position:relative}
@@ -202,6 +131,142 @@ h2 .tag{font-family:Inter;font-size:12px;font-weight:800;padding:5px 12px;border
 .tbl-count{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto}
 tr.hide{display:none}
 .no-result{text-align:center;color:var(--muted);padding:30px;font-style:italic}
+/* ─── show/hide por contexto ─── */
+.mob-only{display:none}
+/* ─── lista mobile de clusters/rede ─── */
+.mob-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.mob-list li{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:12px;background:#f8fafc;border:1px solid var(--line)}
+.mob-list .ml-flag{font-size:18px}
+.mob-list .ml-name{font-weight:700;font-size:14px;color:var(--ink)}
+.mob-list .ml-sub{font-size:12px;color:var(--muted)}
+.mob-list .ml-right{margin-left:auto;text-align:right}
+.mob-list .ml-score{font-family:'Bebas Neue';font-size:22px;line-height:1}
+.mob-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* scroll hint */
+.scroll-hint{font-size:12px;color:var(--muted);text-align:center;padding:6px 0;display:none}
+
+/* ══════════════ TABLET ══════════════ */
+@media(max-width:900px){
+  .cards,.grid-2{grid-template-columns:1fr 1fr}
+  .cl-grid{grid-template-columns:1fr 1fr}
+  .hero-band{padding:24px 22px}
+  section{padding:20px}
+  .hero-art{height:220px}
+}
+
+/* ══════════════ MOBILE (<680px) ══════════════ */
+@media(max-width:680px){
+  /* Viewport safety */
+  html,body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+
+  /* Nav: rola horizontal, sem quebra */
+  .nav{
+    position:sticky;top:0;z-index:30;
+    justify-content:flex-start;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    flex-wrap:nowrap;
+    border-radius:0 0 16px 16px;
+    border-left:none;border-right:none;
+    padding:8px 12px;
+    margin:0 0 20px;
+    gap:4px;
+    scrollbar-width:none;
+    box-shadow:0 4px 16px rgba(10,26,63,.10);
+  }
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{flex-shrink:0;font-size:12px;padding:8px 12px;white-space:nowrap}
+
+  /* Hero */
+  .hero-art{height:130px}
+  .hero-art .ball{width:80px;height:80px;border-width:4px}
+  .hero-art .ball::after{font-size:54px}
+  .hero-band{padding:14px 16px 18px}
+  h1{font-size:clamp(28px,10vw,48px);line-height:.95}
+  .subtitle{font-size:13px;margin-top:6px}
+  .host-flags{font-size:12px;gap:10px}
+
+  /* Container */
+  .container{padding:0 12px 50px}
+
+  /* Sections */
+  section{border-radius:16px;padding:14px 14px 16px;margin:12px 0}
+  h2{font-size:22px;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  h2 .tag{font-size:11px;padding:3px 9px}
+  .section-intro{font-size:13px;margin-bottom:12px}
+
+  /* Cards: 2 colunas */
+  .cards{grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+  .card{padding:12px 14px}
+  .card .ic{font-size:20px;margin-bottom:6px}
+  .metric-value{font-size:28px;margin-top:2px}
+  .metric-label{font-size:11px}
+  .metric-sub{font-size:11px;margin-top:4px}
+
+  /* Cluster grid sempre 2 col */
+  .cl-grid{grid-template-columns:1fr 1fr !important;gap:9px}
+  .cl-card{padding:11px 12px}
+  .cl-head{font-size:13px}
+  .cl-ex{font-size:11px;margin-top:4px}
+
+  /* Grid 2 → 1 col */
+  .grid-2{grid-template-columns:1fr !important;gap:12px}
+
+  /* Insights */
+  .insight{padding:12px 13px;font-size:13px;line-height:1.5;border-radius:10px}
+  .note{font-size:12px;margin-top:10px}
+
+  /* Tabela */
+  .table-wrap{max-height:420px;border-radius:12px}
+  .data-table{font-size:12px}
+  .data-table th{font-size:10px;padding:9px 6px;letter-spacing:0}
+  .data-table td{padding:8px 6px}
+  .tbl-tools{flex-direction:column;gap:8px;align-items:stretch}
+  .tbl-search{width:100%;min-width:unset}
+  .tbl-search input{font-size:13px;padding:10px 12px 10px 36px}
+  .tbl-count{margin-left:0;text-align:center}
+  .fchip{font-size:12px;padding:7px 12px;text-align:center}
+  .probbar{min-width:60px}
+  .probbar span{font-size:11px}
+
+  /* Network controls */
+  .net-ctrl{gap:6px}
+  .net-ctrl button{font-size:12px;padding:8px 13px;min-height:40px}
+  .legend-net{font-size:11px;gap:8px;margin-top:8px}
+
+  /* Charts: esconder nos complexos, mostrar alternativa mobile */
+  #plot_corr{height:250px !important}
+  #plot_pca{display:none !important}
+  #plot_donut{height:200px !important}
+  #plot_quad{display:none !important}
+  #plot_net{display:none !important}
+  #plot_merito{display:none !important}
+  #plot_sim{height:380px !important}
+
+  /* Mostrar alternativas mobile */
+  .mob-only{display:block}
+  .desk-only{display:none}
+  .scroll-hint{display:block}
+
+  /* Footer */
+  .footer{font-size:12px;padding:24px 12px}
+}
+
+/* ── Telas muito pequenas (<420px) ── */
+@media(max-width:420px){
+  .cards{grid-template-columns:1fr}
+  .metric-value{font-size:24px}
+  h2{font-size:19px}
+  .cl-grid{grid-template-columns:1fr 1fr !important}
+  #plot_corr{height:200px !important}
+  #plot_sim{height:340px !important}
+}
+
+/* ── Esconder coluna menos crítica em telas estreitas ── */
+@media(max-width:500px){
+  .data-table th:nth-child(6),.data-table td:nth-child(6){display:none}
+}
 
 </style></head><body>
 <div id="progress"></div>
@@ -255,13 +320,59 @@ tr.hide{display:none}
 <section id="pca">
   <h2>📍 Mapa de perfis (PCA) <span class="tag t-v">interativo</span></h2>
   <p class="section-intro">Cada bolha é uma seleção. Quanto mais à direita, melhor o desempenho geral. O tamanho reflete o score ajustado e a cor indica o perfil. Os losangos marcam o centro de cada grupo. Clique na legenda para isolar perfis.</p>
-  <div id="plot_pca" style="width:100%;height:640px"></div>
+  <div id="plot_pca" style="width:100%;height:640px" class="desk-only"></div>
+<div class="mob-only">
+  <p class="scroll-hint">Toque numa seleção para ver detalhes</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+    <div style="background:#ecfdf3;border:1px solid #16a34a22;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#16a34a;font-size:13px;margin-bottom:8px">🟢 Elite (18)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Espanha · Bélgica · Inglaterra<br>França · Canadá · Alemanha<br>Argentina · Colômbia · Marrocos<br>Suíça · EUA · Brasil · P. Baixos<br>Senegal · México · Portugal<br>Uruguai · Turquia</div>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #2563eb22;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#2563eb;font-size:13px;margin-bottom:8px">🔵 Competitivas (11)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Bósnia · RD Congo · Cabo Verde<br>Austrália · Paraguai · Gana<br>África do Sul · Escócia<br>Irã · Panamá · Tchéquia</div>
+    </div>
+    <div style="background:#fffbeb;border:1px solid #f59e0b22;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#d97706;font-size:13px;margin-bottom:8px">🟡 Intermediárias (10)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Equador · Coreia do Sul · Suécia<br>Argélia · Japão · Croácia<br>Costa do Marfim · Áustria<br>Noruega · Egito</div>
+    </div>
+    <div style="background:#fff1f2;border:1px solid #e11d4822;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#e11d48;font-size:13px;margin-bottom:8px">🔴 Baixo desempenho (9)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Arábia Saudita · Nova Zelândia<br>Curaçao · Iraque · Catar<br>Jordânia · Tunísia<br>Haiti · Uzbequistão</div>
+    </div>
+  </div>
+</div>
   <p class="note">Os dois eixos resumem oito variáveis em um plano só, preservando o máximo de informação possível. Seleções próximas têm desempenho parecido.</p>
 </section>
 <section id="quadrante">
   <h2>🎯 Ataque × Defesa <span class="tag t-r">novo</span></h2>
   <p class="section-intro">Cada seleção posicionada pelo que cria (xG, eixo horizontal) e pelo que cede (xGA, eixo vertical). O quadrante inferior direito reúne as mais completas: criam muito e sofrem pouco. O tamanho da bolha reflete a probabilidade de avançar.</p>
-  <div id="plot_quad" style="width:100%;height:560px"></div>
+  <div id="plot_quad" style="width:100%;height:560px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0">
+    <div style="border-radius:12px;padding:12px;background:linear-gradient(135deg,#ecfdf3,#eff6ff);border:1px solid #16a34a33">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#16a34a">Completas:</b><br>Espanha · Canadá<br>Colômbia · Marrocos<br>Argentina · México</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#fffbeb;border:1px solid #f59e0b33">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#d97706">Defensivas:</b><br>Gana · Paraguai<br>Jordânia · Arábia<br>Tunísia · Catar</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#fff7ed;border:1px solid #f97316aa">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#ea580c">Ofensivas:</b><br>Bélgica · Turquia<br>Alemanha · França<br>Inglaterra · Senegal</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#f8fafc;border:1px solid #94a3b844">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#64748b">Frágeis:</b><br>Qatar · Curacao<br>Iraque · N. Zelândia<br>Arábia Saudita</div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:10px">No desktop, o gráfico scatter mostra cada seleção posicionada por xG × xGA por jogo.</p>
+</div>
   <p class="note">As linhas tracejadas marcam a mediana do torneio em cada eixo, separando os quatro quadrantes de leitura.</p>
 </section>
 <section id="rede">
@@ -271,7 +382,18 @@ tr.hide{display:none}
     <button id="btn-force" class="active" onclick="setNetMode('force')">Desenho livre</button>
     <button id="btn-circular" onclick="setNetMode('circular')">Agrupado por perfil</button>
   </div>
-  <div id="plot_net" style="width:100%;height:640px"></div>
+  <div id="plot_net" style="width:100%;height:640px" class="desk-only"></div>
+<div class="mob-only">
+  <p style="font-size:13px;color:#5b6b82;margin-bottom:10px">Seleções com <b>mais conexões fortes</b> (similaridade ≥ 0,88) entre as 18 da Elite:</p>
+  <ul class="mob-list">
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">França · Suíça · Marrocos</div><div class="ml-sub">8 conexões — hub central da Elite</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">8</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Alemanha · Inglaterra</div><div class="ml-sub">7 conexões cada</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">7</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Bélgica · EUA · Argentina</div><div class="ml-sub">5–6 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#2563eb">6</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Espanha · Colômbia</div><div class="ml-sub">4–5 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#f59e0b">5</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Turquia</div><div class="ml-sub">0 conexões — perfil estatístico isolado</div></div><div class="ml-right"><div class="ml-score" style="color:#e11d48">0</div></div></li>
+  </ul>
+  <p class="note" style="margin-top:10px">No desktop, o grafo interativo mostra as linhas de similaridade entre todas as seleções.</p>
+</div>
   <div class="legend-net">
     <span><b style="color:#16a34a">●</b> Elite</span><span><b style="color:#2563eb">●</b> Competitivas</span>
     <span><b style="color:#f59e0b">●</b> Intermediárias</span><span><b style="color:#e11d48">●</b> Baixo desempenho</span>
@@ -287,7 +409,30 @@ tr.hide{display:none}
     <div class="cl-card" style="--c:#e11d48"><div class="cl-head"><span class="cl-dot big" style="background:#e11d48"></span><b>Injustiçada</b></div><div class="cl-ex">Jogou bem mas caiu. Turquia (0,79) e Uruguai (0,70) são os casos mais gritantes.</div></div>
     <div class="cl-card" style="--c:#94a3b8"><div class="cl-head"><span class="cl-dot big" style="background:#94a3b8"></span><b>Esperada</b></div><div class="cl-ex">Processo fraco e foi eliminada. Resultado alinhado com o futebol mostrado.</div></div>
   </div>
-  <div id="plot_merito" style="width:100%;height:580px"></div>
+  <div id="plot_merito" style="width:100%;height:580px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+    <div style="background:#fff1f2;border-radius:12px;padding:12px;border-left:4px solid #e11d48">
+      <div style="font-weight:800;color:#e11d48;font-size:13px;margin-bottom:6px">❌ Injustiçadas</div>
+      <div style="font-size:12px;color:#0a1a3f;line-height:2">
+        <span style="font-weight:700">Turquia</span> <span style="color:#5b6b82">0,79</span><br>
+        <span style="font-weight:700">Uruguai</span> <span style="color:#5b6b82">0,70</span><br>
+        <span style="font-weight:700">Coreia do Sul</span> <span style="color:#5b6b82">0,24</span>
+      </div>
+    </div>
+    <div style="background:#fffbeb;border-radius:12px;padding:12px;border-left:4px solid #f59e0b">
+      <div style="font-weight:800;color:#d97706;font-size:13px;margin-bottom:6px">🍀 Com sorte</div>
+      <div style="font-size:12px;color:#0a1a3f;line-height:2">
+        <span style="font-weight:700">Paraguai</span> <span style="color:#5b6b82">−1,06</span><br>
+        <span style="font-weight:700">Gana</span> <span style="color:#5b6b82">−1,02</span><br>
+        <span style="font-weight:700">Cabo Verde</span> <span style="color:#5b6b82">−0,96</span><br>
+        <span style="font-weight:700">Bósnia</span> <span style="color:#5b6b82">−0,50</span><br>
+        <span style="font-weight:700">África do Sul</span> <span style="color:#5b6b82">−0,38</span>
+      </div>
+    </div>
+  </div>
+  <p class="note">Score Ajustado: combina xGD, força dos adversários e desempenho vs. esperado pelo FIFA Rank. Acima de 0 = processo acima da média.</p>
+</div>
   <div class="insight"><b>Casos mais gritantes:</b> <b>Turquia</b> (score 0,79 — Elite) e <b>Uruguai</b> (0,70 — Elite) saíram com scores melhores que vários classificados. Do outro lado, <b>Paraguai</b> (−1,06), <b>Cabo Verde</b> (−0,96) e <b>Gana</b> (−1,02) passaram com os piores processos entre os 32 classificados — eles estão na Copa, mas o futebol que mostraram diz outra coisa.</div>
   <p class="note">Score Ajustado combina xGD, ranking relativo dos adversários e desempenho versus o esperado pelo FIFA Rank. Threshold zero = média do torneio. Acima de zero: processo acima da média; abaixo de zero: abaixo da média.</p>
 </section>
@@ -331,11 +476,11 @@ const CL_COLORS={"Elite":"#16a34a","Competitivas":"#2563eb","Intermediárias":"#
   ch.setOption({
     tooltip:{position:'top',backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},
       formatter:p=>`${CORR.labels[p.data[1]]} \u00d7 ${CORR.labels[p.data[0]]}<br><b>r = ${p.data[2]}</b>`},
-    grid:{left:isMob()?80:135,right:30,top:20,bottom:isMob()?70:120},
+    grid:{left:isMob()?70:135,right:20,top:20,bottom:isMob()?70:120},
     xAxis:{type:'category',data:CORR.labels,axisLabel:{rotate:38,fontFamily:FONT,color:'#5b6b82'},splitArea:{show:true},axisLine:{show:false},axisTick:{show:false}},
     yAxis:{type:'category',data:CORR.labels,inverse:true,axisLabel:{fontFamily:FONT,color:'#5b6b82'},splitArea:{show:true},axisLine:{show:false},axisTick:{show:false}},
     visualMap:{min:-1,max:1,calculable:true,orient:'vertical',right:0,top:'center',itemHeight:280,text:['+1 forte','-1 forte'],textStyle:{fontFamily:FONT,color:'#5b6b82'},inRange:{color:['#b91c1c','#f87171','#fef3c7','#86efac','#15803d']}},
-    series:[{type:'heatmap',data:CORR.data,label:{show:true,fontFamily:FONT,fontSize:12,fontWeight:600,color:p=>Math.abs(p.data[2])>0.6?'#fff':'#0a1a3f',formatter:p=>p.data[2].toFixed(2)},itemStyle:{borderColor:'#fff',borderWidth:3,borderRadius:4},emphasis:{itemStyle:{shadowBlur:14,shadowColor:'rgba(0,0,0,.35)'}}}],
+    series:[{type:'heatmap',data:CORR.data,label:{show:!isMob(),fontFamily:FONT,fontSize:isMob()?9:12,fontWeight:600,color:p=>Math.abs(p.data[2])>0.6?'#fff':'#0a1a3f',formatter:p=>p.data[2].toFixed(2)},itemStyle:{borderColor:'#fff',borderWidth:3,borderRadius:4},emphasis:{itemStyle:{shadowBlur:14,shadowColor:'rgba(0,0,0,.35)'}}}],
     animationDuration:900,animationEasing:'cubicOut'});
   window.addEventListener('resize',()=>ch.resize());
 })();
@@ -560,7 +705,7 @@ const MERIT_DATA=[
   ch.setOption({
     tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0a1a3f',borderWidth:0,
       textStyle:{color:'#fff'},formatter:p=>`<b>${p[0].name}</b><br>Probabilidade de título: ${p[0].value}%`},
-    grid:{left:isMob()?105:140,right:isMob()?50:70,top:20,bottom:40},
+    grid:{left:isMob()?100:140,right:isMob()?45:70,top:20,bottom:40},
     xAxis:{type:'value',max:30,name:'probabilidade de ser campeã (%)',nameLocation:'middle',nameGap:28,
       nameTextStyle:{fontFamily:FONT,color:'#5b6b82'},
       splitLine:{lineStyle:{color:'#eef2f7'}},axisLabel:{fontFamily:FONT,color:'#5b6b82'}},
