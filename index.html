@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Relatório Analítico da Copa do Mundo 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,7 +50,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(40px,7vw,
   backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:999px;padding:9px 12px;
   display:flex;flex-wrap:wrap;gap:6px;justify-content:center;box-shadow:var(--shadow)}
 .nav a{color:var(--ink);text-decoration:none;font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px;transition:.2s}
-.nav a:hover{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+.nav a:hover,.nav a:active{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
 
 /* cards */
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}
@@ -107,8 +107,79 @@ h2 .tag{font-family:Inter;font-size:12px;font-weight:800;padding:5px 12px;border
 .probbar span{position:relative;z-index:2;font-size:12px;font-weight:800;padding-left:8px;line-height:20px;color:var(--ink)}
 
 .footer{text-align:center;color:var(--muted);padding:40px 20px;font-size:13px}
-@media(max-width:900px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr 1fr} .hero-band{padding:24px 22px} section{padding:20px} .hero-art{height:240px}}
-@media(max-width:560px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr}}
+/* ── Tablet ── */
+@media(max-width:900px){
+  .cards,.grid-2{grid-template-columns:1fr 1fr}
+  .cl-grid{grid-template-columns:1fr 1fr}
+  .hero-band{padding:24px 22px}
+  section{padding:20px}
+  .hero-art{height:240px}
+}
+/* ── Mobile ── */
+@media(max-width:680px){
+  .nav{
+    justify-content:flex-start;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    flex-wrap:nowrap;
+    border-radius:14px;
+    padding:7px 10px;
+    margin:-26px 0 22px;
+    scrollbar-width:none;
+    gap:4px;
+  }
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{flex-shrink:0;font-size:12px;padding:8px 11px}
+  .hero-art{height:160px}
+  .hero-band{padding:14px 16px 20px}
+  .subtitle{font-size:14px}
+  section{padding:14px;border-radius:16px;margin:14px 0}
+  h2{font-size:24px;gap:8px}
+  h2 .tag{font-size:11px;padding:4px 9px}
+  .cards{grid-template-columns:1fr 1fr;gap:10px}
+  .card{padding:14px}
+  .metric-value{font-size:30px}
+  .metric-label{font-size:11px}
+  .metric-sub{font-size:12px}
+  .cl-grid{grid-template-columns:1fr 1fr !important}
+  .cl-card{padding:12px}
+  .grid-2{grid-template-columns:1fr !important}
+  .insight{padding:12px 14px;font-size:13px;line-height:1.5}
+  .note{font-size:12px}
+  .table-wrap{max-height:380px}
+  .data-table{font-size:12px}
+  .data-table th{font-size:10px;padding:8px 6px;letter-spacing:0}
+  .data-table td{padding:7px 6px}
+  .tbl-tools{flex-direction:column;gap:8px}
+  .tbl-search{width:100%;min-width:unset}
+  .tbl-count{margin-left:0}
+  .probbar{min-width:70px}
+  .probbar span{font-size:11px}
+  .net-ctrl button{font-size:12px;padding:7px 11px}
+  .legend-net{font-size:12px;gap:10px}
+  #plot_corr{height:260px !important}
+  #plot_pca{height:320px !important}
+  #plot_donut{height:200px !important}
+  #plot_quad{height:290px !important}
+  #plot_net{height:300px !important}
+  #plot_merito{height:320px !important}
+  #plot_sim{height:370px !important}
+}
+/* ── Small mobile ── */
+@media(max-width:420px){
+  .cards{grid-template-columns:1fr}
+  .metric-value{font-size:26px}
+  h2{font-size:20px}
+  #plot_pca{height:260px !important}
+  #plot_net{height:250px !important}
+  #plot_merito{height:270px !important}
+  #plot_sim{height:320px !important}
+  #plot_corr{height:220px !important}
+}
+/* ── Esconde coluna xGA em telas muito estreitas ── */
+@media(max-width:480px){
+  .data-table th:nth-child(6),.data-table td:nth-child(6){display:none}
+}
 
 /* progress bar */
 #progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:50;
@@ -251,6 +322,7 @@ tr.hide{display:none}
 <div class="footer">Relatório gerado com Python, Pandas, Scikit-learn, NetworkX e ECharts • Copa do Mundo 2026 🇨🇦🇲🇽🇺🇸</div></main><script>
 const CORR={"labels": ["xG / jogo", "xGA / jogo", "Saldo xG", "Gols feitos", "Gols sofridos", "Score ajustado", "Ranking FIFA", "Dif. p/ adversários"], "data": [[0, 0, 1.0], [1, 0, -0.71], [2, 0, 0.92], [3, 0, 0.58], [4, 0, -0.46], [5, 0, 0.89], [6, 0, -0.66], [7, 0, 0.68], [0, 1, -0.71], [1, 1, 1.0], [2, 1, -0.92], [3, 1, -0.61], [4, 1, 0.61], [5, 1, -0.9], [6, 1, 0.72], [7, 1, -0.71], [0, 2, 0.92], [1, 2, -0.92], [2, 2, 1.0], [3, 2, 0.65], [4, 2, -0.58], [5, 2, 0.97], [6, 2, -0.75], [7, 2, 0.76], [0, 3, 0.58], [1, 3, -0.61], [2, 3, 0.65], [3, 3, 1.0], [4, 3, -0.3], [5, 3, 0.68], [6, 3, -0.62], [7, 3, 0.64], [0, 4, -0.46], [1, 4, 0.61], [2, 4, -0.58], [3, 4, -0.3], [4, 4, 1.0], [5, 4, -0.64], [6, 4, 0.6], [7, 4, -0.64], [0, 5, 0.89], [1, 5, -0.9], [2, 5, 0.97], [3, 5, 0.68], [4, 5, -0.64], [5, 5, 1.0], [6, 5, -0.86], [7, 5, 0.89], [0, 6, -0.66], [1, 6, 0.72], [2, 6, -0.75], [3, 6, -0.62], [4, 6, 0.6], [5, 6, -0.86], [6, 6, 1.0], [7, 6, -0.96], [0, 7, 0.68], [1, 7, -0.71], [2, 7, 0.76], [3, 7, 0.64], [4, 7, -0.64], [5, 7, 0.89], [6, 7, -0.96], [7, 7, 1.0]]}, PCA=[{"name": "Elite", "type": "scatter", "color": "#16a34a", "data": [{"value": [1.814, -1.037], "name": "México", "symbolSize": 31.7, "cluster": "Elite", "score": 0.46, "prob": 89.4}, {"value": [2.149, 0.27], "name": "Suíça", "symbolSize": 33.7, "cluster": "Elite", "score": 0.71, "prob": 98.8}, {"value": [3.231, 1.104], "name": "Canadá", "symbolSize": 37.2, "cluster": "Elite", "score": 1.15, "prob": 93.2}, {"value": [2.065, -0.518], "name": "Brasil", "symbolSize": 32.2, "cluster": "Elite", "score": 0.53, "prob": 97.8}, {"value": [2.425, -0.037], "name": "Marrocos", "symbolSize": 34.5, "cluster": "Elite", "score": 0.81, "prob": 99.7}, {"value": [2.169, 0.766], "name": "Estados Unidos", "symbolSize": 33.4, "cluster": "Elite", "score": 0.67, "prob": 99.6}, {"value": [1.794, 0.554], "name": "Turquia", "symbolSize": 34.3, "cluster": "Elite", "score": 0.79, "prob": 27.3}, {"value": [3.332, 1.27], "name": "Alemanha", "symbolSize": 36.6, "cluster": "Elite", "score": 1.07, "prob": 99.6}, {"value": [2.108, 0.977], "name": "Países Baixos", "symbolSize": 32.2, "cluster": "Elite", "score": 0.53, "prob": 98.4}, {"value": [3.62, 0.246], "name": "Bélgica", "symbolSize": 38.4, "cluster": "Elite", "score": 1.3, "prob": 96.2}, {"value": [4.198, -0.762], "name": "Espanha", "symbolSize": 40.1, "cluster": "Elite", "score": 1.51, "prob": 99.9}, {"value": [1.709, -0.209], "name": "Uruguai", "symbolSize": 33.6, "cluster": "Elite", "score": 0.7, "prob": 72.7}, {"value": [3.754, 0.633], "name": "França", "symbolSize": 37.2, "cluster": "Elite", "score": 1.15, "prob": 100.0}, {"value": [1.659, 1.329], "name": "Senegal", "symbolSize": 32.0, "cluster": "Elite", "score": 0.5, "prob": 96.9}, {"value": [2.929, -0.502], "name": "Argentina", "symbolSize": 34.8, "cluster": "Elite", "score": 0.85, "prob": 89.9}, {"value": [2.453, -0.645], "name": "Colômbia", "symbolSize": 34.7, "cluster": "Elite", "score": 0.84, "prob": 97.1}, {"value": [1.672, -0.79], "name": "Portugal", "symbolSize": 31.2, "cluster": "Elite", "score": 0.4, "prob": 97.1}, {"value": [3.335, -0.079], "name": "Inglaterra", "symbolSize": 37.3, "cluster": "Elite", "score": 1.16, "prob": 99.6}]}, {"name": "Competitivas", "type": "scatter", "color": "#2563eb", "data": [{"value": [-1.334, -0.742], "name": "África do Sul", "symbolSize": 25.0, "cluster": "Competitivas", "score": -0.38, "prob": 49.0}, {"value": [-1.208, -0.207], "name": "Tchéquia", "symbolSize": 25.5, "cluster": "Competitivas", "score": -0.31, "prob": 21.6}, {"value": [-1.62, 0.534], "name": "Bósnia e Herzegovina", "symbolSize": 24.0, "cluster": "Competitivas", "score": -0.5, "prob": 81.0}, {"value": [-1.549, -0.951], "name": "Escócia", "symbolSize": 24.2, "cluster": "Competitivas", "score": -0.48, "prob": 43.7}, {"value": [-0.881, -1.371], "name": "Austrália", "symbolSize": 24.9, "cluster": "Competitivas", "score": -0.39, "prob": 64.7}, {"value": [-2.792, -1.061], "name": "Paraguai", "symbolSize": 19.5, "cluster": "Competitivas", "score": -1.06, "prob": 61.0}, {"value": [-0.552, -1.383], "name": "Irã", "symbolSize": 25.9, "cluster": "Competitivas", "score": -0.26, "prob": 31.6}, {"value": [-2.631, -1.036], "name": "Cabo Verde", "symbolSize": 20.3, "cluster": "Competitivas", "score": -0.96, "prob": 68.4}, {"value": [-0.747, -0.41], "name": "RD Congo", "symbolSize": 25.4, "cluster": "Competitivas", "score": -0.32, "prob": 79.3}, {"value": [-2.807, -1.178], "name": "Gana", "symbolSize": 19.8, "cluster": "Competitivas", "score": -1.02, "prob": 60.8}, {"value": [-0.751, -1.048], "name": "Panamá", "symbolSize": 26.8, "cluster": "Competitivas", "score": -0.15, "prob": 25.6}]}, {"name": "Intermediárias", "type": "scatter", "color": "#f59e0b", "data": [{"value": [0.511, -0.898], "name": "Coreia do Sul", "symbolSize": 29.9, "cluster": "Intermediárias", "score": 0.24, "prob": 27.7}, {"value": [-0.088, -0.784], "name": "Costa do Marfim", "symbolSize": 27.1, "cluster": "Intermediárias", "score": -0.11, "prob": 72.7}, {"value": [1.033, -0.88], "name": "Equador", "symbolSize": 31.4, "cluster": "Intermediárias", "score": 0.42, "prob": 73.7}, {"value": [0.888, -0.109], "name": "Japão", "symbolSize": 29.0, "cluster": "Intermediárias", "score": 0.13, "prob": 92.2}, {"value": [0.511, 1.504], "name": "Suécia", "symbolSize": 29.5, "cluster": "Intermediárias", "score": 0.19, "prob": 94.4}, {"value": [0.504, -0.581], "name": "Egito", "symbolSize": 29.0, "cluster": "Intermediárias", "score": 0.13, "prob": 90.0}, {"value": [-0.466, 1.354], "name": "Noruega", "symbolSize": 25.5, "cluster": "Intermediárias", "score": -0.31, "prob": 84.4}, {"value": [-0.2, 0.483], "name": "Áustria", "symbolSize": 26.7, "cluster": "Intermediárias", "score": -0.16, "prob": 87.9}, {"value": [0.292, 0.85], "name": "Argélia", "symbolSize": 29.2, "cluster": "Intermediárias", "score": 0.15, "prob": 93.5}, {"value": [0.284, -0.195], "name": "Croácia", "symbolSize": 28.2, "cluster": "Intermediárias", "score": 0.02, "prob": 92.1}]}, {"name": "Baixo desempenho", "type": "scatter", "color": "#e11d48", "data": [{"value": [-4.299, 0.32], "name": "Catar", "symbolSize": 17.1, "cluster": "Baixo desempenho", "score": -1.36, "prob": 11.1}, {"value": [-3.084, 0.677], "name": "Haiti", "symbolSize": 21.2, "cluster": "Baixo desempenho", "score": -0.85, "prob": 15.8}, {"value": [-4.601, 0.453], "name": "Curaçao", "symbolSize": 16.9, "cluster": "Baixo desempenho", "score": -1.39, "prob": 17.2}, {"value": [-3.019, 1.05], "name": "Tunísia", "symbolSize": 21.2, "cluster": "Baixo desempenho", "score": -0.85, "prob": 9.2}, {"value": [-3.877, 1.577], "name": "Nova Zelândia", "symbolSize": 18.6, "cluster": "Baixo desempenho", "score": -1.18, "prob": 20.3}, {"value": [-3.666, -0.846], "name": "Arábia Saudita", "symbolSize": 18.0, "cluster": "Baixo desempenho", "score": -1.25, "prob": 21.9}, {"value": [-4.41, 0.84], "name": "Iraque", "symbolSize": 17.3, "cluster": "Baixo desempenho", "score": -1.34, "prob": 15.9}, {"value": [-2.703, 0.614], "name": "Jordânia", "symbolSize": 21.3, "cluster": "Baixo desempenho", "score": -0.84, "prob": 9.9}, {"value": [-3.153, 0.853], "name": "Uzbequistão", "symbolSize": 20.6, "cluster": "Baixo desempenho", "score": -0.92, "prob": 8.9}]}, {"name": "Centro do grupo", "type": "centroid", "color": "#0b1f3a", "data": [[-1.534, -0.805], [2.579, 0.143], [0.327, 0.074], [-3.646, 0.615]]}], NET={"nodes": [{"id": "Mexico", "name": "México", "symbolSize": 25.6, "category": 0, "cluster": "Elite", "deg": 1, "value": 0.46}, {"id": "Switzerland", "name": "Suíça", "symbolSize": 50.8, "category": 0, "cluster": "Elite", "deg": 8, "value": 0.71}, {"id": "Canada", "name": "Canadá", "symbolSize": 32.8, "category": 0, "cluster": "Elite", "deg": 3, "value": 1.15}, {"id": "Brazil", "name": "Brasil", "symbolSize": 32.8, "category": 0, "cluster": "Elite", "deg": 3, "value": 0.53}, {"id": "Morocco", "name": "Marrocos", "symbolSize": 50.8, "category": 0, "cluster": "Elite", "deg": 8, "value": 0.81}, {"id": "United States", "name": "Estados Unidos", "symbolSize": 43.6, "category": 0, "cluster": "Elite", "deg": 6, "value": 0.67}, {"id": "Turkey", "name": "Turquia", "symbolSize": 22.0, "category": 0, "cluster": "Elite", "deg": 0, "value": 0.79}, {"id": "Germany", "name": "Alemanha", "symbolSize": 47.2, "category": 0, "cluster": "Elite", "deg": 7, "value": 1.07}, {"id": "Netherlands", "name": "Países Baixos", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.53}, {"id": "Belgium", "name": "Bélgica", "symbolSize": 43.6, "category": 0, "cluster": "Elite", "deg": 6, "value": 1.3}, {"id": "Spain", "name": "Espanha", "symbolSize": 43.6, "category": 0, "cluster": "Elite", "deg": 6, "value": 1.51}, {"id": "Uruguay", "name": "Uruguai", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.7}, {"id": "France", "name": "França", "symbolSize": 50.8, "category": 0, "cluster": "Elite", "deg": 8, "value": 1.15}, {"id": "Senegal", "name": "Senegal", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.5}, {"id": "Argentina", "name": "Argentina", "symbolSize": 40.0, "category": 0, "cluster": "Elite", "deg": 5, "value": 0.85}, {"id": "Colombia", "name": "Colômbia", "symbolSize": 36.4, "category": 0, "cluster": "Elite", "deg": 4, "value": 0.84}, {"id": "Portugal", "name": "Portugal", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.4}, {"id": "England", "name": "Inglaterra", "symbolSize": 47.2, "category": 0, "cluster": "Elite", "deg": 7, "value": 1.16}], "links": [{"source": "Canada", "target": "United States"}, {"source": "Switzerland", "target": "United States"}, {"source": "Argentina", "target": "Brazil"}, {"source": "Morocco", "target": "United States"}, {"source": "England", "target": "Morocco"}, {"source": "England", "target": "France"}, {"source": "Belgium", "target": "Morocco"}, {"source": "Senegal", "target": "United States"}, {"source": "England", "target": "Spain"}, {"source": "Colombia", "target": "Spain"}, {"source": "France", "target": "Switzerland"}, {"source": "Germany", "target": "Switzerland"}, {"source": "Belgium", "target": "Spain"}, {"source": "Belgium", "target": "Colombia"}, {"source": "Colombia", "target": "Uruguay"}, {"source": "France", "target": "United States"}, {"source": "Spain", "target": "Uruguay"}, {"source": "Germany", "target": "United States"}, {"source": "France", "target": "Netherlands"}, {"source": "Germany", "target": "Netherlands"}, {"source": "Argentina", "target": "Morocco"}, {"source": "Argentina", "target": "France"}, {"source": "Colombia", "target": "England"}, {"source": "England", "target": "Switzerland"}, {"source": "Belgium", "target": "Canada"}, {"source": "Spain", "target": "Switzerland"}, {"source": "Morocco", "target": "Spain"}, {"source": "Argentina", "target": "Portugal"}, {"source": "Brazil", "target": "France"}, {"source": "Belgium", "target": "England"}, {"source": "France", "target": "Germany"}, {"source": "France", "target": "Morocco"}, {"source": "Belgium", "target": "Switzerland"}, {"source": "Germany", "target": "Senegal"}, {"source": "Brazil", "target": "Portugal"}, {"source": "Germany", "target": "Morocco"}, {"source": "Argentina", "target": "Mexico"}, {"source": "Canada", "target": "Switzerland"}, {"source": "England", "target": "Germany"}, {"source": "Morocco", "target": "Switzerland"}], "categories": [{"name": "Elite"}, {"name": "Competitivas"}, {"name": "Intermediárias"}, {"name": "Baixo desempenho"}], "colors": ["#16a34a", "#2563eb", "#f59e0b", "#e11d48"]}, PROB={"names": ["Uzbequistão", "Tunísia", "Jordânia", "Catar", "Haiti", "Iraque", "Curaçao", "Nova Zelândia", "Tchéquia", "Arábia Saudita", "Panamá", "Turquia", "Coreia do Sul", "Irã", "Escócia", "África do Sul", "Gana", "Paraguai", "Austrália", "Cabo Verde", "Uruguai", "Costa do Marfim", "Equador", "RD Congo", "Bósnia e Herzegovina", "Noruega", "Áustria", "México", "Argentina", "Egito", "Croácia", "Japão", "Canadá", "Argélia", "Suécia", "Bélgica", "Senegal", "Colômbia", "Portugal", "Brasil", "Países Baixos", "Suíça", "Inglaterra", "Estados Unidos", "Alemanha", "Marrocos", "Espanha", "França"], "values": [8.9, 9.2, 9.9, 11.1, 15.8, 15.9, 17.2, 20.3, 21.6, 21.9, 25.6, 27.3, 27.7, 31.6, 43.7, 49.0, 60.8, 61.0, 64.7, 68.4, 72.7, 72.7, 73.7, 79.3, 81.0, 84.4, 87.9, 89.4, 89.9, 90.0, 92.1, 92.2, 93.2, 93.5, 94.4, 96.2, 96.9, 97.1, 97.1, 97.8, 98.4, 98.8, 99.6, 99.6, 99.6, 99.7, 99.9, 100.0], "colors": ["#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a"]}, QUAD={"data": [{"value": [1.99, 0.8], "name": "França", "cluster": "Elite", "prob": 100.0, "symbolSize": 24.5, "color": "#16a34a"}, {"value": [2.16, 0.55], "name": "Espanha", "cluster": "Elite", "prob": 99.9, "symbolSize": 24.5, "color": "#16a34a"}, {"value": [1.75, 0.95], "name": "Marrocos", "cluster": "Elite", "prob": 99.7, "symbolSize": 24.5, "color": "#16a34a"}, {"value": [2.14, 0.95], "name": "Alemanha", "cluster": "Elite", "prob": 99.6, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [1.75, 0.89], "name": "Estados Unidos", "cluster": "Elite", "prob": 99.6, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [2.12, 0.88], "name": "Inglaterra", "cluster": "Elite", "prob": 99.6, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [1.78, 1.03], "name": "Suíça", "cluster": "Elite", "prob": 98.8, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [1.78, 1.38], "name": "Países Baixos", "cluster": "Elite", "prob": 98.4, "symbolSize": 24.3, "color": "#16a34a"}, {"value": [1.59, 1.28], "name": "Brasil", "cluster": "Elite", "prob": 97.8, "symbolSize": 24.2, "color": "#16a34a"}, {"value": [1.48, 1.34], "name": "Portugal", "cluster": "Elite", "prob": 97.1, "symbolSize": 24.1, "color": "#16a34a"}, {"value": [2.02, 0.92], "name": "Colômbia", "cluster": "Elite", "prob": 97.1, "symbolSize": 24.1, "color": "#16a34a"}, {"value": [1.9, 1.2], "name": "Senegal", "cluster": "Elite", "prob": 96.9, "symbolSize": 24.1, "color": "#16a34a"}, {"value": [2.55, 0.98], "name": "Bélgica", "cluster": "Elite", "prob": 96.2, "symbolSize": 24.0, "color": "#16a34a"}, {"value": [1.69, 1.09], "name": "Suécia", "cluster": "Intermediárias", "prob": 94.4, "symbolSize": 23.8, "color": "#f59e0b"}, {"value": [1.47, 1.11], "name": "Argélia", "cluster": "Intermediárias", "prob": 93.5, "symbolSize": 23.7, "color": "#f59e0b"}, {"value": [2.39, 0.62], "name": "Canadá", "cluster": "Elite", "prob": 93.2, "symbolSize": 23.6, "color": "#16a34a"}, {"value": [1.14, 1.11], "name": "Japão", "cluster": "Intermediárias", "prob": 92.2, "symbolSize": 23.5, "color": "#f59e0b"}, {"value": [1.05, 1.35], "name": "Croácia", "cluster": "Intermediárias", "prob": 92.1, "symbolSize": 23.5, "color": "#f59e0b"}, {"value": [1.63, 1.46], "name": "Egito", "cluster": "Intermediárias", "prob": 90.0, "symbolSize": 23.2, "color": "#f59e0b"}, {"value": [1.32, 0.74], "name": "Argentina", "cluster": "Elite", "prob": 89.9, "symbolSize": 23.2, "color": "#16a34a"}, {"value": [1.23, 0.88], "name": "México", "cluster": "Elite", "prob": 89.4, "symbolSize": 23.2, "color": "#16a34a"}, {"value": [1.13, 1.36], "name": "Áustria", "cluster": "Intermediárias", "prob": 87.9, "symbolSize": 23.0, "color": "#f59e0b"}, {"value": [1.38, 1.64], "name": "Noruega", "cluster": "Intermediárias", "prob": 84.4, "symbolSize": 22.6, "color": "#f59e0b"}, {"value": [1.04, 1.49], "name": "Bósnia e Herzegovina", "cluster": "Competitivas", "prob": 81.0, "symbolSize": 22.1, "color": "#2563eb"}, {"value": [1.14, 1.28], "name": "RD Congo", "cluster": "Competitivas", "prob": 79.3, "symbolSize": 21.9, "color": "#2563eb"}, {"value": [1.85, 1.32], "name": "Equador", "cluster": "Intermediárias", "prob": 73.7, "symbolSize": 21.2, "color": "#f59e0b"}, {"value": [1.27, 1.44], "name": "Costa do Marfim", "cluster": "Intermediárias", "prob": 72.7, "symbolSize": 21.1, "color": "#f59e0b"}, {"value": [1.82, 0.92], "name": "Uruguai", "cluster": "Elite", "prob": 72.7, "symbolSize": 21.1, "color": "#16a34a"}, {"value": [1.05, 1.98], "name": "Cabo Verde", "cluster": "Competitivas", "prob": 68.4, "symbolSize": 20.6, "color": "#2563eb"}, {"value": [1.1, 1.72], "name": "Austrália", "cluster": "Competitivas", "prob": 64.7, "symbolSize": 20.1, "color": "#2563eb"}, {"value": [0.76, 2.27], "name": "Paraguai", "cluster": "Competitivas", "prob": 61.0, "symbolSize": 19.6, "color": "#2563eb"}, {"value": [0.59, 1.48], "name": "Gana", "cluster": "Competitivas", "prob": 60.8, "symbolSize": 19.6, "color": "#2563eb"}, {"value": [1.15, 1.4], "name": "África do Sul", "cluster": "Competitivas", "prob": 49.0, "symbolSize": 18.1, "color": "#2563eb"}, {"value": [1.06, 1.63], "name": "Escócia", "cluster": "Competitivas", "prob": 43.7, "symbolSize": 17.5, "color": "#2563eb"}, {"value": [1.32, 1.97], "name": "Irã", "cluster": "Competitivas", "prob": 31.6, "symbolSize": 15.9, "color": "#2563eb"}, {"value": [1.35, 1.07], "name": "Coreia do Sul", "cluster": "Intermediárias", "prob": 27.7, "symbolSize": 15.5, "color": "#f59e0b"}, {"value": [2.52, 1.25], "name": "Turquia", "cluster": "Elite", "prob": 27.3, "symbolSize": 15.4, "color": "#16a34a"}, {"value": [1.18, 1.22], "name": "Panamá", "cluster": "Competitivas", "prob": 25.6, "symbolSize": 15.2, "color": "#2563eb"}, {"value": [0.75, 2.33], "name": "Arábia Saudita", "cluster": "Baixo desempenho", "prob": 21.9, "symbolSize": 14.7, "color": "#e11d48"}, {"value": [1.15, 1.52], "name": "Tchéquia", "cluster": "Competitivas", "prob": 21.6, "symbolSize": 14.7, "color": "#2563eb"}, {"value": [1.29, 2.4], "name": "Nova Zelândia", "cluster": "Baixo desempenho", "prob": 20.3, "symbolSize": 14.5, "color": "#e11d48"}, {"value": [0.97, 2.52], "name": "Curaçao", "cluster": "Baixo desempenho", "prob": 17.2, "symbolSize": 14.2, "color": "#e11d48"}, {"value": [0.67, 2.3], "name": "Iraque", "cluster": "Baixo desempenho", "prob": 15.9, "symbolSize": 14.0, "color": "#e11d48"}, {"value": [1.05, 1.58], "name": "Haiti", "cluster": "Baixo desempenho", "prob": 15.8, "symbolSize": 14.0, "color": "#e11d48"}, {"value": [0.63, 2.71], "name": "Catar", "cluster": "Baixo desempenho", "prob": 11.1, "symbolSize": 13.4, "color": "#e11d48"}, {"value": [0.94, 1.65], "name": "Jordânia", "cluster": "Baixo desempenho", "prob": 9.9, "symbolSize": 13.2, "color": "#e11d48"}, {"value": [0.73, 1.76], "name": "Tunísia", "cluster": "Baixo desempenho", "prob": 9.2, "symbolSize": 13.2, "color": "#e11d48"}, {"value": [0.76, 1.85], "name": "Uzbequistão", "cluster": "Baixo desempenho", "prob": 8.9, "symbolSize": 13.1, "color": "#e11d48"}], "medx": 1.31, "medy": 1.35}, DONUT=[{"name": "Elite", "value": 18, "itemStyle": {"color": "#16a34a"}}, {"name": "Competitivas", "value": 11, "itemStyle": {"color": "#2563eb"}}, {"name": "Intermediárias", "value": 10, "itemStyle": {"color": "#f59e0b"}}, {"name": "Baixo desempenho", "value": 9, "itemStyle": {"color": "#e11d48"}}];
 const FONT="Inter, system-ui, sans-serif";
+const isMob=()=>window.innerWidth<=680;
 const CL_COLORS={"Elite":"#16a34a","Competitivas":"#2563eb","Intermediárias":"#f59e0b","Baixo desempenho":"#e11d48"};
 
 /* 1. CORRELACAO */
@@ -259,7 +331,7 @@ const CL_COLORS={"Elite":"#16a34a","Competitivas":"#2563eb","Intermediárias":"#
   ch.setOption({
     tooltip:{position:'top',backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},
       formatter:p=>`${CORR.labels[p.data[1]]} \u00d7 ${CORR.labels[p.data[0]]}<br><b>r = ${p.data[2]}</b>`},
-    grid:{left:135,right:30,top:30,bottom:120},
+    grid:{left:isMob()?80:135,right:30,top:20,bottom:isMob()?70:120},
     xAxis:{type:'category',data:CORR.labels,axisLabel:{rotate:38,fontFamily:FONT,color:'#5b6b82'},splitArea:{show:true},axisLine:{show:false},axisTick:{show:false}},
     yAxis:{type:'category',data:CORR.labels,inverse:true,axisLabel:{fontFamily:FONT,color:'#5b6b82'},splitArea:{show:true},axisLine:{show:false},axisTick:{show:false}},
     visualMap:{min:-1,max:1,calculable:true,orient:'vertical',right:0,top:'center',itemHeight:280,text:['+1 forte','-1 forte'],textStyle:{fontFamily:FONT,color:'#5b6b82'},inRange:{color:['#b91c1c','#f87171','#fef3c7','#86efac','#15803d']}},
@@ -273,7 +345,7 @@ const CL_COLORS={"Elite":"#16a34a","Competitivas":"#2563eb","Intermediárias":"#
   const ch=echarts.init(document.getElementById('plot_pca'));
   const series=PCA.map(s=>{
     if(s.type==='centroid')return {name:s.name,type:'scatter',symbol:'diamond',symbolSize:22,itemStyle:{color:s.color,borderColor:'#fff',borderWidth:2},data:s.data,z:5,tooltip:{show:false},silent:true};
-    return {name:s.name,type:'scatter',color:s.color,data:s.data,itemStyle:{borderColor:'#fff',borderWidth:2,shadowBlur:8,shadowColor:'rgba(0,0,0,.12)',opacity:0.9},emphasis:{focus:'series',itemStyle:{shadowBlur:18,shadowColor:s.color}},labelLayout:{hideOverlap:true},label:{show:true,position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:10,color:'#0a1a3f'}};
+    return {name:s.name,type:'scatter',color:s.color,data:s.data,itemStyle:{borderColor:'#fff',borderWidth:2,shadowBlur:8,shadowColor:'rgba(0,0,0,.12)',opacity:0.9},emphasis:{focus:'series',itemStyle:{shadowBlur:18,shadowColor:s.color}},labelLayout:{hideOverlap:true},label:{show:!isMob(),position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:10,color:'#0a1a3f'}};
   });
   ch.setOption({
     tooltip:{backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:p=>p.data.name?`<b>${p.data.name}</b><br>Perfil: ${p.data.cluster}<br>Score: ${p.data.score}<br>Prob. mata-mata: ${p.data.prob}%`:''},
@@ -308,7 +380,7 @@ const CL_COLORS={"Elite":"#16a34a","Competitivas":"#2563eb","Intermediárias":"#
     name:cl,type:'scatter',color:CL_COLORS[cl],data:byCl[cl],
     itemStyle:{borderColor:'#fff',borderWidth:1.5,opacity:0.88,shadowBlur:6,shadowColor:'rgba(0,0,0,.1)'},
     emphasis:{focus:'series'},labelLayout:{hideOverlap:true},
-    label:{show:true,position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:9,color:'#0a1a3f'}
+    label:{show:!isMob(),position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:9,color:'#0a1a3f'}
   }));
   ch.setOption({
     tooltip:{backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:p=>`<b>${p.data.name}</b><br>xG criado: ${p.data.value[0]}<br>xGA cedido: ${p.data.value[1]}<br>Prob. mata-mata: ${p.data.prob}%`},
@@ -334,7 +406,7 @@ function buildNet(mode){
       circular:{rotateLabel:true},
       force:{repulsion:420,edgeLength:[60,140],gravity:0.08,friction:0.18},
       data:NET.nodes,links:NET.links,categories:NET.categories,
-      label:{show:true,position:mode==='circular'?'right':'right',fontFamily:FONT,fontSize:11,color:'#0a1a3f',fontWeight:600},
+      label:{show:!isMob(),position:'right',fontFamily:FONT,fontSize:11,color:'#0a1a3f',fontWeight:600},
       lineStyle:{color:'#cbd5e1',width:1.3,opacity:0.55,curveness:mode==='circular'?0.3:0.1},
       emphasis:{focus:'adjacency',lineStyle:{width:2.6,color:'#64748b',opacity:0.95},label:{fontSize:13}},
       itemStyle:{borderColor:'#fff',borderWidth:2,shadowBlur:8,shadowColor:'rgba(0,0,0,.12)'}
@@ -410,7 +482,7 @@ const MERIT_DATA=[
     data:bycat[cat],
     symbolSize:14,
     itemStyle:{color:CAT_COLOR[cat],borderColor:'#fff',borderWidth:1.5,opacity:0.9},
-    label:{show:true,position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:9,color:'#0a1a3f'},
+    label:{show:!isMob(),position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:9,color:'#0a1a3f'},
     labelLayout:{hideOverlap:true},
     markArea:cat==='Merecida'?{silent:true,data:[
       [{coord:[-1.6,-0.35],itemStyle:{color:'rgba(22,163,74,0.04)'}},{coord:[0,0.65]}],
@@ -488,7 +560,7 @@ const MERIT_DATA=[
   ch.setOption({
     tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0a1a3f',borderWidth:0,
       textStyle:{color:'#fff'},formatter:p=>`<b>${p[0].name}</b><br>Probabilidade de título: ${p[0].value}%`},
-    grid:{left:140,right:70,top:20,bottom:40},
+    grid:{left:isMob()?105:140,right:isMob()?50:70,top:20,bottom:40},
     xAxis:{type:'value',max:30,name:'probabilidade de ser campeã (%)',nameLocation:'middle',nameGap:28,
       nameTextStyle:{fontFamily:FONT,color:'#5b6b82'},
       splitLine:{lineStyle:{color:'#eef2f7'}},axisLabel:{fontFamily:FONT,color:'#5b6b82'}},
