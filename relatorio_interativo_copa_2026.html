@@ -1,0 +1,407 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório Analítico da Copa do Mundo 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{
+  --can:#e11d48; --mex:#16a34a; --usa:#1f6feb; --ouro:#f2b134;
+  --ink:#0a1a3f; --muted:#5b6b82; --bg:#eef2f8; --panel:#ffffff;
+  --line:#dde5f0; --shadow:0 18px 50px rgba(10,26,63,.12); --radius:22px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+
+/* ===== HERO no estilo do poster: blocos de cor angulosos ===== */
+.hero{position:relative;overflow:hidden;color:#fff;padding:0;background:#0a1a3f}
+.hero-art{position:relative;height:340px;display:flex}
+.hero-art .blk{flex:1;position:relative;overflow:hidden}
+.blk.can{background:linear-gradient(135deg,#ff2d55,#b3122f)}
+.blk.mex{background:linear-gradient(135deg,#22c55e,#0f7a37)}
+.blk.usa{background:linear-gradient(135deg,#3b82f6,#1b3fae)}
+/* estrelas e linhas de velocidade decorativas */
+.hero-art::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 18% 30%,#fff 0 4px,transparent 5px),
+    radial-gradient(circle at 84% 22%,#fff 0 3px,transparent 4px),
+    radial-gradient(circle at 67% 70%,rgba(255,255,255,.85) 0 5px,transparent 6px),
+    radial-gradient(circle at 32% 78%,rgba(255,255,255,.8) 0 3px,transparent 4px);}
+.hero-art .ball{position:absolute;z-index:4;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#fff,#e7edf5);left:50%;top:52%;transform:translate(-50%,-50%);
+  box-shadow:0 20px 50px rgba(0,0,0,.35);border:6px solid #fff}
+.hero-art .ball::after{content:"⚽";position:absolute;inset:0;display:grid;place-items:center;font-size:78px}
+/* faixas anguladas */
+.slash{position:absolute;z-index:2;background:rgba(255,255,255,.16);height:14px;width:140%;left:-20%;transform-origin:center}
+.s1{top:24%;transform:rotate(-8deg)} .s2{top:60%;transform:rotate(6deg)} .s3{top:82%;transform:rotate(-4deg)}
+
+.hero-band{background:#0a1a3f;padding:30px 42px 36px;position:relative;z-index:5}
+.hero-inner{max-width:1180px;margin:0 auto}
+.host-flags{font-size:14px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;
+  display:flex;gap:18px;flex-wrap:wrap}
+.host-flags .c{color:#ff5d7a} .host-flags .m{color:#4ade80} .host-flags .u{color:#7aa2ff}
+h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(40px,7vw,78px);line-height:.92;margin:6px 0 12px;letter-spacing:1.5px;color:#fff}
+.subtitle{max-width:780px;font-size:17px;color:rgba(255,255,255,.86)}
+
+.container{max-width:1180px;margin:0 auto;padding:26px 22px 70px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:30;margin:-26px auto 28px;background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:999px;padding:9px 12px;
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;box-shadow:var(--shadow)}
+.nav a{color:var(--ink);text-decoration:none;font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px;transition:.2s}
+.nav a:hover{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .2s}
+.card:hover{transform:translateY(-4px)}
+.card .ic{font-size:26px;margin-bottom:8px}
+.card::after{content:"";position:absolute;right:-22px;top:-22px;width:70px;height:70px;border-radius:50%;opacity:.10}
+.card.accent-v::after{background:var(--mex)} .card.accent-a::after{background:var(--usa)}
+.card.accent-r::after{background:var(--can)} .card.accent-o::after{background:var(--ouro)}
+.card.accent-v{border-top:5px solid var(--mex)} .card.accent-a{border-top:5px solid var(--usa)}
+.card.accent-r{border-top:5px solid var(--can)} .card.accent-o{border-top:5px solid var(--ouro)}
+.metric-label{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.metric-value{font-family:'Bebas Neue',sans-serif;font-size:40px;margin-top:4px;line-height:1;color:var(--ink)}
+.metric-sub{color:var(--muted);font-size:13px;margin-top:6px}
+
+section{background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:30px;margin:24px 0;box-shadow:var(--shadow)}
+h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:36px;letter-spacing:.5px;margin:0 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h2 .tag{font-family:Inter;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;color:#fff}
+.t-v{background:var(--mex)} .t-a{background:var(--usa)} .t-r{background:var(--can)} .t-o{background:var(--ouro)}
+.section-intro{color:var(--muted);max-width:880px;margin-bottom:18px}
+.insight{border-left:5px solid var(--mex);background:linear-gradient(120deg,#ecfdf3,#eff6ff);border-radius:14px;padding:16px 20px;color:#13402b;margin:18px 0}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+
+.cl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 4px}
+.cl-card{border:1px solid var(--line);border-radius:16px;padding:16px;border-top:5px solid var(--c);background:#fff}
+.cl-head{display:flex;align-items:center;gap:8px;font-size:15px}
+.cl-count{margin-left:auto;font-family:'Bebas Neue';font-size:26px;color:var(--c)}
+.cl-ex{color:var(--muted);font-size:13px;margin-top:6px}
+.cl-dot{width:11px;height:11px;border-radius:50%;display:inline-block} .cl-dot.big{width:14px;height:14px}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+
+/* network controls */
+.net-ctrl{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.net-ctrl button{font-family:Inter;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;
+  border:2px solid var(--usa);background:#fff;color:var(--usa);cursor:pointer;transition:.2s}
+.net-ctrl button.active{background:var(--usa);color:#fff}
+.legend-net{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)}
+
+.table-wrap{max-height:620px;overflow:auto;border:1px solid var(--line);border-radius:16px}
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th{background:var(--ink);color:#fff;text-align:left;padding:12px;position:sticky;top:0;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.data-table td{border-bottom:1px solid var(--line);padding:10px 12px}
+.data-table tr:nth-child(even) td{background:#f8fafc}
+.data-table tr:hover td{background:#eef6ff}
+.team{font-weight:700} .flag{margin-right:6px}
+.grp{text-align:center;font-weight:800;color:var(--usa)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.badge{font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;color:#fff}
+.badge.pass{background:var(--mex)} .badge.out{background:var(--can)}
+.probbar{position:relative;background:#eef2f7;border-radius:999px;height:20px;min-width:120px;overflow:hidden}
+.probfill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;opacity:.85}
+.probbar span{position:relative;z-index:2;font-size:12px;font-weight:800;padding-left:8px;line-height:20px;color:var(--ink)}
+
+.footer{text-align:center;color:var(--muted);padding:40px 20px;font-size:13px}
+@media(max-width:900px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr 1fr} .hero-band{padding:24px 22px} section{padding:20px} .hero-art{height:240px}}
+@media(max-width:560px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr}}
+
+/* progress bar */
+#progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:50;
+  background:linear-gradient(90deg,var(--can),var(--mex),var(--usa));transition:width .1s linear}
+/* active nav link */
+.nav a.active{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+/* table toolbar */
+.tbl-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 16px}
+.tbl-search{flex:1;min-width:200px;position:relative}
+.tbl-search input{width:100%;padding:11px 14px 11px 40px;border:2px solid var(--line);border-radius:999px;
+  font-family:Inter;font-size:14px;color:var(--ink);outline:none;transition:.2s;background:#fff}
+.tbl-search input:focus{border-color:var(--usa);box-shadow:0 0 0 4px rgba(31,111,235,.12)}
+.tbl-search .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
+.fchip{font-family:Inter;font-weight:700;font-size:13px;padding:8px 14px;border-radius:999px;
+  border:2px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:.2s}
+.fchip:hover{border-color:var(--usa)}
+.fchip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fchip.f-pass.active{background:var(--mex);border-color:var(--mex)}
+.fchip.f-out.active{background:var(--can);border-color:var(--can)}
+.tbl-count{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto}
+tr.hide{display:none}
+.no-result{text-align:center;color:var(--muted);padding:30px;font-style:italic}
+
+</style></head><body>
+<div id="progress"></div>
+<header class="hero">
+  <div class="hero-art">
+    <div class="blk can"></div><div class="blk mex"></div><div class="blk usa"></div>
+    <div class="slash s1"></div><div class="slash s2"></div><div class="slash s3"></div>
+    <div class="ball"></div>
+  </div>
+  <div class="hero-band"><div class="hero-inner">
+        <h1>Relatório Analítico<br>da Copa do Mundo 2026</h1>
+    <p class="subtitle">Uma leitura interativa da primeira fase: perfis das seleções, agrupamentos por desempenho, rede de similaridade e probabilidade estimada de avançar no mata-mata.</p>
+  </div></div>
+</header>
+<main class="container"><nav class="nav">
+<a href="#resumo">Resumo</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
+<a href="#pca">Mapa PCA</a><a href="#quadrante">Ataque × Defesa</a><a href="#rede">Rede</a>
+<a href="#predicao">Predição</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
+<section id="resumo">
+  <h2>⚽ Resumo executivo <span class="tag t-v">visão geral</span></h2>
+  <p class="section-intro">Os indicadores combinam desempenho observado, qualidade das chances criadas e cedidas, força relativa dos adversários e ranking FIFA. A fase prevista é a <b>passagem do mata-mata</b>.</p>
+  <div class="cards">
+    <div class="card accent-a"><div class="ic">🌎</div><div class="metric-label">Seleções</div><div class="metric-value">48</div><div class="metric-sub">equipes analisadas</div></div>
+    <div class="card accent-v"><div class="ic">✅</div><div class="metric-label">Classificadas</div><div class="metric-value">32</div><div class="metric-sub">avançam segundo o modelo</div></div>
+    <div class="card accent-o"><div class="ic">🧩</div><div class="metric-label">Perfis</div><div class="metric-value">4</div><div class="metric-sub">grupos identificados</div></div>
+    <div class="card accent-r"><div class="ic">🎯</div><div class="metric-label">Maior probabilidade</div><div class="metric-value">França</div><div class="metric-sub">100,0% de avançar</div></div>
+  </div>
+  <div class="cards">
+    <div class="card accent-v"><div class="ic">🏆</div><div class="metric-label">Melhor score ajustado</div><div class="metric-value">Espanha</div><div class="metric-sub">1,51 de score</div></div>
+    <div class="card accent-a"><div class="ic">🔥</div><div class="metric-label">Melhor ataque</div><div class="metric-value">Bélgica</div><div class="metric-sub">2,55 xG por jogo</div></div>
+    <div class="card accent-r"><div class="ic">🛡️</div><div class="metric-label">Melhor defesa</div><div class="metric-value">Espanha</div><div class="metric-sub">0,55 xGA por jogo</div></div>
+    <div class="card accent-o"><div class="ic">⭐</div><div class="metric-label">Perfil de Elite</div><div class="metric-value">18</div><div class="metric-sub">seleções no topo</div></div>
+  </div>
+  <div class="insight"><b>Leitura rápida:</b> o grupo de <b>Elite</b> reúne seleções com maior score ajustado, forte produção ofensiva e bons indicadores defensivos. Entre os nomes mais fortes aparecem Espanha, Bélgica, Inglaterra, França e Alemanha.</div>
+</section>
+<section id="correlacao">
+  <h2>🔗 Mapa de correlação <span class="tag t-a">variáveis</span></h2>
+  <p class="section-intro">Verde indica variáveis que crescem juntas (correlação positiva forte). Vermelho indica variáveis que andam em direções opostas. Tons claros no centro indicam pouca relação.</p>
+  <div id="plot_corr" style="width:100%;height:600px"></div>
+  <p class="note">Correlações muito altas indicam variáveis que carregam informação parecida. Isso ajuda a interpretar os perfis e evita depender só da tabela de classificação.</p>
+</section>
+<section id="clusters">
+  <h2>🧩 Perfis das seleções <span class="tag t-o">clusters</span></h2>
+  <p class="section-intro">O algoritmo de agrupamento separa as seleções em quatro perfis com características estatísticas semelhantes, do mais forte ao mais frágil.</p>
+  <div class="grid-2">
+    <div><div class="cl-grid" style="grid-template-columns:1fr 1fr"><div class="cl-card" style="--c:#16a34a"><div class="cl-head"><span class="cl-dot big" style="background:#16a34a"></span><b>Elite</b><span class="cl-count">18</span></div><div class="cl-ex">França, Espanha, Marrocos, Alemanha…</div></div><div class="cl-card" style="--c:#2563eb"><div class="cl-head"><span class="cl-dot big" style="background:#2563eb"></span><b>Competitivas</b><span class="cl-count">11</span></div><div class="cl-ex">Bósnia e Herzegovina, RD Congo, Cabo Verde, Austrália…</div></div><div class="cl-card" style="--c:#f59e0b"><div class="cl-head"><span class="cl-dot big" style="background:#f59e0b"></span><b>Intermediárias</b><span class="cl-count">10</span></div><div class="cl-ex">Suécia, Argélia, Japão, Croácia…</div></div><div class="cl-card" style="--c:#e11d48"><div class="cl-head"><span class="cl-dot big" style="background:#e11d48"></span><b>Baixo desempenho</b><span class="cl-count">9</span></div><div class="cl-ex">Arábia Saudita, Nova Zelândia, Curaçao, Iraque…</div></div></div></div>
+    <div id="plot_donut" style="width:100%;height:300px"></div>
+  </div>
+  <div class="insight"><b>Como ler:</b> o número grande mostra quantas seleções caíram em cada perfil. Os perfis ajudam a comparar equipes parecidas, mesmo em grupos diferentes do sorteio.</div>
+</section>
+<section id="pca">
+  <h2>📍 Mapa de perfis (PCA) <span class="tag t-v">interativo</span></h2>
+  <p class="section-intro">Cada bolha é uma seleção. Quanto mais à direita, melhor o desempenho geral. O tamanho reflete o score ajustado e a cor indica o perfil. Os losangos marcam o centro de cada grupo. Clique na legenda para isolar perfis.</p>
+  <div id="plot_pca" style="width:100%;height:640px"></div>
+  <p class="note">Os dois eixos resumem oito variáveis em um plano só, preservando o máximo de informação possível. Seleções próximas têm desempenho parecido.</p>
+</section>
+<section id="quadrante">
+  <h2>🎯 Ataque × Defesa <span class="tag t-r">novo</span></h2>
+  <p class="section-intro">Cada seleção posicionada pelo que cria (xG, eixo horizontal) e pelo que cede (xGA, eixo vertical). O quadrante inferior direito reúne as mais completas: criam muito e sofrem pouco. O tamanho da bolha reflete a probabilidade de avançar.</p>
+  <div id="plot_quad" style="width:100%;height:560px"></div>
+  <p class="note">As linhas tracejadas marcam a mediana do torneio em cada eixo, separando os quatro quadrantes de leitura.</p>
+</section>
+<section id="rede">
+  <h2>🕸️ Rede de similaridade <span class="tag t-a">conexões fortes</span></h2>
+  <p class="section-intro">As 18 seleções mais fortes. Uma linha liga duas seleções estatisticamente muito parecidas. Bolhas maiores têm mais conexões. Use os botões para alternar entre o desenho livre (físico) e o agrupamento por perfil, bem mais organizado.</p>
+  <div class="net-ctrl">
+    <button id="btn-force" class="active" onclick="setNetMode('force')">Desenho livre</button>
+    <button id="btn-circular" onclick="setNetMode('circular')">Agrupado por perfil</button>
+  </div>
+  <div id="plot_net" style="width:100%;height:640px"></div>
+  <div class="legend-net">
+    <span><b style="color:#16a34a">●</b> Elite</span><span><b style="color:#2563eb">●</b> Competitivas</span>
+    <span><b style="color:#f59e0b">●</b> Intermediárias</span><span><b style="color:#e11d48">●</b> Baixo desempenho</span>
+    <span>📏 Tamanho = número de conexões fortes • 🖱️ arraste para explorar</span>
+  </div>
+</section>
+<section id="predicao">
+  <h2>🏅 Predição de avanço <span class="tag t-r">mata-mata</span></h2>
+  <p class="section-intro">Probabilidade estimada de cada seleção <b>passar do mata-mata</b>. Verde para as que o modelo projeta como classificadas, vermelho para as que podem ser eliminadas. São projeções probabilísticas, não certezas. Todas as 48 seleções, da maior para a menor probabilidade.</p>
+  <div id="plot_prob" style="width:100%;height:1180px"></div>
+  <p class="note">As probabilidades vêm de um modelo de floresta aleatória treinado sobre os indicadores de desempenho.</p>
+</section>
+<section id="tabela">
+  <h2>📋 Tabela completa <span class="tag t-a">48 seleções</span></h2>
+  <p class="section-intro">Todas as seleções ordenadas pela probabilidade de avançar no mata-mata.</p>
+  <div class="tbl-tools">
+  <div class="tbl-search"><span class="si">🔍</span><input id="tblSearch" type="text" placeholder="Buscar seleção..." oninput="filterTable()"></div>
+  <button class="fchip active" data-f="all" onclick="setFilter(this,'all')">Todas</button>
+  <button class="fchip f-pass" data-f="pass" onclick="setFilter(this,'pass')">Deve classificar</button>
+  <button class="fchip f-out" data-f="out" onclick="setFilter(this,'out')">Pode ser eliminada</button>
+  <span class="tbl-count" id="tblCount"></span>
+</div>
+<div class="table-wrap"><table class="data-table"><thead><tr>
+  <th>Seleção</th><th style="text-align:center">Grupo</th><th>Perfil</th><th style="text-align:right">Score</th>
+  <th style="text-align:right">xG/jogo</th><th style="text-align:right">xGA/jogo</th><th>Prob. avançar</th><th>Situação</th>
+  </tr></thead><tbody><tr data-name="franca" data-status="pass"><td class="team"><span class="flag">⚽</span>França</td><td class="grp">I</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.15</td><td class="num">1.99</td><td class="num">0.80</td><td class="num"><div class="probbar"><div class="probfill" style="width:100.0%;background:#16a34a"></div><span>100.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="espanha" data-status="pass"><td class="team"><span class="flag">⚽</span>Espanha</td><td class="grp">H</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.51</td><td class="num">2.16</td><td class="num">0.55</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.9%;background:#16a34a"></div><span>99.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="marrocos" data-status="pass"><td class="team"><span class="flag">⚽</span>Marrocos</td><td class="grp">C</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.81</td><td class="num">1.75</td><td class="num">0.95</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.7%;background:#16a34a"></div><span>99.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="alemanha" data-status="pass"><td class="team"><span class="flag">⚽</span>Alemanha</td><td class="grp">E</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.07</td><td class="num">2.14</td><td class="num">0.95</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.6%;background:#16a34a"></div><span>99.6%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="estados unidos" data-status="pass"><td class="team"><span class="flag">⚽</span>Estados Unidos</td><td class="grp">D</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.67</td><td class="num">1.75</td><td class="num">0.89</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.6%;background:#16a34a"></div><span>99.6%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="inglaterra" data-status="pass"><td class="team"><span class="flag">⚽</span>Inglaterra</td><td class="grp">L</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.16</td><td class="num">2.12</td><td class="num">0.88</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.6%;background:#16a34a"></div><span>99.6%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="suica" data-status="pass"><td class="team"><span class="flag">⚽</span>Suíça</td><td class="grp">B</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.71</td><td class="num">1.78</td><td class="num">1.03</td><td class="num"><div class="probbar"><div class="probfill" style="width:98.8%;background:#16a34a"></div><span>98.8%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="paises baixos" data-status="pass"><td class="team"><span class="flag">⚽</span>Países Baixos</td><td class="grp">F</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.53</td><td class="num">1.78</td><td class="num">1.38</td><td class="num"><div class="probbar"><div class="probfill" style="width:98.4%;background:#16a34a"></div><span>98.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="brasil" data-status="pass"><td class="team"><span class="flag">⚽</span>Brasil</td><td class="grp">C</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.53</td><td class="num">1.59</td><td class="num">1.28</td><td class="num"><div class="probbar"><div class="probfill" style="width:97.8%;background:#16a34a"></div><span>97.8%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="portugal" data-status="pass"><td class="team"><span class="flag">⚽</span>Portugal</td><td class="grp">K</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.40</td><td class="num">1.48</td><td class="num">1.34</td><td class="num"><div class="probbar"><div class="probfill" style="width:97.1%;background:#16a34a"></div><span>97.1%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="colombia" data-status="pass"><td class="team"><span class="flag">⚽</span>Colômbia</td><td class="grp">K</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.84</td><td class="num">2.02</td><td class="num">0.92</td><td class="num"><div class="probbar"><div class="probfill" style="width:97.1%;background:#16a34a"></div><span>97.1%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="senegal" data-status="pass"><td class="team"><span class="flag">⚽</span>Senegal</td><td class="grp">I</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.50</td><td class="num">1.90</td><td class="num">1.20</td><td class="num"><div class="probbar"><div class="probfill" style="width:96.9%;background:#16a34a"></div><span>96.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="belgica" data-status="pass"><td class="team"><span class="flag">⚽</span>Bélgica</td><td class="grp">G</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.30</td><td class="num">2.55</td><td class="num">0.98</td><td class="num"><div class="probbar"><div class="probfill" style="width:96.2%;background:#16a34a"></div><span>96.2%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="suecia" data-status="pass"><td class="team"><span class="flag">⚽</span>Suécia</td><td class="grp">F</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.19</td><td class="num">1.69</td><td class="num">1.09</td><td class="num"><div class="probbar"><div class="probfill" style="width:94.4%;background:#16a34a"></div><span>94.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="argelia" data-status="pass"><td class="team"><span class="flag">⚽</span>Argélia</td><td class="grp">J</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.15</td><td class="num">1.47</td><td class="num">1.11</td><td class="num"><div class="probbar"><div class="probfill" style="width:93.5%;background:#16a34a"></div><span>93.5%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="canada" data-status="pass"><td class="team"><span class="flag">⚽</span>Canadá</td><td class="grp">B</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.15</td><td class="num">2.39</td><td class="num">0.62</td><td class="num"><div class="probbar"><div class="probfill" style="width:93.2%;background:#16a34a"></div><span>93.2%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="japao" data-status="pass"><td class="team"><span class="flag">⚽</span>Japão</td><td class="grp">F</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.13</td><td class="num">1.14</td><td class="num">1.11</td><td class="num"><div class="probbar"><div class="probfill" style="width:92.2%;background:#16a34a"></div><span>92.2%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="croacia" data-status="pass"><td class="team"><span class="flag">⚽</span>Croácia</td><td class="grp">L</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.02</td><td class="num">1.05</td><td class="num">1.35</td><td class="num"><div class="probbar"><div class="probfill" style="width:92.1%;background:#16a34a"></div><span>92.1%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="egito" data-status="pass"><td class="team"><span class="flag">⚽</span>Egito</td><td class="grp">G</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.13</td><td class="num">1.63</td><td class="num">1.46</td><td class="num"><div class="probbar"><div class="probfill" style="width:90.0%;background:#16a34a"></div><span>90.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="argentina" data-status="pass"><td class="team"><span class="flag">⚽</span>Argentina</td><td class="grp">J</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.85</td><td class="num">1.32</td><td class="num">0.74</td><td class="num"><div class="probbar"><div class="probfill" style="width:89.9%;background:#16a34a"></div><span>89.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="mexico" data-status="pass"><td class="team"><span class="flag">⚽</span>México</td><td class="grp">A</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.46</td><td class="num">1.23</td><td class="num">0.88</td><td class="num"><div class="probbar"><div class="probfill" style="width:89.4%;background:#16a34a"></div><span>89.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="austria" data-status="pass"><td class="team"><span class="flag">⚽</span>Áustria</td><td class="grp">J</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">-0.16</td><td class="num">1.13</td><td class="num">1.36</td><td class="num"><div class="probbar"><div class="probfill" style="width:87.9%;background:#16a34a"></div><span>87.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="noruega" data-status="pass"><td class="team"><span class="flag">⚽</span>Noruega</td><td class="grp">I</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">-0.31</td><td class="num">1.38</td><td class="num">1.64</td><td class="num"><div class="probbar"><div class="probfill" style="width:84.4%;background:#16a34a"></div><span>84.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="bosnia e herzegovina" data-status="pass"><td class="team"><span class="flag">⚽</span>Bósnia e Herzegovina</td><td class="grp">B</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.50</td><td class="num">1.04</td><td class="num">1.49</td><td class="num"><div class="probbar"><div class="probfill" style="width:81.0%;background:#16a34a"></div><span>81.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="rd congo" data-status="pass"><td class="team"><span class="flag">⚽</span>RD Congo</td><td class="grp">K</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.32</td><td class="num">1.14</td><td class="num">1.28</td><td class="num"><div class="probbar"><div class="probfill" style="width:79.3%;background:#16a34a"></div><span>79.3%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="equador" data-status="pass"><td class="team"><span class="flag">⚽</span>Equador</td><td class="grp">E</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.42</td><td class="num">1.85</td><td class="num">1.32</td><td class="num"><div class="probbar"><div class="probfill" style="width:73.7%;background:#16a34a"></div><span>73.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="costa do marfim" data-status="pass"><td class="team"><span class="flag">⚽</span>Costa do Marfim</td><td class="grp">E</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">-0.11</td><td class="num">1.27</td><td class="num">1.44</td><td class="num"><div class="probbar"><div class="probfill" style="width:72.7%;background:#16a34a"></div><span>72.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="uruguai" data-status="pass"><td class="team"><span class="flag">⚽</span>Uruguai</td><td class="grp">H</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.70</td><td class="num">1.82</td><td class="num">0.92</td><td class="num"><div class="probbar"><div class="probfill" style="width:72.7%;background:#16a34a"></div><span>72.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="cabo verde" data-status="pass"><td class="team"><span class="flag">⚽</span>Cabo Verde</td><td class="grp">H</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.96</td><td class="num">1.05</td><td class="num">1.98</td><td class="num"><div class="probbar"><div class="probfill" style="width:68.4%;background:#16a34a"></div><span>68.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="australia" data-status="pass"><td class="team"><span class="flag">⚽</span>Austrália</td><td class="grp">D</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.39</td><td class="num">1.10</td><td class="num">1.72</td><td class="num"><div class="probbar"><div class="probfill" style="width:64.7%;background:#16a34a"></div><span>64.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="paraguai" data-status="pass"><td class="team"><span class="flag">⚽</span>Paraguai</td><td class="grp">D</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-1.06</td><td class="num">0.76</td><td class="num">2.27</td><td class="num"><div class="probbar"><div class="probfill" style="width:61.0%;background:#16a34a"></div><span>61.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="gana" data-status="pass"><td class="team"><span class="flag">⚽</span>Gana</td><td class="grp">L</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-1.02</td><td class="num">0.59</td><td class="num">1.48</td><td class="num"><div class="probbar"><div class="probfill" style="width:60.8%;background:#16a34a"></div><span>60.8%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="africa do sul" data-status="out"><td class="team"><span class="flag">⚽</span>África do Sul</td><td class="grp">A</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.38</td><td class="num">1.15</td><td class="num">1.40</td><td class="num"><div class="probbar"><div class="probfill" style="width:49.0%;background:#e11d48"></div><span>49.0%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="escocia" data-status="out"><td class="team"><span class="flag">⚽</span>Escócia</td><td class="grp">C</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.48</td><td class="num">1.06</td><td class="num">1.63</td><td class="num"><div class="probbar"><div class="probfill" style="width:43.7%;background:#e11d48"></div><span>43.7%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="ira" data-status="out"><td class="team"><span class="flag">⚽</span>Irã</td><td class="grp">G</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.26</td><td class="num">1.32</td><td class="num">1.97</td><td class="num"><div class="probbar"><div class="probfill" style="width:31.6%;background:#e11d48"></div><span>31.6%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="coreia do sul" data-status="out"><td class="team"><span class="flag">⚽</span>Coreia do Sul</td><td class="grp">A</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.24</td><td class="num">1.35</td><td class="num">1.07</td><td class="num"><div class="probbar"><div class="probfill" style="width:27.7%;background:#e11d48"></div><span>27.7%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="turquia" data-status="out"><td class="team"><span class="flag">⚽</span>Turquia</td><td class="grp">D</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.79</td><td class="num">2.52</td><td class="num">1.25</td><td class="num"><div class="probbar"><div class="probfill" style="width:27.3%;background:#e11d48"></div><span>27.3%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="panama" data-status="out"><td class="team"><span class="flag">⚽</span>Panamá</td><td class="grp">L</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.15</td><td class="num">1.18</td><td class="num">1.22</td><td class="num"><div class="probbar"><div class="probfill" style="width:25.6%;background:#e11d48"></div><span>25.6%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="arabia saudita" data-status="out"><td class="team"><span class="flag">⚽</span>Arábia Saudita</td><td class="grp">H</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.25</td><td class="num">0.75</td><td class="num">2.33</td><td class="num"><div class="probbar"><div class="probfill" style="width:21.9%;background:#e11d48"></div><span>21.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="tchequia" data-status="out"><td class="team"><span class="flag">⚽</span>Tchéquia</td><td class="grp">A</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.31</td><td class="num">1.15</td><td class="num">1.52</td><td class="num"><div class="probbar"><div class="probfill" style="width:21.6%;background:#e11d48"></div><span>21.6%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="nova zelandia" data-status="out"><td class="team"><span class="flag">⚽</span>Nova Zelândia</td><td class="grp">G</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.18</td><td class="num">1.29</td><td class="num">2.40</td><td class="num"><div class="probbar"><div class="probfill" style="width:20.3%;background:#e11d48"></div><span>20.3%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="curacao" data-status="out"><td class="team"><span class="flag">⚽</span>Curaçao</td><td class="grp">E</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.39</td><td class="num">0.97</td><td class="num">2.52</td><td class="num"><div class="probbar"><div class="probfill" style="width:17.2%;background:#e11d48"></div><span>17.2%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="iraque" data-status="out"><td class="team"><span class="flag">⚽</span>Iraque</td><td class="grp">I</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.34</td><td class="num">0.67</td><td class="num">2.30</td><td class="num"><div class="probbar"><div class="probfill" style="width:15.9%;background:#e11d48"></div><span>15.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="haiti" data-status="out"><td class="team"><span class="flag">⚽</span>Haiti</td><td class="grp">C</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.85</td><td class="num">1.05</td><td class="num">1.58</td><td class="num"><div class="probbar"><div class="probfill" style="width:15.8%;background:#e11d48"></div><span>15.8%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="catar" data-status="out"><td class="team"><span class="flag">⚽</span>Catar</td><td class="grp">B</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.36</td><td class="num">0.63</td><td class="num">2.71</td><td class="num"><div class="probbar"><div class="probfill" style="width:11.1%;background:#e11d48"></div><span>11.1%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="jordania" data-status="out"><td class="team"><span class="flag">⚽</span>Jordânia</td><td class="grp">J</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.84</td><td class="num">0.94</td><td class="num">1.65</td><td class="num"><div class="probbar"><div class="probfill" style="width:9.9%;background:#e11d48"></div><span>9.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="tunisia" data-status="out"><td class="team"><span class="flag">⚽</span>Tunísia</td><td class="grp">F</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.85</td><td class="num">0.73</td><td class="num">1.76</td><td class="num"><div class="probbar"><div class="probfill" style="width:9.2%;background:#e11d48"></div><span>9.2%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="uzbequistao" data-status="out"><td class="team"><span class="flag">⚽</span>Uzbequistão</td><td class="grp">K</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.92</td><td class="num">0.76</td><td class="num">1.85</td><td class="num"><div class="probbar"><div class="probfill" style="width:8.9%;background:#e11d48"></div><span>8.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr></tbody></table></div>
+</section>
+<section id="conclusoes">
+  <h2>🏁 Conclusões <span class="tag t-v">síntese</span></h2>
+  <p>A análise identificou quatro perfis principais. O grupo de <b>Elite</b> concentra equipes com maior score ajustado e melhor equilíbrio entre ataque e defesa. As <b>Competitivas</b> brigam, mas com menos dominância. As <b>Intermediárias</b> formam um grupo equilibrado, e o <b>Baixo desempenho</b> reúne as equipes mais frágeis.</p>
+  <p>A rede de similaridade complementa os perfis ao mostrar quais seleções se aproximam estatisticamente. A predição transforma os indicadores em probabilidade de passar do mata-mata.</p>
+  <div class="insight"><b>Nota metodológica:</b> como a base representa uma fase curta do torneio, o modelo preditivo deve ser lido como protótipo analítico. Para previsões mais robustas, o ideal seria combinar várias edições da Copa e dados jogo a jogo.</div>
+</section>
+<div class="footer">Relatório gerado com Python, Pandas, Scikit-learn, NetworkX e ECharts • Copa do Mundo 2026 🇨🇦🇲🇽🇺🇸</div></main><script>
+const CORR={"labels": ["xG / jogo", "xGA / jogo", "Saldo xG", "Gols feitos", "Gols sofridos", "Score ajustado", "Ranking FIFA", "Dif. p/ adversários"], "data": [[0, 0, 1.0], [1, 0, -0.71], [2, 0, 0.92], [3, 0, 0.58], [4, 0, -0.46], [5, 0, 0.89], [6, 0, -0.66], [7, 0, 0.68], [0, 1, -0.71], [1, 1, 1.0], [2, 1, -0.92], [3, 1, -0.61], [4, 1, 0.61], [5, 1, -0.9], [6, 1, 0.72], [7, 1, -0.71], [0, 2, 0.92], [1, 2, -0.92], [2, 2, 1.0], [3, 2, 0.65], [4, 2, -0.58], [5, 2, 0.97], [6, 2, -0.75], [7, 2, 0.76], [0, 3, 0.58], [1, 3, -0.61], [2, 3, 0.65], [3, 3, 1.0], [4, 3, -0.3], [5, 3, 0.68], [6, 3, -0.62], [7, 3, 0.64], [0, 4, -0.46], [1, 4, 0.61], [2, 4, -0.58], [3, 4, -0.3], [4, 4, 1.0], [5, 4, -0.64], [6, 4, 0.6], [7, 4, -0.64], [0, 5, 0.89], [1, 5, -0.9], [2, 5, 0.97], [3, 5, 0.68], [4, 5, -0.64], [5, 5, 1.0], [6, 5, -0.86], [7, 5, 0.89], [0, 6, -0.66], [1, 6, 0.72], [2, 6, -0.75], [3, 6, -0.62], [4, 6, 0.6], [5, 6, -0.86], [6, 6, 1.0], [7, 6, -0.96], [0, 7, 0.68], [1, 7, -0.71], [2, 7, 0.76], [3, 7, 0.64], [4, 7, -0.64], [5, 7, 0.89], [6, 7, -0.96], [7, 7, 1.0]]}, PCA=[{"name": "Elite", "type": "scatter", "color": "#16a34a", "data": [{"value": [1.814, -1.037], "name": "México", "symbolSize": 31.7, "cluster": "Elite", "score": 0.46, "prob": 89.4}, {"value": [2.149, 0.27], "name": "Suíça", "symbolSize": 33.7, "cluster": "Elite", "score": 0.71, "prob": 98.8}, {"value": [3.231, 1.104], "name": "Canadá", "symbolSize": 37.2, "cluster": "Elite", "score": 1.15, "prob": 93.2}, {"value": [2.065, -0.518], "name": "Brasil", "symbolSize": 32.2, "cluster": "Elite", "score": 0.53, "prob": 97.8}, {"value": [2.425, -0.037], "name": "Marrocos", "symbolSize": 34.5, "cluster": "Elite", "score": 0.81, "prob": 99.7}, {"value": [2.169, 0.766], "name": "Estados Unidos", "symbolSize": 33.4, "cluster": "Elite", "score": 0.67, "prob": 99.6}, {"value": [1.794, 0.554], "name": "Turquia", "symbolSize": 34.3, "cluster": "Elite", "score": 0.79, "prob": 27.3}, {"value": [3.332, 1.27], "name": "Alemanha", "symbolSize": 36.6, "cluster": "Elite", "score": 1.07, "prob": 99.6}, {"value": [2.108, 0.977], "name": "Países Baixos", "symbolSize": 32.2, "cluster": "Elite", "score": 0.53, "prob": 98.4}, {"value": [3.62, 0.246], "name": "Bélgica", "symbolSize": 38.4, "cluster": "Elite", "score": 1.3, "prob": 96.2}, {"value": [4.198, -0.762], "name": "Espanha", "symbolSize": 40.1, "cluster": "Elite", "score": 1.51, "prob": 99.9}, {"value": [1.709, -0.209], "name": "Uruguai", "symbolSize": 33.6, "cluster": "Elite", "score": 0.7, "prob": 72.7}, {"value": [3.754, 0.633], "name": "França", "symbolSize": 37.2, "cluster": "Elite", "score": 1.15, "prob": 100.0}, {"value": [1.659, 1.329], "name": "Senegal", "symbolSize": 32.0, "cluster": "Elite", "score": 0.5, "prob": 96.9}, {"value": [2.929, -0.502], "name": "Argentina", "symbolSize": 34.8, "cluster": "Elite", "score": 0.85, "prob": 89.9}, {"value": [2.453, -0.645], "name": "Colômbia", "symbolSize": 34.7, "cluster": "Elite", "score": 0.84, "prob": 97.1}, {"value": [1.672, -0.79], "name": "Portugal", "symbolSize": 31.2, "cluster": "Elite", "score": 0.4, "prob": 97.1}, {"value": [3.335, -0.079], "name": "Inglaterra", "symbolSize": 37.3, "cluster": "Elite", "score": 1.16, "prob": 99.6}]}, {"name": "Competitivas", "type": "scatter", "color": "#2563eb", "data": [{"value": [-1.334, -0.742], "name": "África do Sul", "symbolSize": 25.0, "cluster": "Competitivas", "score": -0.38, "prob": 49.0}, {"value": [-1.208, -0.207], "name": "Tchéquia", "symbolSize": 25.5, "cluster": "Competitivas", "score": -0.31, "prob": 21.6}, {"value": [-1.62, 0.534], "name": "Bósnia e Herzegovina", "symbolSize": 24.0, "cluster": "Competitivas", "score": -0.5, "prob": 81.0}, {"value": [-1.549, -0.951], "name": "Escócia", "symbolSize": 24.2, "cluster": "Competitivas", "score": -0.48, "prob": 43.7}, {"value": [-0.881, -1.371], "name": "Austrália", "symbolSize": 24.9, "cluster": "Competitivas", "score": -0.39, "prob": 64.7}, {"value": [-2.792, -1.061], "name": "Paraguai", "symbolSize": 19.5, "cluster": "Competitivas", "score": -1.06, "prob": 61.0}, {"value": [-0.552, -1.383], "name": "Irã", "symbolSize": 25.9, "cluster": "Competitivas", "score": -0.26, "prob": 31.6}, {"value": [-2.631, -1.036], "name": "Cabo Verde", "symbolSize": 20.3, "cluster": "Competitivas", "score": -0.96, "prob": 68.4}, {"value": [-0.747, -0.41], "name": "RD Congo", "symbolSize": 25.4, "cluster": "Competitivas", "score": -0.32, "prob": 79.3}, {"value": [-2.807, -1.178], "name": "Gana", "symbolSize": 19.8, "cluster": "Competitivas", "score": -1.02, "prob": 60.8}, {"value": [-0.751, -1.048], "name": "Panamá", "symbolSize": 26.8, "cluster": "Competitivas", "score": -0.15, "prob": 25.6}]}, {"name": "Intermediárias", "type": "scatter", "color": "#f59e0b", "data": [{"value": [0.511, -0.898], "name": "Coreia do Sul", "symbolSize": 29.9, "cluster": "Intermediárias", "score": 0.24, "prob": 27.7}, {"value": [-0.088, -0.784], "name": "Costa do Marfim", "symbolSize": 27.1, "cluster": "Intermediárias", "score": -0.11, "prob": 72.7}, {"value": [1.033, -0.88], "name": "Equador", "symbolSize": 31.4, "cluster": "Intermediárias", "score": 0.42, "prob": 73.7}, {"value": [0.888, -0.109], "name": "Japão", "symbolSize": 29.0, "cluster": "Intermediárias", "score": 0.13, "prob": 92.2}, {"value": [0.511, 1.504], "name": "Suécia", "symbolSize": 29.5, "cluster": "Intermediárias", "score": 0.19, "prob": 94.4}, {"value": [0.504, -0.581], "name": "Egito", "symbolSize": 29.0, "cluster": "Intermediárias", "score": 0.13, "prob": 90.0}, {"value": [-0.466, 1.354], "name": "Noruega", "symbolSize": 25.5, "cluster": "Intermediárias", "score": -0.31, "prob": 84.4}, {"value": [-0.2, 0.483], "name": "Áustria", "symbolSize": 26.7, "cluster": "Intermediárias", "score": -0.16, "prob": 87.9}, {"value": [0.292, 0.85], "name": "Argélia", "symbolSize": 29.2, "cluster": "Intermediárias", "score": 0.15, "prob": 93.5}, {"value": [0.284, -0.195], "name": "Croácia", "symbolSize": 28.2, "cluster": "Intermediárias", "score": 0.02, "prob": 92.1}]}, {"name": "Baixo desempenho", "type": "scatter", "color": "#e11d48", "data": [{"value": [-4.299, 0.32], "name": "Catar", "symbolSize": 17.1, "cluster": "Baixo desempenho", "score": -1.36, "prob": 11.1}, {"value": [-3.084, 0.677], "name": "Haiti", "symbolSize": 21.2, "cluster": "Baixo desempenho", "score": -0.85, "prob": 15.8}, {"value": [-4.601, 0.453], "name": "Curaçao", "symbolSize": 16.9, "cluster": "Baixo desempenho", "score": -1.39, "prob": 17.2}, {"value": [-3.019, 1.05], "name": "Tunísia", "symbolSize": 21.2, "cluster": "Baixo desempenho", "score": -0.85, "prob": 9.2}, {"value": [-3.877, 1.577], "name": "Nova Zelândia", "symbolSize": 18.6, "cluster": "Baixo desempenho", "score": -1.18, "prob": 20.3}, {"value": [-3.666, -0.846], "name": "Arábia Saudita", "symbolSize": 18.0, "cluster": "Baixo desempenho", "score": -1.25, "prob": 21.9}, {"value": [-4.41, 0.84], "name": "Iraque", "symbolSize": 17.3, "cluster": "Baixo desempenho", "score": -1.34, "prob": 15.9}, {"value": [-2.703, 0.614], "name": "Jordânia", "symbolSize": 21.3, "cluster": "Baixo desempenho", "score": -0.84, "prob": 9.9}, {"value": [-3.153, 0.853], "name": "Uzbequistão", "symbolSize": 20.6, "cluster": "Baixo desempenho", "score": -0.92, "prob": 8.9}]}, {"name": "Centro do grupo", "type": "centroid", "color": "#0b1f3a", "data": [[-1.534, -0.805], [2.579, 0.143], [0.327, 0.074], [-3.646, 0.615]]}], NET={"nodes": [{"id": "Mexico", "name": "México", "symbolSize": 25.6, "category": 0, "cluster": "Elite", "deg": 1, "value": 0.46}, {"id": "Switzerland", "name": "Suíça", "symbolSize": 50.8, "category": 0, "cluster": "Elite", "deg": 8, "value": 0.71}, {"id": "Canada", "name": "Canadá", "symbolSize": 32.8, "category": 0, "cluster": "Elite", "deg": 3, "value": 1.15}, {"id": "Brazil", "name": "Brasil", "symbolSize": 32.8, "category": 0, "cluster": "Elite", "deg": 3, "value": 0.53}, {"id": "Morocco", "name": "Marrocos", "symbolSize": 50.8, "category": 0, "cluster": "Elite", "deg": 8, "value": 0.81}, {"id": "United States", "name": "Estados Unidos", "symbolSize": 43.6, "category": 0, "cluster": "Elite", "deg": 6, "value": 0.67}, {"id": "Turkey", "name": "Turquia", "symbolSize": 22.0, "category": 0, "cluster": "Elite", "deg": 0, "value": 0.79}, {"id": "Germany", "name": "Alemanha", "symbolSize": 47.2, "category": 0, "cluster": "Elite", "deg": 7, "value": 1.07}, {"id": "Netherlands", "name": "Países Baixos", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.53}, {"id": "Belgium", "name": "Bélgica", "symbolSize": 43.6, "category": 0, "cluster": "Elite", "deg": 6, "value": 1.3}, {"id": "Spain", "name": "Espanha", "symbolSize": 43.6, "category": 0, "cluster": "Elite", "deg": 6, "value": 1.51}, {"id": "Uruguay", "name": "Uruguai", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.7}, {"id": "France", "name": "França", "symbolSize": 50.8, "category": 0, "cluster": "Elite", "deg": 8, "value": 1.15}, {"id": "Senegal", "name": "Senegal", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.5}, {"id": "Argentina", "name": "Argentina", "symbolSize": 40.0, "category": 0, "cluster": "Elite", "deg": 5, "value": 0.85}, {"id": "Colombia", "name": "Colômbia", "symbolSize": 36.4, "category": 0, "cluster": "Elite", "deg": 4, "value": 0.84}, {"id": "Portugal", "name": "Portugal", "symbolSize": 29.2, "category": 0, "cluster": "Elite", "deg": 2, "value": 0.4}, {"id": "England", "name": "Inglaterra", "symbolSize": 47.2, "category": 0, "cluster": "Elite", "deg": 7, "value": 1.16}], "links": [{"source": "Canada", "target": "United States"}, {"source": "Switzerland", "target": "United States"}, {"source": "Argentina", "target": "Brazil"}, {"source": "Morocco", "target": "United States"}, {"source": "England", "target": "Morocco"}, {"source": "England", "target": "France"}, {"source": "Belgium", "target": "Morocco"}, {"source": "Senegal", "target": "United States"}, {"source": "England", "target": "Spain"}, {"source": "Colombia", "target": "Spain"}, {"source": "France", "target": "Switzerland"}, {"source": "Germany", "target": "Switzerland"}, {"source": "Belgium", "target": "Spain"}, {"source": "Belgium", "target": "Colombia"}, {"source": "Colombia", "target": "Uruguay"}, {"source": "France", "target": "United States"}, {"source": "Spain", "target": "Uruguay"}, {"source": "Germany", "target": "United States"}, {"source": "France", "target": "Netherlands"}, {"source": "Germany", "target": "Netherlands"}, {"source": "Argentina", "target": "Morocco"}, {"source": "Argentina", "target": "France"}, {"source": "Colombia", "target": "England"}, {"source": "England", "target": "Switzerland"}, {"source": "Belgium", "target": "Canada"}, {"source": "Spain", "target": "Switzerland"}, {"source": "Morocco", "target": "Spain"}, {"source": "Argentina", "target": "Portugal"}, {"source": "Brazil", "target": "France"}, {"source": "Belgium", "target": "England"}, {"source": "France", "target": "Germany"}, {"source": "France", "target": "Morocco"}, {"source": "Belgium", "target": "Switzerland"}, {"source": "Germany", "target": "Senegal"}, {"source": "Brazil", "target": "Portugal"}, {"source": "Germany", "target": "Morocco"}, {"source": "Argentina", "target": "Mexico"}, {"source": "Canada", "target": "Switzerland"}, {"source": "England", "target": "Germany"}, {"source": "Morocco", "target": "Switzerland"}], "categories": [{"name": "Elite"}, {"name": "Competitivas"}, {"name": "Intermediárias"}, {"name": "Baixo desempenho"}], "colors": ["#16a34a", "#2563eb", "#f59e0b", "#e11d48"]}, PROB={"names": ["Uzbequistão", "Tunísia", "Jordânia", "Catar", "Haiti", "Iraque", "Curaçao", "Nova Zelândia", "Tchéquia", "Arábia Saudita", "Panamá", "Turquia", "Coreia do Sul", "Irã", "Escócia", "África do Sul", "Gana", "Paraguai", "Austrália", "Cabo Verde", "Uruguai", "Costa do Marfim", "Equador", "RD Congo", "Bósnia e Herzegovina", "Noruega", "Áustria", "México", "Argentina", "Egito", "Croácia", "Japão", "Canadá", "Argélia", "Suécia", "Bélgica", "Senegal", "Colômbia", "Portugal", "Brasil", "Países Baixos", "Suíça", "Inglaterra", "Estados Unidos", "Alemanha", "Marrocos", "Espanha", "França"], "values": [8.9, 9.2, 9.9, 11.1, 15.8, 15.9, 17.2, 20.3, 21.6, 21.9, 25.6, 27.3, 27.7, 31.6, 43.7, 49.0, 60.8, 61.0, 64.7, 68.4, 72.7, 72.7, 73.7, 79.3, 81.0, 84.4, 87.9, 89.4, 89.9, 90.0, 92.1, 92.2, 93.2, 93.5, 94.4, 96.2, 96.9, 97.1, 97.1, 97.8, 98.4, 98.8, 99.6, 99.6, 99.6, 99.7, 99.9, 100.0], "colors": ["#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#e11d48", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a", "#16a34a"]}, QUAD={"data": [{"value": [1.99, 0.8], "name": "França", "cluster": "Elite", "prob": 100.0, "symbolSize": 24.5, "color": "#16a34a"}, {"value": [2.16, 0.55], "name": "Espanha", "cluster": "Elite", "prob": 99.9, "symbolSize": 24.5, "color": "#16a34a"}, {"value": [1.75, 0.95], "name": "Marrocos", "cluster": "Elite", "prob": 99.7, "symbolSize": 24.5, "color": "#16a34a"}, {"value": [2.14, 0.95], "name": "Alemanha", "cluster": "Elite", "prob": 99.6, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [1.75, 0.89], "name": "Estados Unidos", "cluster": "Elite", "prob": 99.6, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [2.12, 0.88], "name": "Inglaterra", "cluster": "Elite", "prob": 99.6, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [1.78, 1.03], "name": "Suíça", "cluster": "Elite", "prob": 98.8, "symbolSize": 24.4, "color": "#16a34a"}, {"value": [1.78, 1.38], "name": "Países Baixos", "cluster": "Elite", "prob": 98.4, "symbolSize": 24.3, "color": "#16a34a"}, {"value": [1.59, 1.28], "name": "Brasil", "cluster": "Elite", "prob": 97.8, "symbolSize": 24.2, "color": "#16a34a"}, {"value": [1.48, 1.34], "name": "Portugal", "cluster": "Elite", "prob": 97.1, "symbolSize": 24.1, "color": "#16a34a"}, {"value": [2.02, 0.92], "name": "Colômbia", "cluster": "Elite", "prob": 97.1, "symbolSize": 24.1, "color": "#16a34a"}, {"value": [1.9, 1.2], "name": "Senegal", "cluster": "Elite", "prob": 96.9, "symbolSize": 24.1, "color": "#16a34a"}, {"value": [2.55, 0.98], "name": "Bélgica", "cluster": "Elite", "prob": 96.2, "symbolSize": 24.0, "color": "#16a34a"}, {"value": [1.69, 1.09], "name": "Suécia", "cluster": "Intermediárias", "prob": 94.4, "symbolSize": 23.8, "color": "#f59e0b"}, {"value": [1.47, 1.11], "name": "Argélia", "cluster": "Intermediárias", "prob": 93.5, "symbolSize": 23.7, "color": "#f59e0b"}, {"value": [2.39, 0.62], "name": "Canadá", "cluster": "Elite", "prob": 93.2, "symbolSize": 23.6, "color": "#16a34a"}, {"value": [1.14, 1.11], "name": "Japão", "cluster": "Intermediárias", "prob": 92.2, "symbolSize": 23.5, "color": "#f59e0b"}, {"value": [1.05, 1.35], "name": "Croácia", "cluster": "Intermediárias", "prob": 92.1, "symbolSize": 23.5, "color": "#f59e0b"}, {"value": [1.63, 1.46], "name": "Egito", "cluster": "Intermediárias", "prob": 90.0, "symbolSize": 23.2, "color": "#f59e0b"}, {"value": [1.32, 0.74], "name": "Argentina", "cluster": "Elite", "prob": 89.9, "symbolSize": 23.2, "color": "#16a34a"}, {"value": [1.23, 0.88], "name": "México", "cluster": "Elite", "prob": 89.4, "symbolSize": 23.2, "color": "#16a34a"}, {"value": [1.13, 1.36], "name": "Áustria", "cluster": "Intermediárias", "prob": 87.9, "symbolSize": 23.0, "color": "#f59e0b"}, {"value": [1.38, 1.64], "name": "Noruega", "cluster": "Intermediárias", "prob": 84.4, "symbolSize": 22.6, "color": "#f59e0b"}, {"value": [1.04, 1.49], "name": "Bósnia e Herzegovina", "cluster": "Competitivas", "prob": 81.0, "symbolSize": 22.1, "color": "#2563eb"}, {"value": [1.14, 1.28], "name": "RD Congo", "cluster": "Competitivas", "prob": 79.3, "symbolSize": 21.9, "color": "#2563eb"}, {"value": [1.85, 1.32], "name": "Equador", "cluster": "Intermediárias", "prob": 73.7, "symbolSize": 21.2, "color": "#f59e0b"}, {"value": [1.27, 1.44], "name": "Costa do Marfim", "cluster": "Intermediárias", "prob": 72.7, "symbolSize": 21.1, "color": "#f59e0b"}, {"value": [1.82, 0.92], "name": "Uruguai", "cluster": "Elite", "prob": 72.7, "symbolSize": 21.1, "color": "#16a34a"}, {"value": [1.05, 1.98], "name": "Cabo Verde", "cluster": "Competitivas", "prob": 68.4, "symbolSize": 20.6, "color": "#2563eb"}, {"value": [1.1, 1.72], "name": "Austrália", "cluster": "Competitivas", "prob": 64.7, "symbolSize": 20.1, "color": "#2563eb"}, {"value": [0.76, 2.27], "name": "Paraguai", "cluster": "Competitivas", "prob": 61.0, "symbolSize": 19.6, "color": "#2563eb"}, {"value": [0.59, 1.48], "name": "Gana", "cluster": "Competitivas", "prob": 60.8, "symbolSize": 19.6, "color": "#2563eb"}, {"value": [1.15, 1.4], "name": "África do Sul", "cluster": "Competitivas", "prob": 49.0, "symbolSize": 18.1, "color": "#2563eb"}, {"value": [1.06, 1.63], "name": "Escócia", "cluster": "Competitivas", "prob": 43.7, "symbolSize": 17.5, "color": "#2563eb"}, {"value": [1.32, 1.97], "name": "Irã", "cluster": "Competitivas", "prob": 31.6, "symbolSize": 15.9, "color": "#2563eb"}, {"value": [1.35, 1.07], "name": "Coreia do Sul", "cluster": "Intermediárias", "prob": 27.7, "symbolSize": 15.5, "color": "#f59e0b"}, {"value": [2.52, 1.25], "name": "Turquia", "cluster": "Elite", "prob": 27.3, "symbolSize": 15.4, "color": "#16a34a"}, {"value": [1.18, 1.22], "name": "Panamá", "cluster": "Competitivas", "prob": 25.6, "symbolSize": 15.2, "color": "#2563eb"}, {"value": [0.75, 2.33], "name": "Arábia Saudita", "cluster": "Baixo desempenho", "prob": 21.9, "symbolSize": 14.7, "color": "#e11d48"}, {"value": [1.15, 1.52], "name": "Tchéquia", "cluster": "Competitivas", "prob": 21.6, "symbolSize": 14.7, "color": "#2563eb"}, {"value": [1.29, 2.4], "name": "Nova Zelândia", "cluster": "Baixo desempenho", "prob": 20.3, "symbolSize": 14.5, "color": "#e11d48"}, {"value": [0.97, 2.52], "name": "Curaçao", "cluster": "Baixo desempenho", "prob": 17.2, "symbolSize": 14.2, "color": "#e11d48"}, {"value": [0.67, 2.3], "name": "Iraque", "cluster": "Baixo desempenho", "prob": 15.9, "symbolSize": 14.0, "color": "#e11d48"}, {"value": [1.05, 1.58], "name": "Haiti", "cluster": "Baixo desempenho", "prob": 15.8, "symbolSize": 14.0, "color": "#e11d48"}, {"value": [0.63, 2.71], "name": "Catar", "cluster": "Baixo desempenho", "prob": 11.1, "symbolSize": 13.4, "color": "#e11d48"}, {"value": [0.94, 1.65], "name": "Jordânia", "cluster": "Baixo desempenho", "prob": 9.9, "symbolSize": 13.2, "color": "#e11d48"}, {"value": [0.73, 1.76], "name": "Tunísia", "cluster": "Baixo desempenho", "prob": 9.2, "symbolSize": 13.2, "color": "#e11d48"}, {"value": [0.76, 1.85], "name": "Uzbequistão", "cluster": "Baixo desempenho", "prob": 8.9, "symbolSize": 13.1, "color": "#e11d48"}], "medx": 1.31, "medy": 1.35}, DONUT=[{"name": "Elite", "value": 18, "itemStyle": {"color": "#16a34a"}}, {"name": "Competitivas", "value": 11, "itemStyle": {"color": "#2563eb"}}, {"name": "Intermediárias", "value": 10, "itemStyle": {"color": "#f59e0b"}}, {"name": "Baixo desempenho", "value": 9, "itemStyle": {"color": "#e11d48"}}];
+const FONT="Inter, system-ui, sans-serif";
+const CL_COLORS={"Elite":"#16a34a","Competitivas":"#2563eb","Intermediárias":"#f59e0b","Baixo desempenho":"#e11d48"};
+
+/* 1. CORRELACAO */
+(function(){
+  const ch=echarts.init(document.getElementById('plot_corr'));
+  ch.setOption({
+    tooltip:{position:'top',backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},
+      formatter:p=>`${CORR.labels[p.data[1]]} \u00d7 ${CORR.labels[p.data[0]]}<br><b>r = ${p.data[2]}</b>`},
+    grid:{left:135,right:30,top:30,bottom:120},
+    xAxis:{type:'category',data:CORR.labels,axisLabel:{rotate:38,fontFamily:FONT,color:'#5b6b82'},splitArea:{show:true},axisLine:{show:false},axisTick:{show:false}},
+    yAxis:{type:'category',data:CORR.labels,inverse:true,axisLabel:{fontFamily:FONT,color:'#5b6b82'},splitArea:{show:true},axisLine:{show:false},axisTick:{show:false}},
+    visualMap:{min:-1,max:1,calculable:true,orient:'vertical',right:0,top:'center',itemHeight:280,text:['+1 forte','-1 forte'],textStyle:{fontFamily:FONT,color:'#5b6b82'},inRange:{color:['#b91c1c','#f87171','#fef3c7','#86efac','#15803d']}},
+    series:[{type:'heatmap',data:CORR.data,label:{show:true,fontFamily:FONT,fontSize:12,fontWeight:600,color:p=>Math.abs(p.data[2])>0.6?'#fff':'#0a1a3f',formatter:p=>p.data[2].toFixed(2)},itemStyle:{borderColor:'#fff',borderWidth:3,borderRadius:4},emphasis:{itemStyle:{shadowBlur:14,shadowColor:'rgba(0,0,0,.35)'}}}],
+    animationDuration:900,animationEasing:'cubicOut'});
+  window.addEventListener('resize',()=>ch.resize());
+})();
+
+/* 2. PCA */
+(function(){
+  const ch=echarts.init(document.getElementById('plot_pca'));
+  const series=PCA.map(s=>{
+    if(s.type==='centroid')return {name:s.name,type:'scatter',symbol:'diamond',symbolSize:22,itemStyle:{color:s.color,borderColor:'#fff',borderWidth:2},data:s.data,z:5,tooltip:{show:false},silent:true};
+    return {name:s.name,type:'scatter',color:s.color,data:s.data,itemStyle:{borderColor:'#fff',borderWidth:2,shadowBlur:8,shadowColor:'rgba(0,0,0,.12)',opacity:0.9},emphasis:{focus:'series',itemStyle:{shadowBlur:18,shadowColor:s.color}},labelLayout:{hideOverlap:true},label:{show:true,position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:10,color:'#0a1a3f'}};
+  });
+  ch.setOption({
+    tooltip:{backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:p=>p.data.name?`<b>${p.data.name}</b><br>Perfil: ${p.data.cluster}<br>Score: ${p.data.score}<br>Prob. mata-mata: ${p.data.prob}%`:''},
+    legend:{bottom:0,textStyle:{fontFamily:FONT,color:'#5b6b82'},icon:'circle'},
+    grid:{left:60,right:40,top:30,bottom:70},
+    xAxis:{name:'\u2190 menor desempenho   |   maior desempenho \u2192',nameLocation:'middle',nameGap:34,nameTextStyle:{fontFamily:FONT,color:'#5b6b82',fontSize:12},splitLine:{lineStyle:{color:'#eef2f7'}},axisLine:{lineStyle:{color:'#cbd5e1'}}},
+    yAxis:{name:'contraste ataque \u00d7 defesa',nameLocation:'middle',nameGap:40,nameTextStyle:{fontFamily:FONT,color:'#5b6b82',fontSize:12},splitLine:{lineStyle:{color:'#eef2f7'}},axisLine:{lineStyle:{color:'#cbd5e1'}}},
+    series:series,animationDuration:900,animationEasing:'elasticOut'});
+  window.addEventListener('resize',()=>ch.resize());
+})();
+
+/* 3. DONUT (distribuicao de perfis) */
+(function(){
+  const ch=echarts.init(document.getElementById('plot_donut'));
+  ch.setOption({
+    tooltip:{trigger:'item',backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:'{b}: {c} seleções ({d}%)'},
+    legend:{bottom:0,textStyle:{fontFamily:FONT,color:'#5b6b82'},icon:'circle'},
+    series:[{type:'pie',radius:['45%','72%'],center:['50%','45%'],avoidLabelOverlap:true,
+      itemStyle:{borderColor:'#fff',borderWidth:3},
+      label:{show:true,formatter:'{c}',fontFamily:FONT,fontWeight:800,fontSize:18,color:'#0a1a3f'},
+      emphasis:{scale:true,scaleSize:8,label:{fontSize:20}},data:DONUT}],
+    animationType:'scale',animationEasing:'elasticOut',animationDuration:1000});
+  window.addEventListener('resize',()=>ch.resize());
+})();
+
+/* 4. QUADRANTE Ataque x Defesa */
+(function(){
+  const ch=echarts.init(document.getElementById('plot_quad'));
+  const byCl={};
+  QUAD.data.forEach(d=>{(byCl[d.cluster]=byCl[d.cluster]||[]).push(d);});
+  const series=Object.keys(byCl).map(cl=>({
+    name:cl,type:'scatter',color:CL_COLORS[cl],data:byCl[cl],
+    itemStyle:{borderColor:'#fff',borderWidth:1.5,opacity:0.88,shadowBlur:6,shadowColor:'rgba(0,0,0,.1)'},
+    emphasis:{focus:'series'},labelLayout:{hideOverlap:true},
+    label:{show:true,position:'top',formatter:p=>p.data.name,fontFamily:FONT,fontSize:9,color:'#0a1a3f'}
+  }));
+  ch.setOption({
+    tooltip:{backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:p=>`<b>${p.data.name}</b><br>xG criado: ${p.data.value[0]}<br>xGA cedido: ${p.data.value[1]}<br>Prob. mata-mata: ${p.data.prob}%`},
+    legend:{bottom:0,textStyle:{fontFamily:FONT,color:'#5b6b82'},icon:'circle'},
+    grid:{left:60,right:40,top:30,bottom:70},
+    xAxis:{name:'xG criado por jogo \u2192 (ataque)',nameLocation:'middle',nameGap:32,nameTextStyle:{fontFamily:FONT,color:'#5b6b82',fontSize:12},splitLine:{lineStyle:{color:'#eef2f7'}},axisLine:{lineStyle:{color:'#cbd5e1'}}},
+    yAxis:{name:'\u2190 xGA cedido por jogo (defesa)',nameLocation:'middle',nameGap:40,inverse:true,nameTextStyle:{fontFamily:FONT,color:'#5b6b82',fontSize:12},splitLine:{lineStyle:{color:'#eef2f7'}},axisLine:{lineStyle:{color:'#cbd5e1'}}},
+    series:series.concat([{type:'scatter',data:[],markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#94a3b8',width:1.5},
+      data:[{xAxis:QUAD.medx},{yAxis:QUAD.medy}],label:{show:false}}}]),
+    animationDuration:900,animationEasing:'cubicOut'});
+  window.addEventListener('resize',()=>ch.resize());
+})();
+
+/* 5. REDE com toggle force/circular */
+let netChart, netMode='force';
+function buildNet(mode){
+  const opt={
+    tooltip:{backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:p=>p.dataType==='node'?`<b>${p.data.name}</b><br>Perfil: ${p.data.cluster}<br>Conex\u00f5es fortes: ${p.data.deg}`:''},
+    legend:{data:NET.categories.map(c=>c.name),bottom:0,textStyle:{fontFamily:FONT,color:'#5b6b82'},icon:'circle'},
+    color:NET.colors,
+    series:[{
+      type:'graph',layout:mode==='force'?'force':'circular',roam:true,
+      circular:{rotateLabel:true},
+      force:{repulsion:420,edgeLength:[60,140],gravity:0.08,friction:0.18},
+      data:NET.nodes,links:NET.links,categories:NET.categories,
+      label:{show:true,position:mode==='circular'?'right':'right',fontFamily:FONT,fontSize:11,color:'#0a1a3f',fontWeight:600},
+      lineStyle:{color:'#cbd5e1',width:1.3,opacity:0.55,curveness:mode==='circular'?0.3:0.1},
+      emphasis:{focus:'adjacency',lineStyle:{width:2.6,color:'#64748b',opacity:0.95},label:{fontSize:13}},
+      itemStyle:{borderColor:'#fff',borderWidth:2,shadowBlur:8,shadowColor:'rgba(0,0,0,.12)'}
+    }],
+    animationDuration:1000,animationEasingUpdate:'cubicInOut'};
+  netChart.setOption(opt,true);
+}
+function setNetMode(m){
+  netMode=m;
+  document.getElementById('btn-force').classList.toggle('active',m==='force');
+  document.getElementById('btn-circular').classList.toggle('active',m==='circular');
+  buildNet(m);
+}
+(function(){
+  netChart=echarts.init(document.getElementById('plot_net'));
+  buildNet('force');
+  window.addEventListener('resize',()=>netChart.resize());
+})();
+
+/* 6. PROBABILIDADE */
+(function(){
+  const ch=echarts.init(document.getElementById('plot_prob'));
+  ch.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#0a1a3f',borderWidth:0,textStyle:{color:'#fff'},formatter:p=>`<b>${p[0].name}</b><br>Prob. de passar do mata-mata: ${p[0].value}%`},
+    grid:{left:120,right:50,top:20,bottom:40},
+    xAxis:{type:'value',max:105,name:'probabilidade (%)',nameLocation:'middle',nameGap:28,nameTextStyle:{fontFamily:FONT,color:'#5b6b82'},splitLine:{lineStyle:{color:'#eef2f7'}},axisLabel:{fontFamily:FONT,color:'#5b6b82'}},
+    yAxis:{type:'category',data:PROB.names,axisLabel:{fontFamily:FONT,color:'#0a1a3f',fontWeight:600},axisLine:{show:false},axisTick:{show:false}},
+    series:[{type:'bar',data:PROB.values.map((v,i)=>({value:v,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:PROB.colors[i]+'aa'},{offset:1,color:PROB.colors[i]}]),borderRadius:[0,6,6,0]}})),barWidth:'62%',label:{show:true,position:'right',formatter:p=>p.value+'%',fontFamily:FONT,fontWeight:700,color:'#0a1a3f'},emphasis:{itemStyle:{shadowBlur:12,shadowColor:'rgba(0,0,0,.25)'}}}],
+    animationDuration:1100,animationEasing:'cubicOut',animationDelay:i=>i*30});
+  window.addEventListener('resize',()=>ch.resize());
+})();
+
+/* ===== UX: progress bar + active nav + table filter ===== */
+(function(){
+  const bar=document.getElementById('progress');
+  const navLinks=Array.from(document.querySelectorAll('.nav a'));
+  const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function onScroll(){
+    const st=window.scrollY||document.documentElement.scrollTop;
+    const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+    bar.style.width=(h>0?(st/h*100):0)+'%';
+    let cur=sections[0];
+    for(const s of sections){ if(s.getBoundingClientRect().top<=120) cur=s; }
+    navLinks.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+(cur&&cur.id)));
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll); onScroll();
+})();
+
+let curFilter='all';
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function setFilter(btn,f){
+  curFilter=f;
+  document.querySelectorAll('.fchip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterTable();
+}
+function filterTable(){
+  const q=norm(document.getElementById('tblSearch').value.trim());
+  const rows=document.querySelectorAll('.data-table tbody tr[data-name]');
+  let shown=0;
+  rows.forEach(r=>{
+    const okText=!q||r.dataset.name.includes(q);
+    const okFilter=curFilter==='all'||r.dataset.status===curFilter;
+    const vis=okText&&okFilter;
+    r.classList.toggle('hide',!vis);
+    if(vis) shown++;
+  });
+  const c=document.getElementById('tblCount');
+  if(c) c.textContent=shown+' de '+rows.length+' seleções';
+  // no-result row
+  const tbody=document.querySelector('.data-table tbody');
+  let nr=document.getElementById('noResult');
+  if(shown===0){
+    if(!nr){nr=document.createElement('tr');nr.id='noResult';
+      nr.innerHTML='<td colspan="8" class="no-result">Nenhuma seleção encontrada</td>';tbody.appendChild(nr);}
+    nr.style.display='';
+  } else if(nr){nr.style.display='none';}
+}
+document.addEventListener('DOMContentLoaded',filterTable);
+filterTable();
+
+</script>
+</body></html>
