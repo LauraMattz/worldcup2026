@@ -1,0 +1,24 @@
+{
+  "jogos": [
+    {
+      "data": "2026-06-28",
+      "rodada": "Oitavas (R32)",
+      "time_a": "África do Sul",
+      "time_b": "Canadá",
+      "placar": "0 – 1",
+      "vencedor": "Canadá",
+      "favorito_modelo": "Canadá",
+      "prob_favorito": 0.908
+    },
+    {
+      "data": "2026-06-29",
+      "rodada": "Oitavas (R32)",
+      "time_a": "Brasil",
+      "time_b": "Japão",
+      "placar": "2 – 1",
+      "vencedor": "Brasil",
+      "favorito_modelo": "Brasil",
+      "prob_favorito": 0.642
+    }
+  ]
+}
