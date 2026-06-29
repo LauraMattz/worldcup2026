@@ -1,0 +1,989 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Relatório Analítico da Copa do Mundo 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{
+  --can:#e11d48; --mex:#16a34a; --usa:#1f6feb; --ouro:#f2b134;
+  --ink:#0a1a3f; --muted:#5b6b82; --bg:#eef2f8; --panel:#ffffff;
+  --line:#dde5f0; --shadow:0 18px 50px rgba(10,26,63,.12); --radius:22px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+
+/* ===== HERO no estilo do poster: blocos de cor angulosos ===== */
+.hero{position:relative;overflow:hidden;color:#fff;padding:0;background:#0a1a3f}
+.hero-art{position:relative;height:340px;display:flex}
+.hero-art .blk{flex:1;position:relative;overflow:hidden}
+.blk.can{background:linear-gradient(135deg,#ff2d55,#b3122f)}
+.blk.mex{background:linear-gradient(135deg,#22c55e,#0f7a37)}
+.blk.usa{background:linear-gradient(135deg,#3b82f6,#1b3fae)}
+/* estrelas e linhas de velocidade decorativas */
+.hero-art::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 18% 30%,#fff 0 4px,transparent 5px),
+    radial-gradient(circle at 84% 22%,#fff 0 3px,transparent 4px),
+    radial-gradient(circle at 67% 70%,rgba(255,255,255,.85) 0 5px,transparent 6px),
+    radial-gradient(circle at 32% 78%,rgba(255,255,255,.8) 0 3px,transparent 4px);}
+.hero-art .ball{position:absolute;z-index:4;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#fff,#e7edf5);left:50%;top:52%;transform:translate(-50%,-50%);
+  box-shadow:0 20px 50px rgba(0,0,0,.35);border:6px solid #fff}
+.hero-art .ball::after{content:"⚽";position:absolute;inset:0;display:grid;place-items:center;font-size:78px}
+/* faixas anguladas */
+.slash{position:absolute;z-index:2;background:rgba(255,255,255,.16);height:14px;width:140%;left:-20%;transform-origin:center}
+.s1{top:24%;transform:rotate(-8deg)} .s2{top:60%;transform:rotate(6deg)} .s3{top:82%;transform:rotate(-4deg)}
+
+.hero-band{background:#0a1a3f;padding:30px 42px 36px;position:relative;z-index:5}
+.hero-inner{max-width:1180px;margin:0 auto}
+.host-flags{font-size:14px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;
+  display:flex;gap:18px;flex-wrap:wrap}
+.host-flags .c{color:#ff5d7a} .host-flags .m{color:#4ade80} .host-flags .u{color:#7aa2ff}
+h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(40px,7vw,78px);line-height:.92;margin:6px 0 12px;letter-spacing:1.5px;color:#fff}
+.subtitle{max-width:780px;font-size:17px;color:rgba(255,255,255,.86)}
+
+.container{max-width:1180px;margin:0 auto;padding:26px 22px 70px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:30;margin:-26px auto 28px;background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:999px;padding:9px 12px;
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;box-shadow:var(--shadow)}
+.nav a{color:var(--ink);text-decoration:none;font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px;transition:.2s}
+.nav a:hover{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .2s}
+.card:hover{transform:translateY(-4px)}
+.card .ic{font-size:26px;margin-bottom:8px}
+.card::after{content:"";position:absolute;right:-22px;top:-22px;width:70px;height:70px;border-radius:50%;opacity:.10}
+.card.accent-v::after{background:var(--mex)} .card.accent-a::after{background:var(--usa)}
+.card.accent-r::after{background:var(--can)} .card.accent-o::after{background:var(--ouro)}
+.card.accent-v{border-top:5px solid var(--mex)} .card.accent-a{border-top:5px solid var(--usa)}
+.card.accent-r{border-top:5px solid var(--can)} .card.accent-o{border-top:5px solid var(--ouro)}
+.metric-label{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.metric-value{font-family:'Bebas Neue',sans-serif;font-size:40px;margin-top:4px;line-height:1;color:var(--ink)}
+.metric-sub{color:var(--muted);font-size:13px;margin-top:6px}
+
+section{background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:30px;margin:24px 0;box-shadow:var(--shadow)}
+h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:36px;letter-spacing:.5px;margin:0 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h2 .tag{font-family:Inter;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;color:#fff}
+.t-v{background:var(--mex)} .t-a{background:var(--usa)} .t-r{background:var(--can)} .t-o{background:var(--ouro)}
+.section-intro{color:var(--muted);max-width:880px;margin-bottom:18px}
+.insight{border-left:5px solid var(--mex);background:linear-gradient(120deg,#ecfdf3,#eff6ff);border-radius:14px;padding:16px 20px;color:#13402b;margin:18px 0}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+
+.cl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 4px}
+.cl-card{border:1px solid var(--line);border-radius:16px;padding:16px;border-top:5px solid var(--c);background:#fff}
+.cl-head{display:flex;align-items:center;gap:8px;font-size:15px}
+.cl-count{margin-left:auto;font-family:'Bebas Neue';font-size:26px;color:var(--c)}
+.cl-ex{color:var(--muted);font-size:13px;margin-top:6px}
+.cl-dot{width:11px;height:11px;border-radius:50%;display:inline-block} .cl-dot.big{width:14px;height:14px}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+
+/* network controls */
+.net-ctrl{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.net-ctrl button{font-family:Inter;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;
+  border:2px solid var(--usa);background:#fff;color:var(--usa);cursor:pointer;transition:.2s}
+.net-ctrl button.active{background:var(--usa);color:#fff}
+.legend-net{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)}
+
+.table-wrap{max-height:620px;overflow:auto;border:1px solid var(--line);border-radius:16px}
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th{background:var(--ink);color:#fff;text-align:left;padding:12px;position:sticky;top:0;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.data-table td{border-bottom:1px solid var(--line);padding:10px 12px}
+.data-table tr:nth-child(even) td{background:#f8fafc}
+.data-table tr:hover td{background:#eef6ff}
+.team{font-weight:700} .flag{margin-right:6px}
+.grp{text-align:center;font-weight:800;color:var(--usa)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.badge{font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;color:#fff}
+.badge.pass{background:var(--mex)} .badge.out{background:var(--can)}
+.probbar{position:relative;background:#eef2f7;border-radius:999px;height:20px;min-width:120px;overflow:hidden}
+.probfill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;opacity:.85}
+.probbar span{position:relative;z-index:2;font-size:12px;font-weight:800;padding-left:8px;line-height:20px;color:var(--ink)}
+
+.footer{text-align:center;color:var(--muted);padding:40px 20px;font-size:13px}
+@media(max-width:900px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr 1fr} .hero-band{padding:24px 22px} section{padding:20px} .hero-art{height:240px}}
+@media(max-width:560px){.cards,.cl-grid,.grid-2{grid-template-columns:1fr}}
+
+/* progress bar */
+#progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:50;
+  background:linear-gradient(90deg,var(--can),var(--mex),var(--usa));transition:width .1s linear}
+/* active nav link */
+.nav a.active,.nav a:active{background:linear-gradient(120deg,var(--mex),var(--usa));color:#fff}
+/* table toolbar */
+.tbl-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 16px}
+.tbl-search{flex:1;min-width:200px;position:relative}
+.tbl-search input{width:100%;padding:11px 14px 11px 40px;border:2px solid var(--line);border-radius:999px;
+  font-family:Inter;font-size:14px;color:var(--ink);outline:none;transition:.2s;background:#fff}
+.tbl-search input:focus{border-color:var(--usa);box-shadow:0 0 0 4px rgba(31,111,235,.12)}
+.tbl-search .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
+.fchip{font-family:Inter;font-weight:700;font-size:13px;padding:8px 14px;border-radius:999px;
+  border:2px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:.2s}
+.fchip:hover{border-color:var(--usa)}
+.fchip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fchip.f-pass.active{background:var(--mex);border-color:var(--mex)}
+.fchip.f-out.active{background:var(--can);border-color:var(--can)}
+.tbl-count{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto}
+tr.hide{display:none}
+.no-result{text-align:center;color:var(--muted);padding:30px;font-style:italic}
+/* ─── show/hide por contexto ─── */
+.mob-only{display:none}
+/* ─── lista mobile de clusters/rede ─── */
+.mob-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.mob-list li{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:12px;background:#f8fafc;border:1px solid var(--line)}
+.mob-list .ml-flag{font-size:18px}
+.mob-list .ml-name{font-weight:700;font-size:14px;color:var(--ink)}
+.mob-list .ml-sub{font-size:12px;color:var(--muted)}
+.mob-list .ml-right{margin-left:auto;text-align:right}
+.mob-list .ml-score{font-family:'Bebas Neue';font-size:22px;line-height:1}
+.mob-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* scroll hint */
+.scroll-hint{font-size:12px;color:var(--muted);text-align:center;padding:6px 0;display:none}
+
+/* ══════════════ TABLET ══════════════ */
+@media(max-width:900px){
+  .cards,.grid-2{grid-template-columns:1fr 1fr}
+  .cl-grid{grid-template-columns:1fr 1fr}
+  .hero-band{padding:24px 22px}
+  section{padding:20px}
+  .hero-art{height:220px}
+}
+
+/* ══════════════ MOBILE (<680px) ══════════════ */
+@media(max-width:680px){
+  /* Viewport safety */
+  html,body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+
+  /* Nav: rola horizontal, sem quebra */
+  .nav{
+    position:sticky;top:0;z-index:30;
+    justify-content:flex-start;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    flex-wrap:nowrap;
+    border-radius:0 0 16px 16px;
+    border-left:none;border-right:none;
+    padding:8px 12px;
+    margin:0 0 20px;
+    gap:4px;
+    scrollbar-width:none;
+    box-shadow:0 4px 16px rgba(10,26,63,.10);
+  }
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{flex-shrink:0;font-size:12px;padding:8px 12px;white-space:nowrap}
+
+  /* Hero */
+  .hero-art{height:130px}
+  .hero-art .ball{width:80px;height:80px;border-width:4px}
+  .hero-art .ball::after{font-size:54px}
+  .hero-band{padding:14px 16px 18px}
+  h1{font-size:clamp(28px,10vw,48px);line-height:.95}
+  .subtitle{font-size:13px;margin-top:6px}
+  .host-flags{font-size:12px;gap:10px}
+
+  /* Container */
+  .container{padding:0 12px 50px}
+
+  /* Sections */
+  section{border-radius:16px;padding:14px 14px 16px;margin:12px 0}
+  h2{font-size:22px;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  h2 .tag{font-size:11px;padding:3px 9px}
+  .section-intro{font-size:13px;margin-bottom:12px}
+
+  /* Cards: 2 colunas */
+  .cards{grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+  .card{padding:12px 14px}
+  .card .ic{font-size:20px;margin-bottom:6px}
+  .metric-value{font-size:28px;margin-top:2px}
+  .metric-label{font-size:11px}
+  .metric-sub{font-size:11px;margin-top:4px}
+
+  /* Cluster grid sempre 2 col */
+  .cl-grid{grid-template-columns:1fr 1fr !important;gap:9px}
+  .cl-card{padding:11px 12px}
+  .cl-head{font-size:13px}
+  .cl-ex{font-size:11px;margin-top:4px}
+
+  /* Grid 2 → 1 col */
+  .grid-2{grid-template-columns:1fr !important;gap:12px}
+
+  /* Insights */
+  .insight{padding:12px 13px;font-size:13px;line-height:1.5;border-radius:10px}
+  .note{font-size:12px;margin-top:10px}
+
+  /* Tabela */
+  .table-wrap{max-height:420px;border-radius:12px}
+  .data-table{font-size:12px}
+  .data-table th{font-size:10px;padding:9px 6px;letter-spacing:0}
+  .data-table td{padding:8px 6px}
+  .tbl-tools{flex-direction:column;gap:8px;align-items:stretch}
+  .tbl-search{width:100%;min-width:unset}
+  .tbl-search input{font-size:13px;padding:10px 12px 10px 36px}
+  .tbl-count{margin-left:0;text-align:center}
+  .fchip{font-size:12px;padding:7px 12px;text-align:center}
+  .probbar{min-width:52px}
+  .probbar span{font-size:11px;font-weight:700}
+  .data-table th{font-size:10px;padding:8px 5px;letter-spacing:0}
+  .data-table td{padding:7px 5px;font-size:12px}
+  .cl-dot{width:8px;height:8px}
+
+  /* Network controls */
+  .net-ctrl{gap:6px}
+  .net-ctrl button{font-size:12px;padding:8px 13px;min-height:40px}
+  .legend-net{font-size:11px;gap:8px;margin-top:8px}
+
+  /* Charts: esconder nos complexos, mostrar alternativa mobile */
+  #plot_corr{display:none !important}
+  #plot_pca{display:none !important}
+  #plot_donut{height:220px !important}
+  #plot_quad{display:none !important}
+  #plot_net{display:none !important}
+  #plot_merito{display:none !important}
+  #plot_sim{height:380px !important}
+
+  /* Mostrar alternativas mobile */
+  .mob-only{display:block}
+  .desk-only{display:none}
+  .scroll-hint{display:block}
+
+  /* Footer */
+  .footer{font-size:12px;padding:24px 12px}
+}
+
+/* ── Telas muito pequenas (<420px) ── */
+@media(max-width:420px){
+  .cards{grid-template-columns:1fr}
+  .metric-value{font-size:24px}
+  h2{font-size:19px}
+  .cl-grid{grid-template-columns:1fr 1fr !important}
+  #plot_sim{height:340px !important}
+}
+
+/* ── Tabela mobile: manter só Seleção, Perfil, Score, Prob. ── */
+@media(max-width:680px){
+  .data-table th:nth-child(2),.data-table td:nth-child(2){display:none}  /* Grupo */
+  .data-table th:nth-child(5),.data-table td:nth-child(5){display:none}  /* xG/jogo */
+  .data-table th:nth-child(6),.data-table td:nth-child(6){display:none}  /* xGA/jogo */
+  .data-table th:nth-child(8),.data-table td:nth-child(8){display:none}  /* Situação */
+  .probbar{min-width:50px}
+  .probbar span{font-size:11px;font-weight:700}
+  .data-table td.num{font-size:12px}
+}
+
+</style></head><body>
+<div id="progress"></div>
+<header class="hero">
+  <div class="hero-art">
+    <div class="blk can"></div><div class="blk mex"></div><div class="blk usa"></div>
+    <div class="slash s1"></div><div class="slash s2"></div><div class="slash s3"></div>
+    <div class="ball"></div>
+  </div>
+  <div class="hero-band"><div class="hero-inner">
+        <h1>Relatório Analítico<br>da Copa do Mundo 2026</h1>
+    <p class="subtitle">Uma leitura interativa da primeira fase: perfis das seleções, agrupamentos por desempenho, rede de similaridade e qualidade do processo, processo versus resultado e simulação do mata-mata.</p>
+  </div></div>
+</header>
+<main class="container"><nav class="nav">
+<a href="#resumo">Resumo</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
+<a href="#pca">Mapa PCA</a><a href="#quadrante">Ataque × Defesa</a><a href="#rede">Rede</a>
+<a href="#merito">Processo</a><a href="#simulacao">Simulação</a><a href="#previsoes">Previsões</a><a href="#resultados">Resultados</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
+<section id="resumo">
+  <h2>⚽ Resumo executivo <span class="tag t-v">visão geral</span></h2>
+  <p class="section-intro">Os indicadores combinam desempenho observado, qualidade das chances criadas e cedidas, força relativa dos adversários e ranking FIFA. A fase prevista é a <b>passagem do mata-mata</b>.</p>
+  <div class="cards">
+    <div class="card accent-a"><div class="ic">🌎</div><div class="metric-label">Seleções</div><div class="metric-value">48</div><div class="metric-sub">equipes analisadas</div></div>
+    <div class="card accent-v"><div class="ic">✅</div><div class="metric-label">Classificadas</div><div class="metric-value">32</div><div class="metric-sub">avançam segundo o modelo</div></div>
+    <div class="card accent-o"><div class="ic">🧩</div><div class="metric-label">Perfis</div><div class="metric-value">4</div><div class="metric-sub">grupos identificados</div></div>
+    <div class="card accent-r"><div class="ic">🍀</div><div class="metric-label">Maior sorte</div><div class="metric-value">Paraguai</div><div class="metric-sub">classificou com score −1,06</div></div>
+  </div>
+  <div class="cards">
+    <div class="card accent-v"><div class="ic">🏆</div><div class="metric-label">Melhor score ajustado</div><div class="metric-value">Espanha</div><div class="metric-sub">1,51 de score</div></div>
+    <div class="card accent-a"><div class="ic">🔥</div><div class="metric-label">Melhor ataque</div><div class="metric-value">Bélgica</div><div class="metric-sub">2,55 xG por jogo</div></div>
+    <div class="card accent-r"><div class="ic">🛡️</div><div class="metric-label">Melhor defesa</div><div class="metric-value">Espanha</div><div class="metric-sub">0,55 xGA por jogo</div></div>
+    <div class="card accent-o"><div class="ic">⭐</div><div class="metric-label">Perfil de Elite</div><div class="metric-value">18</div><div class="metric-sub">seleções no topo</div></div>
+  </div>
+  <div class="insight"><b>Leitura rápida:</b> o grupo de <b>Elite</b> reúne seleções com maior score ajustado, forte produção ofensiva e bons indicadores defensivos. Entre os nomes mais fortes aparecem Espanha, Bélgica, Inglaterra, França e Alemanha.</div>
+</section>
+<section id="correlacao">
+  <h2>🔗 Mapa de correlação <span class="tag t-a">variáveis</span></h2>
+  <p class="section-intro">Verde indica variáveis que crescem juntas. Vermelho indica relação inversa. Tons claros indicam pouca relação entre as variáveis.</p>
+  <div id="plot_corr" class="desk-only" style="width:100%;height:600px"></div>
+<div class="mob-only" style="margin-top:8px">
+  <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Principais correlações encontradas:</p>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border-left:4px solid #16a34a">
+      <span style="font-size:18px;font-weight:800;color:#15803d;min-width:44px">+0.97</span>
+      <span style="font-size:13px;color:#0a1a3f"><b>Saldo xG</b> ↔ <b>Score ajustado</b>: a métrica-chave captura quase todo o desempenho ofensivo</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border-left:4px solid #16a34a">
+      <span style="font-size:18px;font-weight:800;color:#15803d;min-width:44px">+0.92</span>
+      <span style="font-size:13px;color:#0a1a3f"><b>xG/jogo</b> ↔ <b>Saldo xG</b>: quem cria mais chances domina o saldo</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff1f2;border-radius:10px;border-left:4px solid #e11d48">
+      <span style="font-size:18px;font-weight:800;color:#be123c;min-width:44px">−0.92</span>
+      <span style="font-size:13px;color:#0a1a3f"><b>xGA/jogo</b> ↔ <b>Saldo xG</b>: quanto mais a defesa cede, pior o saldo</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff1f2;border-radius:10px;border-left:4px solid #e11d48">
+      <span style="font-size:18px;font-weight:800;color:#be123c;min-width:44px">−0.90</span>
+      <span style="font-size:13px;color:#0a1a3f"><b>xGA/jogo</b> ↔ <b>Score ajustado</b>: defesas frágeis penalizam muito o score</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border-left:4px solid #2563eb">
+      <span style="font-size:18px;font-weight:800;color:#1d4ed8;min-width:44px">+0.89</span>
+      <span style="font-size:13px;color:#0a1a3f"><b>Saldo xG</b> ↔ <b>Score ajustado</b>: consistência entre as métricas confirma a robustez</span>
+    </div>
+  </div>
+</div>
+  <p class="note">Correlações muito altas indicam variáveis que carregam informação parecida. Isso ajuda a interpretar os perfis e evita depender só da tabela de classificação.</p>
+</section>
+<section id="clusters">
+  <h2>🧩 Perfis das seleções <span class="tag t-o">clusters</span></h2>
+  <p class="section-intro">Quatro perfis com características estatísticas semelhantes, do mais forte ao mais frágil.</p>
+  <div class="grid-2">
+    <div><div class="cl-grid" style="grid-template-columns:1fr 1fr"><div class="cl-card" style="--c:#16a34a"><div class="cl-head"><span class="cl-dot big" style="background:#16a34a"></span><b>Elite</b><span class="cl-count">18</span></div><div class="cl-ex">França, Espanha, Marrocos, Alemanha…</div></div><div class="cl-card" style="--c:#2563eb"><div class="cl-head"><span class="cl-dot big" style="background:#2563eb"></span><b>Competitivas</b><span class="cl-count">11</span></div><div class="cl-ex">Bósnia e Herzegovina, RD Congo, Cabo Verde, Austrália…</div></div><div class="cl-card" style="--c:#f59e0b"><div class="cl-head"><span class="cl-dot big" style="background:#f59e0b"></span><b>Intermediárias</b><span class="cl-count">10</span></div><div class="cl-ex">Suécia, Argélia, Japão, Croácia…</div></div><div class="cl-card" style="--c:#e11d48"><div class="cl-head"><span class="cl-dot big" style="background:#e11d48"></span><b>Baixo desempenho</b><span class="cl-count">9</span></div><div class="cl-ex">Arábia Saudita, Nova Zelândia, Curaçao, Iraque…</div></div></div></div>
+    <div id="plot_donut" style="width:100%;height:300px"></div>
+<div class="mob-only" style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px">
+  <span style="font-size:12px;padding:4px 10px;border-radius:20px;background:#dcfce7;color:#15803d;font-weight:600">🟢 Elite: 18</span>
+  <span style="font-size:12px;padding:4px 10px;border-radius:20px;background:#dbeafe;color:#1d4ed8;font-weight:600">🔵 Competitivas: 11</span>
+  <span style="font-size:12px;padding:4px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">🟡 Intermediárias: 10</span>
+  <span style="font-size:12px;padding:4px 10px;border-radius:20px;background:#ffe4e6;color:#9f1239;font-weight:600">🔴 Baixo desempenho: 9</span>
+</div>
+  </div>
+  <div class="insight"><b>Como ler:</b> o número grande mostra quantas seleções caíram em cada perfil. Os perfis ajudam a comparar equipes parecidas, mesmo em grupos diferentes do sorteio.</div>
+</section>
+<section id="pca">
+  <h2>📍 Mapa de perfis (PCA) <span class="tag t-v">visualização</span></h2>
+  <p class="section-intro">Cada bolha é uma seleção. Quanto mais à direita e acima, melhor o desempenho. Tamanho reflete o Score Ajustado. Losangos marcam o centro de cada perfil.</p>
+  <div id="plot_pca" style="width:100%;height:640px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+    <div style="background:#ecfdf3;border:1px solid #16a34a22;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#16a34a;font-size:13px;margin-bottom:8px">🟢 Elite (18)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Espanha · Bélgica · Inglaterra<br>França · Canadá · Alemanha<br>Argentina · Colômbia · Marrocos<br>Suíça · EUA · Brasil · P. Baixos<br>Senegal · México · Portugal<br>Uruguai · Turquia</div>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #2563eb22;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#2563eb;font-size:13px;margin-bottom:8px">🔵 Competitivas (11)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Bósnia · RD Congo · Cabo Verde<br>Austrália · Paraguai · Gana<br>África do Sul · Escócia<br>Irã · Panamá · Tchéquia</div>
+    </div>
+    <div style="background:#fffbeb;border:1px solid #f59e0b22;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#d97706;font-size:13px;margin-bottom:8px">🟡 Intermediárias (10)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Equador · Coreia do Sul · Suécia<br>Argélia · Japão · Croácia<br>Costa do Marfim · Áustria<br>Noruega · Egito</div>
+    </div>
+    <div style="background:#fff1f2;border:1px solid #e11d4822;border-radius:12px;padding:12px">
+      <div style="font-weight:800;color:#e11d48;font-size:13px;margin-bottom:8px">🔴 Baixo desempenho (9)</div>
+      <div style="font-size:12px;line-height:1.8;color:#0a1a3f">Arábia Saudita · Nova Zelândia<br>Curaçao · Iraque · Catar<br>Jordânia · Tunísia<br>Haiti · Uzbequistão</div>
+    </div>
+  </div>
+</div>
+  <p class="note">Os dois eixos resumem oito variáveis em um plano só, preservando o máximo de informação possível. Seleções próximas têm desempenho parecido.</p>
+</section>
+<section id="quadrante">
+  <h2>🎯 Ataque × Defesa <span class="tag t-r">novo</span></h2>
+  <p class="section-intro">xG (gols esperados criados) e xGA (gols esperados sofridos) medem a qualidade das chances, não apenas o placar. Seleções no canto superior esquerdo criam muito e cedem pouco: perfil ideal. O tamanho da bolha reflete a probabilidade de avançar no mata-mata.</p>
+  <div id="plot_quad" style="width:100%;height:560px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0">
+    <div style="border-radius:12px;padding:12px;background:linear-gradient(135deg,#ecfdf3,#eff6ff);border:1px solid #16a34a33">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#16a34a">Completas:</b><br>Espanha · Canadá<br>Colômbia · Marrocos<br>Argentina · México</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#fffbeb;border:1px solid #f59e0b33">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#d97706">Defensivas:</b><br>Gana · Paraguai<br>Jordânia · Arábia<br>Tunísia · Catar</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#fff7ed;border:1px solid #f97316aa">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#ea580c">Ofensivas:</b><br>Bélgica · Turquia<br>Alemanha · França<br>Inglaterra · Senegal</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#f8fafc;border:1px solid #94a3b844">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#64748b">Frágeis:</b><br>Qatar · Curacao<br>Iraque · N. Zelândia<br>Arábia Saudita</div>
+    </div>
+  </div>
+  
+</div>
+  <p class="note">As linhas tracejadas marcam a mediana do torneio em cada eixo, separando os quatro quadrantes de leitura.</p>
+</section>
+<section id="rede">
+  <h2>🕸️ Rede de similaridade <span class="tag t-a">conexões fortes</span></h2>
+  <p class="section-intro">As 18 seleções mais fortes. Uma linha liga duas seleções com perfil estatístico parecido. Bolhas maiores têm mais conexões.<span class="desk-only"> Use os botões para alternar o layout.</span></p>
+  <div class="net-ctrl desk-only">
+    <button id="btn-force" class="active" onclick="setNetMode('force')">Desenho livre</button>
+    <button id="btn-circular" onclick="setNetMode('circular')">Agrupado por perfil</button>
+  </div>
+  <div id="plot_net" style="width:100%;height:640px" class="desk-only"></div>
+<div class="mob-only">
+  <p style="font-size:13px;color:#5b6b82;margin-bottom:10px">Seleções com <b>mais conexões fortes</b> (similaridade ≥ 0,88) entre as 18 da Elite:</p>
+  <ul class="mob-list">
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">França · Suíça · Marrocos</div><div class="ml-sub">8 conexões: hub central da Elite</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">8</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Alemanha · Inglaterra</div><div class="ml-sub">7 conexões cada</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">7</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Bélgica · EUA · Argentina</div><div class="ml-sub">5–6 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#2563eb">6</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Espanha · Colômbia</div><div class="ml-sub">4–5 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#f59e0b">5</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Turquia</div><div class="ml-sub">0 conexões: perfil estatístico isolado</div></div><div class="ml-right"><div class="ml-score" style="color:#e11d48">0</div></div></li>
+  </ul>
+  <p class="note" style="margin-top:10px">As conexões mostradas são pares com similaridade estatística acima de 0,88 entre as variáveis de desempenho.</p>
+</div>
+  <div class="legend-net">
+    <span><b style="color:#16a34a">●</b> Elite</span><span><b style="color:#2563eb">●</b> Competitivas</span>
+    <span><b style="color:#f59e0b">●</b> Intermediárias</span><span><b style="color:#e11d48">●</b> Baixo desempenho</span>
+    <span class="desk-only">📏 Tamanho = número de conexões fortes • 🖱️ arraste para explorar</span>
+  </div>
+</section>
+<section id="merito">
+  <h2>🔍 Processo × Resultado <span class="tag t-o">processo × resultado</span></h2>
+  <p class="section-intro">O gráfico mostra se o processo de cada seleção justifica sua classificação, com base no Score Ajustado. Quatro quadrantes: passou jogando bem, passou com sorte, caiu jogando bem ou saiu como esperado.</p>
+  <div class="cl-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+    <div class="cl-card" style="--c:#16a34a"><div class="cl-head"><span class="cl-dot big" style="background:#16a34a"></span><b>Merecida</b></div><div class="cl-ex">Bom processo + classificou. A grande maioria das 32 classificadas.</div></div>
+    <div class="cl-card" style="--c:#f59e0b"><div class="cl-head"><span class="cl-dot big" style="background:#f59e0b"></span><b>Com sorte</b></div><div class="cl-ex">Processo fraco mas passou. Destaque: Paraguai (−1,06), Cabo Verde (−0,96), Gana (−1,02).</div></div>
+    <div class="cl-card" style="--c:#e11d48"><div class="cl-head"><span class="cl-dot big" style="background:#e11d48"></span><b>Caiu jogando bem</b></div><div class="cl-ex">Jogou bem mas caiu. Turquia (0,79) e Uruguai (0,70) são os casos mais gritantes.</div></div>
+    <div class="cl-card" style="--c:#94a3b8"><div class="cl-head"><span class="cl-dot big" style="background:#94a3b8"></span><b>Esperada</b></div><div class="cl-ex">Processo fraco e foi eliminada. Resultado alinhado com o futebol mostrado.</div></div>
+  </div>
+  <div id="plot_merito" style="width:100%;height:580px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+    <div style="background:#fff1f2;border-radius:12px;padding:12px;border-left:4px solid #e11d48">
+      <div style="font-weight:800;color:#e11d48;font-size:13px;margin-bottom:6px">❌ Caiu jogando bem</div>
+      <div style="font-size:12px;color:#0a1a3f;line-height:2">
+        <span style="font-weight:700">Turquia</span> <span style="color:#5b6b82">0,79</span><br>
+        <span style="font-weight:700">Uruguai</span> <span style="color:#5b6b82">0,70</span><br>
+        <span style="font-weight:700">Coreia do Sul</span> <span style="color:#5b6b82">0,24</span>
+      </div>
+    </div>
+    <div style="background:#fffbeb;border-radius:12px;padding:12px;border-left:4px solid #f59e0b">
+      <div style="font-weight:800;color:#d97706;font-size:13px;margin-bottom:6px">🍀 Com sorte</div>
+      <div style="font-size:12px;color:#0a1a3f;line-height:2">
+        <span style="font-weight:700">Paraguai</span> <span style="color:#5b6b82">−1,06</span><br>
+        <span style="font-weight:700">Gana</span> <span style="color:#5b6b82">−1,02</span><br>
+        <span style="font-weight:700">Cabo Verde</span> <span style="color:#5b6b82">−0,96</span><br>
+        <span style="font-weight:700">Bósnia</span> <span style="color:#5b6b82">−0,50</span><br>
+        <span style="font-weight:700">África do Sul</span> <span style="color:#5b6b82">−0,38</span>
+      </div>
+    </div>
+  </div>
+  <p class="note">Score Ajustado: combina xGD, força dos adversários e desempenho vs. esperado pelo FIFA Rank. Acima de 0 = processo acima da média.</p>
+</div>
+  <div class="insight"><b>Casos mais gritantes:</b> <b>Turquia</b> (score 0,79, Elite) e <b>Uruguai</b> (0,70, Elite) saíram com scores melhores que vários classificados. Do outro lado, <b>Paraguai</b> (−1,06), <b>Cabo Verde</b> (−0,96) e <b>Gana</b> (−1,02) passaram com os piores processos entre os 32 classificados: estão na Copa, mas o futebol que mostraram diz outra coisa.</div>
+  <p class="note">Score Ajustado combina saldo de xG, força dos adversários e desempenho relativo ao ranking FIFA. Acima de zero: processo acima da média do torneio.</p>
+</section>
+<section id="simulacao">
+  <h2>🎲 Simulação do mata-mata <span class="tag t-r">predição real</span></h2>
+  <p class="section-intro">O modelo roda <b>10.000 simulações</b> do chaveamento completo (R32, quartas, semis e final) e estima a probabilidade de cada seleção ser campeã. A chance de vencer cada partida segue uma função logística baseada no Score Ajustado: quanto maior a diferença de score, maior a probabilidade de vitória.</p>
+  <div id="plot_sim" style="width:100%;height:560px"></div>
+  <div class="insight">A probabilidade é a frequência de vitória nas 10.000 simulações. Espanha e Bélgica lideram pelos maiores Scores Ajustados. O chaveamento cria assimetrias: uma seleção forte pode enfrentar outra forte já no R32.</div>
+  <p class="note">Chaveamento ilustrativo cruzando grupos. Diferença de +1,0 no Score Ajustado implica cerca de 82% de chance de vitória.</p>
+</section>
+
+<section id="previsoes">
+  <h2>🔮 Previsões do Mata-Mata <span class="tag t-r">modelo Poisson</span></h2>
+  <p class="section-intro">Placares estimados para todos os jogos do R32 via distribuição de Poisson. λ = média entre xG da seleção e xGA do adversário na fase de grupos. Fonte: <a href="https://footystats.org/international/world-cup/xg" target="_blank" rel="noopener" style="color:var(--accent)">footystats.org</a>.</p>
+
+  <!-- Abas por dia -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="prev-tabs">
+    <button onclick="showDay('d28')" id="tab-d28" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">28/06</button>
+    <button onclick="showDay('d29')" id="tab-d29" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">29/06</button>
+    <button onclick="showDay('d30')" id="tab-d30" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">30/06</button>
+    <button onclick="showDay('d01')" id="tab-d01" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">01/07</button>
+    <button onclick="showDay('d02')" id="tab-d02" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">02/07</button>
+    <button onclick="showDay('d03')" id="tab-d03" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">03/07</button>
+  </div>
+
+  <!-- 28/06 -->
+  <div id="prev-d28" class="prev-day" style="display:none">
+    <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇦 Canadá × África do Sul 🇿🇦</div>
+        <span style="background:#15803d;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">✓ Encerrado</span>
+      </div>
+      <div style="font-size:26px;font-weight:800;color:#0a1a3f;margin:10px 0">1 – 0</div>
+      <div style="font-size:12px;color:#5b6b82">Favorito do modelo venceu · 90+2' Stephen Eustáquio · λ Canadá=1.89, λ África do Sul=0.79</div>
+    </div>
+  </div>
+
+  <!-- 29/06 -->
+  <div id="prev-d29" class="prev-day" style="display:flex;flex-direction:column;gap:14px">
+    <!-- Brasil x Japão -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇧🇷 Brasil × Japão 🇯🇵</div>
+        <span style="font-size:12px;color:var(--muted)">14h · Houston</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Brasil</div><div style="font-size:19px;font-weight:800;color:#15803d">40%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">27%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Japão</div><div style="font-size:19px;font-weight:800;color:#dc2626">33%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.6%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 10.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 9.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.5%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.7%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Brasil=1.35 · λ Japão=1.21</div>
+    </div>
+    <!-- Alemanha x Paraguai -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇩🇪 Alemanha × Paraguai 🇵🇾</div>
+        <span style="font-size:12px;color:var(--muted)">17h30 · Boston</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Alemanha</div><div style="font-size:19px;font-weight:800;color:#15803d">66%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">19%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Paraguai</div><div style="font-size:19px;font-weight:800;color:#dc2626">13%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 11.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 10.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.7%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 8.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">3×0 · 8.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Alemanha=2.21 · λ Paraguai=0.85 · Maior assimetria do R32</div>
+    </div>
+    <!-- Países Baixos x Marrocos -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇳🇱 Países Baixos × Marrocos 🇲🇦</div>
+        <span style="font-size:12px;color:var(--muted)">22h · Seattle</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Países Baixos</div><div style="font-size:19px;font-weight:800;color:#64748b">33%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Marrocos ⚡</div><div style="font-size:19px;font-weight:800;color:#15803d">42%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 8.9%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 7.8%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 7.3%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ PB=1.36 · λ Marrocos=1.57 · Marrocos leve favorito pelo xGA alto da Holanda</div>
+    </div>
+  </div>
+
+  <!-- 30/06 -->
+  <div id="prev-d30" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Costa do Marfim x Noruega -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇮 Costa do Marfim × Noruega 🇳🇴</div>
+        <span style="font-size:12px;color:var(--muted)">14h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Costa do Marfim</div><div style="font-size:19px;font-weight:800;color:#64748b">38%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">25%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Noruega</div><div style="font-size:19px;font-weight:800;color:#64748b">36%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.7%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.5%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 8.3%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 8.2%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.0%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Costa do Marfim=1.46 · λ Noruega=1.41 · Jogo mais equilibrado do torneio</div>
+    </div>
+    <!-- França x Suécia -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇫🇷 França × Suécia 🇸🇪</div>
+        <span style="font-size:12px;color:var(--muted)">18h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">França</div><div style="font-size:19px;font-weight:800;color:#15803d">44%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">25%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Suécia</div><div style="font-size:19px;font-weight:800;color:#dc2626">31%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 9.5%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.1%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 7.7%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ França=1.54 · λ Suécia=1.25</div>
+    </div>
+    <!-- México x Equador -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇲🇽 México × Equador 🇪🇨</div>
+        <span style="font-size:12px;color:var(--muted)">22h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">México</div><div style="font-size:19px;font-weight:800;color:#dc2626">35%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">26%</div></div>
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Equador ⚡</div><div style="font-size:19px;font-weight:800;color:#15803d">39%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 9.7%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 9.1%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 8.5%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 7.9%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ México=1.27 · λ Equador=1.36 · Equador leve favorito pelo xG superior nos grupos</div>
+    </div>
+  </div>
+
+  <!-- 01/07 -->
+  <div id="prev-d01" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Inglaterra x RD Congo -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra × RD Congo 🇨🇩</div>
+        <span style="font-size:12px;color:var(--muted)">13h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Inglaterra</div><div style="font-size:19px;font-weight:800;color:#15803d">53%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">RD Congo</div><div style="font-size:19px;font-weight:800;color:#dc2626">22%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 11.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.7%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 9.6%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 6.7%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Inglaterra=1.70 · λ RD Congo=1.01</div>
+    </div>
+    <!-- Bélgica x Senegal -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇧🇪 Bélgica × Senegal 🇸🇳</div>
+        <span style="font-size:12px;color:var(--muted)">17h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Bélgica</div><div style="font-size:19px;font-weight:800;color:#15803d">47%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">22%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Senegal</div><div style="font-size:19px;font-weight:800;color:#dc2626">29%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 9.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.2%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.1%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 6.8%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×2 · 6.6%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Bélgica=1.88 · λ Senegal=1.44 · Jogo aberto, lambdas altos dos dois lados</div>
+    </div>
+    <!-- EUA x Bósnia -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇺🇸 Estados Unidos × Bósnia 🇧🇦</div>
+        <span style="font-size:12px;color:var(--muted)">21h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">EUA</div><div style="font-size:19px;font-weight:800;color:#15803d">52%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">25%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Bósnia</div><div style="font-size:19px;font-weight:800;color:#dc2626">22%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 12.2%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 9.9%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.5%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.5%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ EUA=1.62 · λ Bósnia=0.97</div>
+    </div>
+  </div>
+
+  <!-- 02/07 -->
+  <div id="prev-d02" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Espanha x Áustria -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇪🇸 Espanha × Áustria 🇦🇹</div>
+        <span style="font-size:12px;color:var(--muted)">16h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Espanha</div><div style="font-size:19px;font-weight:800;color:#15803d">58%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">23%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Áustria</div><div style="font-size:19px;font-weight:800;color:#dc2626">18%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 13.1%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 11.5%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.0%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.7%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Espanha=1.76 · λ Áustria=0.84</div>
+    </div>
+    <!-- Portugal x Croácia -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇵🇹 Portugal × Croácia 🇭🇷</div>
+        <span style="font-size:12px;color:var(--muted)">20h · Toronto</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Portugal</div><div style="font-size:19px;font-weight:800;color:#15803d">42%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">26%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Croácia</div><div style="font-size:19px;font-weight:800;color:#dc2626">32%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 10.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.8%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.8%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Portugal=1.42 · λ Croácia=1.20</div>
+    </div>
+    <!-- Suíça x Argélia — 02/07 à meia-noite BRT (11pm ET Vancouver) -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇭 Suíça × Argélia 🇩🇿</div>
+        <span style="font-size:12px;color:var(--muted)">00h · Vancouver</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Suíça</div><div style="font-size:19px;font-weight:800;color:#15803d">41%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">26%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Argélia</div><div style="font-size:19px;font-weight:800;color:#dc2626">32%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.2%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 9.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.8%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.6%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Suíça=1.45 · λ Argélia=1.25 · Começa no dia 02/07, meia-noite horário de Brasília</div>
+    </div>
+  </div>
+
+  <!-- 03/07 -->
+  <div id="prev-d03" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Austrália x Egito -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇦🇺 Austrália × Egito 🇪🇬</div>
+        <span style="font-size:12px;color:var(--muted)">horário a confirmar</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Austrália</div><div style="font-size:19px;font-weight:800;color:#dc2626">29%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Egito ⚡</div><div style="font-size:19px;font-weight:800;color:#15803d">46%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.2%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 9.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.7%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×2 · 7.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 7.1%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Austrália=1.28 · λ Egito=1.67 · Maior surpresa do modelo: Egito favoritado · AT&T Stadium, Arlington</div>
+    </div>
+    <!-- Argentina x Cabo Verde -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇦🇷 Argentina × Cabo Verde 🇨🇻</div>
+        <span style="font-size:12px;color:var(--muted)">19h · Miami Gardens</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Argentina</div><div style="font-size:19px;font-weight:800;color:#15803d">54%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Cabo Verde</div><div style="font-size:19px;font-weight:800;color:#dc2626">20%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 12.9%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.6%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 10.7%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.6%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.8%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Argentina=1.65 · λ Cabo Verde=0.90</div>
+    </div>
+    <!-- Colômbia x Gana -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇴 Colômbia × Gana 🇬🇭</div>
+        <span style="font-size:12px;color:var(--muted)">22h30 · Kansas City</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Colômbia</div><div style="font-size:19px;font-weight:800;color:#15803d">60%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">23%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Gana</div><div style="font-size:19px;font-weight:800;color:#dc2626">16%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 14.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 12.5%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 10.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.4%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 8.2%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Colômbia=1.75 · λ Gana=0.76</div>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:14px">⚙️ Verde = time favorito pelo modelo · Empate nos 90min leva a prorrogação e pênaltis · Dados: <a href="https://footystats.org/international/world-cup/xg" target="_blank" rel="noopener" style="color:var(--accent)">footystats.org</a></p>
+
+  <script>
+  // Mapeamento id → data do jogo
+  var DAYS = {
+    d28: new Date(2026, 5, 28), // 28/06
+    d29: new Date(2026, 5, 29), // 29/06
+    d30: new Date(2026, 5, 30), // 30/06
+    d01: new Date(2026, 6,  1), // 01/07
+    d02: new Date(2026, 6,  2), // 02/07
+    d03: new Date(2026, 6,  3), // 03/07
+  };
+
+  function todayLocal() {
+    var d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function applyTabStyles(activeId) {
+    var hoje = todayLocal();
+    Object.keys(DAYS).forEach(function(id) {
+      var btn = document.getElementById('tab-' + id);
+      if (!btn) return;
+      var gameDate = DAYS[id];
+      var isActive = (id === activeId);
+      var isPast   = gameDate < hoje;
+      var isToday  = gameDate.getTime() === hoje.getTime();
+
+      if (isActive) {
+        // Aba selecionada: destaque azul (ou verde se já jogou)
+        btn.style.background   = isPast ? '#15803d' : 'var(--accent)';
+        btn.style.color        = '#fff';
+        btn.style.borderColor  = isPast ? '#15803d' : 'var(--accent)';
+        btn.style.opacity      = '1';
+      } else if (isPast) {
+        // Já jogou mas não selecionada: verde suave
+        btn.style.background   = '#f0fdf4';
+        btn.style.color        = '#15803d';
+        btn.style.borderColor  = '#bbf7d0';
+        btn.style.opacity      = '1';
+      } else if (isToday) {
+        // Hoje mas não selecionada: borda accent
+        btn.style.background   = 'var(--card)';
+        btn.style.color        = 'var(--accent)';
+        btn.style.borderColor  = 'var(--accent)';
+        btn.style.opacity      = '1';
+      } else {
+        // Futuro
+        btn.style.background   = 'var(--card)';
+        btn.style.color        = 'var(--muted)';
+        btn.style.borderColor  = 'var(--border)';
+        btn.style.opacity      = '0.7';
+      }
+    });
+  }
+
+  function showDay(id) {
+    document.querySelectorAll('.prev-day').forEach(function(el) { el.style.display = 'none'; });
+    var el = document.getElementById('prev-' + id);
+    el.style.display       = 'flex';
+    el.style.flexDirection = 'column';
+    applyTabStyles(id);
+  }
+
+  // Abrir a aba de hoje automaticamente (ou a próxima futura se hoje não tiver jogo)
+  (function() {
+    var hoje = todayLocal();
+    var ids = ['d28','d29','d30','d01','d02','d03'];
+    var target = ids[ids.length - 1]; // fallback: último dia
+    for (var i = 0; i < ids.length; i++) {
+      if (DAYS[ids[i]] >= hoje) { target = ids[i]; break; }
+    }
+    showDay(target);
+  })();
+  </script>
+</section>
+
+<section id="resultados">
+  <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span></h2>
+  <p class="section-intro">Resultados reais confrontados com a simulação Monte Carlo. Verde = modelo acertou. Vermelho = surpresa.</p>
+
+  <div id="resultados-lista" style="display:flex;flex-direction:column;gap:10px">
+
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 8px">Oitavas (R32)</div>
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;padding:14px 16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">África do Sul</div>
+              <div style="font-size:11px;color:#9ca3af">score -0.38</div>
+            </div>
+            <div style="font-size:22px;font-weight:800;color:#0a1a3f;min-width:60px;text-align:center">0 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Canadá ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.15</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span style="background:#15803d;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">✓ Favorito venceu</span>
+            <span style="font-size:11px;color:#5b6b82">Favorito Canadá (91%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;padding:14px 16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Brasil ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.24</div>
+            </div>
+            <div style="font-size:22px;font-weight:800;color:#0a1a3f;min-width:60px;text-align:center">2 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Japão</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.85</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span style="background:#15803d;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">✓ Favorito venceu</span>
+            <span style="font-size:11px;color:#5b6b82">Favorito Brasil (64%)</span>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="resultados-resumo" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
+      <div style="font-size:28px;font-weight:800;color:#15803d">2</div>
+      <div style="font-size:12px;color:#5b6b82">Jogos disputados</div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
+      <div style="font-size:28px;font-weight:800;color:#15803d">2/2</div>
+      <div style="font-size:12px;color:#5b6b82">Favoritos passaram</div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
+      <div style="font-size:28px;font-weight:800;color:#15803d">100%</div>
+      <div style="font-size:12px;color:#5b6b82">Acurácia do modelo</div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:14px">💡 Até agora o modelo acertou todos os vencedores — os times com maior score ajustado avançaram como esperado.</p>
+</section>
+
+<section id="tabela">
+  <h2>📋 Tabela completa <span class="tag t-a">48 seleções</span></h2>
+  <p class="section-intro">Todas as seleções com suas métricas e a probabilidade estimada de avançar no mata-mata.</p>
+  <div class="tbl-tools">
+  <div class="tbl-search"><span class="si">🔍</span><input id="tblSearch" type="text" placeholder="Buscar seleção..." oninput="filterTable()"></div>
+  <button class="fchip active" data-f="all" onclick="setFilter(this,'all')">Todas</button>
+  <button class="fchip f-pass" data-f="pass" onclick="setFilter(this,'pass')">Deve classificar</button>
+  <button class="fchip f-out" data-f="out" onclick="setFilter(this,'out')">Pode ser eliminada</button>
+  <span class="tbl-count" id="tblCount"></span>
+</div>
+<div class="table-wrap"><table class="data-table"><thead><tr>
+  <th>Seleção</th><th style="text-align:center">Grupo</th><th>Perfil</th><th style="text-align:right">Score</th>
+  <th style="text-align:right">xG/jogo</th><th style="text-align:right">xGA/jogo</th><th>Prob. avançar</th><th>Situação</th>
+  </tr></thead><tbody><tr data-name="franca" data-status="pass"><td class="team"><span class="flag">⚽</span>França</td><td class="grp">I</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.15</td><td class="num">1.99</td><td class="num">0.80</td><td class="num"><div class="probbar"><div class="probfill" style="width:100.0%;background:#16a34a"></div><span>100.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="espanha" data-status="pass"><td class="team"><span class="flag">⚽</span>Espanha</td><td class="grp">H</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.51</td><td class="num">2.16</td><td class="num">0.55</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.9%;background:#16a34a"></div><span>99.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="marrocos" data-status="pass"><td class="team"><span class="flag">⚽</span>Marrocos</td><td class="grp">C</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.81</td><td class="num">1.75</td><td class="num">0.95</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.7%;background:#16a34a"></div><span>99.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="alemanha" data-status="pass"><td class="team"><span class="flag">⚽</span>Alemanha</td><td class="grp">E</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.07</td><td class="num">2.14</td><td class="num">0.95</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.6%;background:#16a34a"></div><span>99.6%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="estados unidos" data-status="pass"><td class="team"><span class="flag">⚽</span>Estados Unidos</td><td class="grp">D</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.67</td><td class="num">1.75</td><td class="num">0.89</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.6%;background:#16a34a"></div><span>99.6%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="inglaterra" data-status="pass"><td class="team"><span class="flag">⚽</span>Inglaterra</td><td class="grp">L</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.16</td><td class="num">2.12</td><td class="num">0.88</td><td class="num"><div class="probbar"><div class="probfill" style="width:99.6%;background:#16a34a"></div><span>99.6%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="suica" data-status="pass"><td class="team"><span class="flag">⚽</span>Suíça</td><td class="grp">B</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.71</td><td class="num">1.78</td><td class="num">1.03</td><td class="num"><div class="probbar"><div class="probfill" style="width:98.8%;background:#16a34a"></div><span>98.8%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="paises baixos" data-status="pass"><td class="team"><span class="flag">⚽</span>Países Baixos</td><td class="grp">F</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.53</td><td class="num">1.78</td><td class="num">1.38</td><td class="num"><div class="probbar"><div class="probfill" style="width:98.4%;background:#16a34a"></div><span>98.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="brasil" data-status="pass"><td class="team"><span class="flag">⚽</span>Brasil</td><td class="grp">C</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.53</td><td class="num">1.59</td><td class="num">1.28</td><td class="num"><div class="probbar"><div class="probfill" style="width:97.8%;background:#16a34a"></div><span>97.8%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="portugal" data-status="pass"><td class="team"><span class="flag">⚽</span>Portugal</td><td class="grp">K</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.40</td><td class="num">1.48</td><td class="num">1.34</td><td class="num"><div class="probbar"><div class="probfill" style="width:97.1%;background:#16a34a"></div><span>97.1%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="colombia" data-status="pass"><td class="team"><span class="flag">⚽</span>Colômbia</td><td class="grp">K</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.84</td><td class="num">2.02</td><td class="num">0.92</td><td class="num"><div class="probbar"><div class="probfill" style="width:97.1%;background:#16a34a"></div><span>97.1%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="senegal" data-status="pass"><td class="team"><span class="flag">⚽</span>Senegal</td><td class="grp">I</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.50</td><td class="num">1.90</td><td class="num">1.20</td><td class="num"><div class="probbar"><div class="probfill" style="width:96.9%;background:#16a34a"></div><span>96.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="belgica" data-status="pass"><td class="team"><span class="flag">⚽</span>Bélgica</td><td class="grp">G</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.30</td><td class="num">2.55</td><td class="num">0.98</td><td class="num"><div class="probbar"><div class="probfill" style="width:96.2%;background:#16a34a"></div><span>96.2%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="suecia" data-status="pass"><td class="team"><span class="flag">⚽</span>Suécia</td><td class="grp">F</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.19</td><td class="num">1.69</td><td class="num">1.09</td><td class="num"><div class="probbar"><div class="probfill" style="width:94.4%;background:#16a34a"></div><span>94.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="argelia" data-status="pass"><td class="team"><span class="flag">⚽</span>Argélia</td><td class="grp">J</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.15</td><td class="num">1.47</td><td class="num">1.11</td><td class="num"><div class="probbar"><div class="probfill" style="width:93.5%;background:#16a34a"></div><span>93.5%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="canada" data-status="pass"><td class="team"><span class="flag">⚽</span>Canadá</td><td class="grp">B</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">1.15</td><td class="num">2.39</td><td class="num">0.62</td><td class="num"><div class="probbar"><div class="probfill" style="width:93.2%;background:#16a34a"></div><span>93.2%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="japao" data-status="pass"><td class="team"><span class="flag">⚽</span>Japão</td><td class="grp">F</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.13</td><td class="num">1.14</td><td class="num">1.11</td><td class="num"><div class="probbar"><div class="probfill" style="width:92.2%;background:#16a34a"></div><span>92.2%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="croacia" data-status="pass"><td class="team"><span class="flag">⚽</span>Croácia</td><td class="grp">L</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.02</td><td class="num">1.05</td><td class="num">1.35</td><td class="num"><div class="probbar"><div class="probfill" style="width:92.1%;background:#16a34a"></div><span>92.1%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="egito" data-status="pass"><td class="team"><span class="flag">⚽</span>Egito</td><td class="grp">G</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.13</td><td class="num">1.63</td><td class="num">1.46</td><td class="num"><div class="probbar"><div class="probfill" style="width:90.0%;background:#16a34a"></div><span>90.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="argentina" data-status="pass"><td class="team"><span class="flag">⚽</span>Argentina</td><td class="grp">J</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.85</td><td class="num">1.32</td><td class="num">0.74</td><td class="num"><div class="probbar"><div class="probfill" style="width:89.9%;background:#16a34a"></div><span>89.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="mexico" data-status="pass"><td class="team"><span class="flag">⚽</span>México</td><td class="grp">A</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.46</td><td class="num">1.23</td><td class="num">0.88</td><td class="num"><div class="probbar"><div class="probfill" style="width:89.4%;background:#16a34a"></div><span>89.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="austria" data-status="pass"><td class="team"><span class="flag">⚽</span>Áustria</td><td class="grp">J</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">-0.16</td><td class="num">1.13</td><td class="num">1.36</td><td class="num"><div class="probbar"><div class="probfill" style="width:87.9%;background:#16a34a"></div><span>87.9%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="noruega" data-status="pass"><td class="team"><span class="flag">⚽</span>Noruega</td><td class="grp">I</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">-0.31</td><td class="num">1.38</td><td class="num">1.64</td><td class="num"><div class="probbar"><div class="probfill" style="width:84.4%;background:#16a34a"></div><span>84.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="bosnia e herzegovina" data-status="pass"><td class="team"><span class="flag">⚽</span>Bósnia e Herzegovina</td><td class="grp">B</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.50</td><td class="num">1.04</td><td class="num">1.49</td><td class="num"><div class="probbar"><div class="probfill" style="width:81.0%;background:#16a34a"></div><span>81.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="rd congo" data-status="pass"><td class="team"><span class="flag">⚽</span>RD Congo</td><td class="grp">K</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.32</td><td class="num">1.14</td><td class="num">1.28</td><td class="num"><div class="probbar"><div class="probfill" style="width:79.3%;background:#16a34a"></div><span>79.3%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="equador" data-status="pass"><td class="team"><span class="flag">⚽</span>Equador</td><td class="grp">E</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.42</td><td class="num">1.85</td><td class="num">1.32</td><td class="num"><div class="probbar"><div class="probfill" style="width:73.7%;background:#16a34a"></div><span>73.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="costa do marfim" data-status="pass"><td class="team"><span class="flag">⚽</span>Costa do Marfim</td><td class="grp">E</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">-0.11</td><td class="num">1.27</td><td class="num">1.44</td><td class="num"><div class="probbar"><div class="probfill" style="width:72.7%;background:#16a34a"></div><span>72.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="uruguai" data-status="pass"><td class="team"><span class="flag">⚽</span>Uruguai</td><td class="grp">H</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.70</td><td class="num">1.82</td><td class="num">0.92</td><td class="num"><div class="probbar"><div class="probfill" style="width:72.7%;background:#16a34a"></div><span>72.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="cabo verde" data-status="pass"><td class="team"><span class="flag">⚽</span>Cabo Verde</td><td class="grp">H</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.96</td><td class="num">1.05</td><td class="num">1.98</td><td class="num"><div class="probbar"><div class="probfill" style="width:68.4%;background:#16a34a"></div><span>68.4%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="australia" data-status="pass"><td class="team"><span class="flag">⚽</span>Austrália</td><td class="grp">D</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.39</td><td class="num">1.10</td><td class="num">1.72</td><td class="num"><div class="probbar"><div class="probfill" style="width:64.7%;background:#16a34a"></div><span>64.7%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="paraguai" data-status="pass"><td class="team"><span class="flag">⚽</span>Paraguai</td><td class="grp">D</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-1.06</td><td class="num">0.76</td><td class="num">2.27</td><td class="num"><div class="probbar"><div class="probfill" style="width:61.0%;background:#16a34a"></div><span>61.0%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="gana" data-status="pass"><td class="team"><span class="flag">⚽</span>Gana</td><td class="grp">L</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-1.02</td><td class="num">0.59</td><td class="num">1.48</td><td class="num"><div class="probbar"><div class="probfill" style="width:60.8%;background:#16a34a"></div><span>60.8%</span></div></td><td><span class="badge pass">Deve classificar</span></td></tr><tr data-name="africa do sul" data-status="out"><td class="team"><span class="flag">⚽</span>África do Sul</td><td class="grp">A</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.38</td><td class="num">1.15</td><td class="num">1.40</td><td class="num"><div class="probbar"><div class="probfill" style="width:49.0%;background:#e11d48"></div><span>49.0%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="escocia" data-status="out"><td class="team"><span class="flag">⚽</span>Escócia</td><td class="grp">C</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.48</td><td class="num">1.06</td><td class="num">1.63</td><td class="num"><div class="probbar"><div class="probfill" style="width:43.7%;background:#e11d48"></div><span>43.7%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="ira" data-status="out"><td class="team"><span class="flag">⚽</span>Irã</td><td class="grp">G</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.26</td><td class="num">1.32</td><td class="num">1.97</td><td class="num"><div class="probbar"><div class="probfill" style="width:31.6%;background:#e11d48"></div><span>31.6%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="coreia do sul" data-status="out"><td class="team"><span class="flag">⚽</span>Coreia do Sul</td><td class="grp">A</td><td><span class="cl-dot" style="background:#f59e0b"></span>Intermediárias</td><td class="num">0.24</td><td class="num">1.35</td><td class="num">1.07</td><td class="num"><div class="probbar"><div class="probfill" style="width:27.7%;background:#e11d48"></div><span>27.7%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="turquia" data-status="out"><td class="team"><span class="flag">⚽</span>Turquia</td><td class="grp">D</td><td><span class="cl-dot" style="background:#16a34a"></span>Elite</td><td class="num">0.79</td><td class="num">2.52</td><td class="num">1.25</td><td class="num"><div class="probbar"><div class="probfill" style="width:27.3%;background:#e11d48"></div><span>27.3%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="panama" data-status="out"><td class="team"><span class="flag">⚽</span>Panamá</td><td class="grp">L</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.15</td><td class="num">1.18</td><td class="num">1.22</td><td class="num"><div class="probbar"><div class="probfill" style="width:25.6%;background:#e11d48"></div><span>25.6%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="arabia saudita" data-status="out"><td class="team"><span class="flag">⚽</span>Arábia Saudita</td><td class="grp">H</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.25</td><td class="num">0.75</td><td class="num">2.33</td><td class="num"><div class="probbar"><div class="probfill" style="width:21.9%;background:#e11d48"></div><span>21.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="tchequia" data-status="out"><td class="team"><span class="flag">⚽</span>Tchéquia</td><td class="grp">A</td><td><span class="cl-dot" style="background:#2563eb"></span>Competitivas</td><td class="num">-0.31</td><td class="num">1.15</td><td class="num">1.52</td><td class="num"><div class="probbar"><div class="probfill" style="width:21.6%;background:#e11d48"></div><span>21.6%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="nova zelandia" data-status="out"><td class="team"><span class="flag">⚽</span>Nova Zelândia</td><td class="grp">G</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.18</td><td class="num">1.29</td><td class="num">2.40</td><td class="num"><div class="probbar"><div class="probfill" style="width:20.3%;background:#e11d48"></div><span>20.3%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="curacao" data-status="out"><td class="team"><span class="flag">⚽</span>Curaçao</td><td class="grp">E</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.39</td><td class="num">0.97</td><td class="num">2.52</td><td class="num"><div class="probbar"><div class="probfill" style="width:17.2%;background:#e11d48"></div><span>17.2%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="iraque" data-status="out"><td class="team"><span class="flag">⚽</span>Iraque</td><td class="grp">I</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.34</td><td class="num">0.67</td><td class="num">2.30</td><td class="num"><div class="probbar"><div class="probfill" style="width:15.9%;background:#e11d48"></div><span>15.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="haiti" data-status="out"><td class="team"><span class="flag">⚽</span>Haiti</td><td class="grp">C</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.85</td><td class="num">1.05</td><td class="num">1.58</td><td class="num"><div class="probbar"><div class="probfill" style="width:15.8%;background:#e11d48"></div><span>15.8%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="catar" data-status="out"><td class="team"><span class="flag">⚽</span>Catar</td><td class="grp">B</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-1.36</td><td class="num">0.63</td><td class="num">2.71</td><td class="num"><div class="probbar"><div class="probfill" style="width:11.1%;background:#e11d48"></div><span>11.1%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="jordania" data-status="out"><td class="team"><span class="flag">⚽</span>Jordânia</td><td class="grp">J</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.84</td><td class="num">0.94</td><td class="num">1.65</td><td class="num"><div class="probbar"><div class="probfill" style="width:9.9%;background:#e11d48"></div><span>9.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="tunisia" data-status="out"><td class="team"><span class="flag">⚽</span>Tunísia</td><td class="grp">F</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.85</td><td class="num">0.73</td><td class="num">1.76</td><td class="num"><div class="probbar"><div class="probfill" style="width:9.2%;background:#e11d48"></div><span>9.2%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr><tr data-name="uzbequistao" data-status="out"><td class="team"><span class="flag">⚽</span>Uzbequistão</td><td class="grp">K</td><td><span class="cl-dot" style="background:#e11d48"></span>Baixo desempenho</td><td class="num">-0.92</td><td class="num">0.76</td><td class="num">1.85</td><td class="num"><div class="probbar"><div class="probfill" style="width:8.9%;background:#e11d48"></div><span>8.9%</span></div></td><td><span class="badge out">Pode ser eliminada</span></td></tr></tbody></table></div>
+</section>
+<section id="conclusoes">
+  <h2>🏁 Conclusões <span class="tag t-v">síntese</span></h2>
+  <p>A análise identificou quatro perfis principais. O grupo de <b>Elite</b> concentra equipes com m
