@@ -292,7 +292,7 @@ tr.hide{display:none}
 <main class="container"><nav class="nav">
 <a href="#resumo">Resumo</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
 <a href="#pca">Mapa PCA</a><a href="#quadrante">Ataque × Defesa</a><a href="#rede">Rede</a>
-<a href="#merito">Processo</a><a href="#simulacao">Simulação</a><a href="#resultados">Resultados</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
+<a href="#merito">Processo</a><a href="#simulacao">Simulação</a><a href="#previsoes">Previsões</a><a href="#resultados">Resultados</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
 <section id="resumo">
   <h2>⚽ Resumo executivo <span class="tag t-v">visão geral</span></h2>
   <p class="section-intro">Os indicadores combinam desempenho observado, qualidade das chances criadas e cedidas, força relativa dos adversários e ranking FIFA. A fase prevista é a <b>passagem do mata-mata</b>.</p>
@@ -481,6 +481,430 @@ tr.hide{display:none}
   <div class="insight">A probabilidade é a frequência de vitória nas 10.000 simulações. Espanha e Bélgica lideram pelos maiores Scores Ajustados. O chaveamento cria assimetrias: uma seleção forte pode enfrentar outra forte já no R32.</div>
   <p class="note">Chaveamento ilustrativo cruzando grupos. Diferença de +1,0 no Score Ajustado implica cerca de 82% de chance de vitória.</p>
 </section>
+
+<section id="previsoes">
+  <h2>🔮 Previsões do Mata-Mata <span class="tag t-r">modelo Poisson</span></h2>
+  <p class="section-intro">Placares estimados para todos os jogos do R32 via distribuição de Poisson. λ = média entre xG da seleção e xGA do adversário na fase de grupos. Fonte: <a href="https://footystats.org/international/world-cup/xg" target="_blank" rel="noopener" style="color:var(--accent)">footystats.org</a>.</p>
+
+  <!-- Abas por dia -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="prev-tabs">
+    <button onclick="showDay('d28')" id="tab-d28" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">28/06</button>
+    <button onclick="showDay('d29')" id="tab-d29" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">29/06</button>
+    <button onclick="showDay('d30')" id="tab-d30" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">30/06</button>
+    <button onclick="showDay('d01')" id="tab-d01" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">01/07</button>
+    <button onclick="showDay('d02')" id="tab-d02" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">02/07</button>
+    <button onclick="showDay('d03')" id="tab-d03" class="prev-tab" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer">03/07</button>
+  </div>
+
+  <!-- 28/06 -->
+  <div id="prev-d28" class="prev-day" style="display:none">
+    <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇦 Canadá × África do Sul 🇿🇦</div>
+        <span style="background:#15803d;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">✓ Encerrado</span>
+      </div>
+      <div style="font-size:26px;font-weight:800;color:#0a1a3f;margin:10px 0">1 – 0</div>
+      <div style="font-size:12px;color:#5b6b82">Favorito do modelo venceu · 90+2' Stephen Eustáquio · λ Canadá=1.89, λ África do Sul=0.79</div>
+    </div>
+  </div>
+
+  <!-- 29/06 -->
+  <div id="prev-d29" class="prev-day" style="display:flex;flex-direction:column;gap:14px">
+    <!-- Brasil x Japão -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇧🇷 Brasil × Japão 🇯🇵</div>
+        <span style="font-size:12px;color:var(--muted)">14h · Houston</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Brasil</div><div style="font-size:19px;font-weight:800;color:#15803d">40%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">27%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Japão</div><div style="font-size:19px;font-weight:800;color:#dc2626">33%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.6%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 10.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 9.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.5%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.7%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Brasil=1.35 · λ Japão=1.21</div>
+    </div>
+    <!-- Alemanha x Paraguai -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇩🇪 Alemanha × Paraguai 🇵🇾</div>
+        <span style="font-size:12px;color:var(--muted)">17h30 · Boston</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Alemanha</div><div style="font-size:19px;font-weight:800;color:#15803d">66%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">19%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Paraguai</div><div style="font-size:19px;font-weight:800;color:#dc2626">13%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 11.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 10.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.7%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 8.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">3×0 · 8.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Alemanha=2.21 · λ Paraguai=0.85 · Maior assimetria do R32</div>
+    </div>
+    <!-- Países Baixos x Marrocos -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇳🇱 Países Baixos × Marrocos 🇲🇦</div>
+        <span style="font-size:12px;color:var(--muted)">22h · Seattle</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Países Baixos</div><div style="font-size:19px;font-weight:800;color:#64748b">33%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Marrocos ⚡</div><div style="font-size:19px;font-weight:800;color:#15803d">42%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 8.9%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 7.8%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 7.3%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ PB=1.36 · λ Marrocos=1.57 · Marrocos leve favorito pelo xGA alto da Holanda</div>
+    </div>
+  </div>
+
+  <!-- 30/06 -->
+  <div id="prev-d30" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Costa do Marfim x Noruega -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇮 Costa do Marfim × Noruega 🇳🇴</div>
+        <span style="font-size:12px;color:var(--muted)">14h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Costa do Marfim</div><div style="font-size:19px;font-weight:800;color:#64748b">38%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">25%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Noruega</div><div style="font-size:19px;font-weight:800;color:#64748b">36%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.7%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.5%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 8.3%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 8.2%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.0%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Costa do Marfim=1.46 · λ Noruega=1.41 · Jogo mais equilibrado do torneio</div>
+    </div>
+    <!-- França x Suécia -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇫🇷 França × Suécia 🇸🇪</div>
+        <span style="font-size:12px;color:var(--muted)">18h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">França</div><div style="font-size:19px;font-weight:800;color:#15803d">44%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">25%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Suécia</div><div style="font-size:19px;font-weight:800;color:#dc2626">31%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 9.5%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.1%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 7.7%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ França=1.54 · λ Suécia=1.25</div>
+    </div>
+    <!-- México x Equador -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇲🇽 México × Equador 🇪🇨</div>
+        <span style="font-size:12px;color:var(--muted)">22h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">México</div><div style="font-size:19px;font-weight:800;color:#dc2626">35%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">26%</div></div>
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Equador ⚡</div><div style="font-size:19px;font-weight:800;color:#15803d">39%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 9.7%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 9.1%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 8.5%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 7.9%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ México=1.27 · λ Equador=1.36 · Equador leve favorito pelo xG superior nos grupos</div>
+    </div>
+  </div>
+
+  <!-- 01/07 -->
+  <div id="prev-d01" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Inglaterra x RD Congo -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra × RD Congo 🇨🇩</div>
+        <span style="font-size:12px;color:var(--muted)">13h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Inglaterra</div><div style="font-size:19px;font-weight:800;color:#15803d">53%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">RD Congo</div><div style="font-size:19px;font-weight:800;color:#dc2626">22%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 11.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.7%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 9.6%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 6.7%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Inglaterra=1.70 · λ RD Congo=1.01</div>
+    </div>
+    <!-- Bélgica x Senegal -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇧🇪 Bélgica × Senegal 🇸🇳</div>
+        <span style="font-size:12px;color:var(--muted)">17h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Bélgica</div><div style="font-size:19px;font-weight:800;color:#15803d">47%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">22%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Senegal</div><div style="font-size:19px;font-weight:800;color:#dc2626">29%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 9.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.2%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.1%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 6.8%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×2 · 6.6%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Bélgica=1.88 · λ Senegal=1.44 · Jogo aberto, lambdas altos dos dois lados</div>
+    </div>
+    <!-- EUA x Bósnia -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇺🇸 Estados Unidos × Bósnia 🇧🇦</div>
+        <span style="font-size:12px;color:var(--muted)">21h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">EUA</div><div style="font-size:19px;font-weight:800;color:#15803d">52%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">25%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Bósnia</div><div style="font-size:19px;font-weight:800;color:#dc2626">22%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 12.2%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 9.9%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.5%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.5%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ EUA=1.62 · λ Bósnia=0.97</div>
+    </div>
+  </div>
+
+  <!-- 02/07 -->
+  <div id="prev-d02" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Espanha x Áustria -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇪🇸 Espanha × Áustria 🇦🇹</div>
+        <span style="font-size:12px;color:var(--muted)">16h</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Espanha</div><div style="font-size:19px;font-weight:800;color:#15803d">58%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">23%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Áustria</div><div style="font-size:19px;font-weight:800;color:#dc2626">18%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 13.1%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 11.5%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.0%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.7%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Espanha=1.76 · λ Áustria=0.84</div>
+    </div>
+    <!-- Portugal x Croácia -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇵🇹 Portugal × Croácia 🇭🇷</div>
+        <span style="font-size:12px;color:var(--muted)">20h · Toronto</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Portugal</div><div style="font-size:19px;font-weight:800;color:#15803d">42%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">26%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Croácia</div><div style="font-size:19px;font-weight:800;color:#dc2626">32%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 10.4%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.8%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.8%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.4%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Portugal=1.42 · λ Croácia=1.20</div>
+    </div>
+    <!-- Suíça x Argélia — 02/07 à meia-noite BRT (11pm ET Vancouver) -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇭 Suíça × Argélia 🇩🇿</div>
+        <span style="font-size:12px;color:var(--muted)">00h · Vancouver</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Suíça</div><div style="font-size:19px;font-weight:800;color:#15803d">41%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">26%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Argélia</div><div style="font-size:19px;font-weight:800;color:#dc2626">32%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 12.2%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 9.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 8.8%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 7.6%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Suíça=1.45 · λ Argélia=1.25 · Começa no dia 02/07, meia-noite horário de Brasília</div>
+    </div>
+  </div>
+
+  <!-- 03/07 -->
+  <div id="prev-d03" class="prev-day" style="display:none;flex-direction:column;gap:14px">
+    <!-- Austrália x Egito -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇦🇺 Austrália × Egito 🇪🇬</div>
+        <span style="font-size:12px;color:var(--muted)">horário a confirmar</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Austrália</div><div style="font-size:19px;font-weight:800;color:#dc2626">29%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Egito ⚡</div><div style="font-size:19px;font-weight:800;color:#15803d">46%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.2%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×2 · 9.4%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×1 · 8.7%</span>
+        <span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×2 · 7.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 7.1%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Austrália=1.28 · λ Egito=1.67 · Maior surpresa do modelo: Egito favoritado · AT&T Stadium, Arlington</div>
+    </div>
+    <!-- Argentina x Cabo Verde -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇦🇷 Argentina × Cabo Verde 🇨🇻</div>
+        <span style="font-size:12px;color:var(--muted)">19h · Miami Gardens</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Argentina</div><div style="font-size:19px;font-weight:800;color:#15803d">54%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">24%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Cabo Verde</div><div style="font-size:19px;font-weight:800;color:#dc2626">20%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 12.9%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 11.6%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 10.7%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.6%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 7.8%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Argentina=1.65 · λ Cabo Verde=0.90</div>
+    </div>
+    <!-- Colômbia x Gana -->
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">🇨🇴 Colômbia × Gana 🇬🇭</div>
+        <span style="font-size:12px;color:var(--muted)">22h30 · Kansas City</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="background:#dcfce7;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#15803d;font-weight:600">Colômbia</div><div style="font-size:19px;font-weight:800;color:#15803d">60%</div></div>
+        <div style="background:#f1f5f9;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#64748b;font-weight:600">Empate</div><div style="font-size:19px;font-weight:800;color:#64748b">23%</div></div>
+        <div style="background:#fef2f2;border-radius:10px;padding:6px 12px;text-align:center;flex:1;min-width:70px"><div style="font-size:10px;color:#dc2626;font-weight:600">Gana</div><div style="font-size:19px;font-weight:800;color:#dc2626">16%</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×0 · 14.3%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×0 · 12.5%</span>
+        <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">1×1 · 10.8%</span>
+        <span style="background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">2×1 · 9.4%</span>
+        <span style="background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px">0×0 · 8.2%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">λ Colômbia=1.75 · λ Gana=0.76</div>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:14px">⚙️ Verde = time favorito pelo modelo · Empate nos 90min leva a prorrogação e pênaltis · Dados: <a href="https://footystats.org/international/world-cup/xg" target="_blank" rel="noopener" style="color:var(--accent)">footystats.org</a></p>
+
+  <script>
+  // Mapeamento id → data do jogo
+  var DAYS = {
+    d28: new Date(2026, 5, 28), // 28/06
+    d29: new Date(2026, 5, 29), // 29/06
+    d30: new Date(2026, 5, 30), // 30/06
+    d01: new Date(2026, 6,  1), // 01/07
+    d02: new Date(2026, 6,  2), // 02/07
+    d03: new Date(2026, 6,  3), // 03/07
+  };
+
+  function todayLocal() {
+    var d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function applyTabStyles(activeId) {
+    var hoje = todayLocal();
+    Object.keys(DAYS).forEach(function(id) {
+      var btn = document.getElementById('tab-' + id);
+      if (!btn) return;
+      var gameDate = DAYS[id];
+      var isActive = (id === activeId);
+      var isPast   = gameDate < hoje;
+      var isToday  = gameDate.getTime() === hoje.getTime();
+
+      if (isActive) {
+        // Aba selecionada: destaque azul (ou verde se já jogou)
+        btn.style.background   = isPast ? '#15803d' : 'var(--accent)';
+        btn.style.color        = '#fff';
+        btn.style.borderColor  = isPast ? '#15803d' : 'var(--accent)';
+        btn.style.opacity      = '1';
+      } else if (isPast) {
+        // Já jogou mas não selecionada: verde suave
+        btn.style.background   = '#f0fdf4';
+        btn.style.color        = '#15803d';
+        btn.style.borderColor  = '#bbf7d0';
+        btn.style.opacity      = '1';
+      } else if (isToday) {
+        // Hoje mas não selecionada: borda accent
+        btn.style.background   = 'var(--card)';
+        btn.style.color        = 'var(--accent)';
+        btn.style.borderColor  = 'var(--accent)';
+        btn.style.opacity      = '1';
+      } else {
+        // Futuro
+        btn.style.background   = 'var(--card)';
+        btn.style.color        = 'var(--muted)';
+        btn.style.borderColor  = 'var(--border)';
+        btn.style.opacity      = '0.7';
+      }
+    });
+  }
+
+  function showDay(id) {
+    document.querySelectorAll('.prev-day').forEach(function(el) { el.style.display = 'none'; });
+    var el = document.getElementById('prev-' + id);
+    el.style.display       = 'flex';
+    el.style.flexDirection = 'column';
+    applyTabStyles(id);
+  }
+
+  // Abrir a aba de hoje automaticamente (ou a próxima futura se hoje não tiver jogo)
+  (function() {
+    var hoje = todayLocal();
+    var ids = ['d28','d29','d30','d01','d02','d03'];
+    var target = ids[ids.length - 1]; // fallback: último dia
+    for (var i = 0; i < ids.length; i++) {
+      if (DAYS[ids[i]] >= hoje) { target = ids[i]; break; }
+    }
+    showDay(target);
+  })();
+  </script>
+</section>
+
 <section id="resultados">
   <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span></h2>
   <p class="section-intro">Resultados reais versus a simulação. Verde: modelo acertou. Vermelho: surpresa.</p>
