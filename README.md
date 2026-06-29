@@ -53,6 +53,30 @@ Ou abra `index.html` localmente no navegador (funciona offline).
 
 ### 2️⃣ Registrar Novo Resultado
 
+#### 🤖 **Método 1: GitHub Actions (Recomendado)**
+
+O jeito mais fácil é usar o workflow automatizado direto no GitHub:
+
+1. Vá para **[Actions](https://github.com/LauraMattz/worldcup2026/actions)**
+2. Clique em **"Atualizar Resultados da Copa"** no menu lateral
+3. Clique em **"Run workflow"** no canto superior direito
+4. Preencha os campos:
+   - **Time A**: Nome do primeiro time (ex: `Alemanha`)
+   - **Time B**: Nome do segundo time (ex: `Paraguai`)
+   - **Placar**: Resultado final (ex: `2-0`)
+   - **Vencedor**: Time que venceu (nome completo)
+   - **Rodada**: (opcional, padrão: `Oitavas (R32)`)
+5. Clique em **"Run workflow"**
+
+O script vai:
+- ✅ Adicionar o resultado ao `resultados_copa2026.json`
+- ✅ Atualizar `previsao_vs_resultado.py` automaticamente
+- ✅ Regenerar `index.html` com os cards atualizados
+- ✅ Fazer commit e push das mudanças
+- ✅ GitHub Pages atualiza em ~1 minuto
+
+#### 💻 **Método 2: Linha de Comando (Local)**
+
 Quando um jogo das oitavas terminar, use o script `acompanhar_copa.py`:
 
 ```bash

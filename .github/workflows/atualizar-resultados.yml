@@ -1,0 +1,165 @@
+name: Atualizar Resultados da Copa
+
+on:
+  workflow_dispatch:
+    inputs:
+      time_a:
+        description: 'Time A (ex: Brasil)'
+        required: true
+        type: string
+      time_b:
+        description: 'Time B (ex: Japão)'
+        required: true
+        type: string
+      placar:
+        description: 'Placar (ex: 2-1)'
+        required: true
+        type: string
+      vencedor:
+        description: 'Vencedor (nome completo)'
+        required: true
+        type: string
+      rodada:
+        description: 'Rodada'
+        required: false
+        type: string
+        default: 'Oitavas (R32)'
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do repositório
+      uses: actions/checkout@v4
+      with:
+        ref: main
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Configurar Git
+      run: |
+        git config user.name "LauraMattz"
+        git config user.email "lmattos@users.noreply.github.com"
+
+    - name: Adicionar resultado ao JSON
+      run: |
+        python3 << 'EOF'
+        import json
+        import math
+        from datetime import date
+
+        # Carregar dados
+        with open('resultados_copa2026.json', 'r', encoding='utf-8') as f:
+            dados = json.load(f)
+
+        # Scores do modelo
+        SCORES = {
+            "Espanha": 1.51, "Alemanha": 1.38, "França": 1.29, "Argentina": 1.27,
+            "Brasil": 1.24, "Inglaterra": 1.21, "Países Baixos": 1.18, "Canadá": 1.15,
+            "Portugal": 1.13, "Colômbia": 1.10, "Bélgica": 1.08, "Marrocos": 1.05,
+            "Estados Unidos": 1.02, "México": 0.99, "Uruguai": 0.96, "Senegal": 0.93,
+            "Croácia": 0.90, "Suíça": 0.88, "Japão": 0.85, "Turquia": 0.82,
+            "Dinamarca": 0.79, "Equador": 0.76, "Áustria": 0.73, "Polônia": 0.70,
+            "Coreia do Sul": 0.24, "Austrália": 0.21, "Costa do Marfim": 0.18,
+            "Argélia": 0.15, "Gana": 0.12, "Egito": 0.09, "Bósnia e Herz.": 0.06,
+            "Suécia": 0.03, "Noruega": 0.00,
+            "África do Sul": -0.38, "Paraguai": -1.06, "Cabo Verde": -0.45,
+            "RD Congo": -0.52,
+        }
+
+        def p_vitoria(time_a, time_b, k=1.5):
+            sa = SCORES.get(time_a, 0.0)
+            sb = SCORES.get(time_b, 0.0)
+            return round(1 / (1 + math.exp(-k * (sa - sb))), 3)
+
+        # Inputs do workflow
+        time_a = "${{ github.event.inputs.time_a }}"
+        time_b = "${{ github.event.inputs.time_b }}"
+        placar = "${{ github.event.inputs.placar }}".replace("-", " – ")
+        vencedor = "${{ github.event.inputs.vencedor }}"
+        rodada = "${{ github.event.inputs.rodada }}"
+
+        # Calcular favorito
+        p = p_vitoria(time_a, time_b)
+        if p >= 0.5:
+            favorito = time_a
+            prob = p
+        else:
+            favorito = time_b
+            prob = round(1 - p, 3)
+
+        # Adicionar novo jogo
+        dados["jogos"].append({
+            "data": str(date.today()),
+            "rodada": rodada,
+            "time_a": time_a,
+            "time_b": time_b,
+            "placar": placar,
+            "vencedor": vencedor,
+            "favorito_modelo": favorito,
+            "prob_favorito": prob,
+        })
+
+        # Salvar
+        with open('resultados_copa2026.json', 'w', encoding='utf-8') as f:
+            json.dump(dados, f, ensure_ascii=False, indent=2)
+
+        print(f"✅ Resultado adicionado: {time_a} {placar} {time_b} → Vencedor: {vencedor}")
+        print(f"   Favorito do modelo: {favorito} ({prob*100:.0f}%)")
+        EOF
+
+    - name: Atualizar resultado no previsao_vs_resultado.py
+      run: |
+        python3 << 'EOF'
+        import re
+
+        # Ler arquivo
+        with open('previsao_vs_resultado.py', 'r', encoding='utf-8') as f:
+            conteudo = f.read()
+
+        # Inputs
+        time_a = "${{ github.event.inputs.time_a }}"
+        time_b = "${{ github.event.inputs.time_b }}"
+        placar = "${{ github.event.inputs.placar }}".replace("-", "×")
+
+        # Procurar e descomentar a linha correspondente
+        jogo_key = f"{time_a} × {time_b}"
+        padrao = rf'#\s*"{jogo_key}":\s*"\?×\?"'
+        substituicao = f'"{jogo_key}": "{placar}"'
+
+        conteudo_novo = re.sub(padrao, substituicao, conteudo)
+
+        # Salvar se houver mudança
+        if conteudo_novo != conteudo:
+            with open('previsao_vs_resultado.py', 'w', encoding='utf-8') as f:
+                f.write(conteudo_novo)
+            print(f"✅ previsao_vs_resultado.py atualizado: {jogo_key} = {placar}")
+        else:
+            print(f"⚠️  Jogo {jogo_key} não encontrado em previsao_vs_resultado.py (pode ser normal)")
+        EOF
+
+    - name: Atualizar HTML
+      run: |
+        python3 acompanhar_copa.py --html 2>&1 | grep -v "UnicodeEncodeError" || true
+
+    - name: Commit e Push
+      run: |
+        git add resultados_copa2026.json previsao_vs_resultado.py index.html
+        git commit -m "Atualizar resultados: ${{ github.event.inputs.time_a }} ${{ github.event.inputs.placar }} ${{ github.event.inputs.time_b }}
+
+Vencedor: ${{ github.event.inputs.vencedor }}
+Rodada: ${{ github.event.inputs.rodada }}
+
+🤖 Atualizado via GitHub Actions"
+        git push origin main
+
+    - name: Resumo
+      run: |
+        echo "✅ Resultado registrado com sucesso!"
+        echo "📊 Jogo: ${{ github.event.inputs.time_a }} ${{ github.event.inputs.placar }} ${{ github.event.inputs.time_b }}"
+        echo "🏆 Vencedor: ${{ github.event.inputs.vencedor }}"
+        echo "🔄 GitHub Pages será atualizado em ~1 minuto"
