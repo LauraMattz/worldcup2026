@@ -18,7 +18,7 @@ on:
           - 'Países Baixos × Marrocos'
 
 jobs:
-  buscar-resultado:
+  buscar-e-atualizar:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,13 +36,17 @@ jobs:
       run: |
         pip install requests beautifulsoup4
 
-    - name: Buscar resultado na web
+    - name: Configurar Git
+      run: |
+        git config user.name "LauraMattz"
+        git config user.email "lmattos@users.noreply.github.com"
+
+    - name: Buscar resultado e atualizar automaticamente
       id: buscar
       run: |
         python3 << 'EOF'
-        import requests
-        import json
-        import re
+        import os
+        import sys
         from datetime import datetime
 
         # Determinar qual jogo buscar
@@ -63,42 +67,137 @@ jobs:
             "Alemanha × Paraguai": {
                 "time_a": "Alemanha",
                 "time_b": "Paraguai",
-                "query": "Germany Paraguay World Cup 2026 result score"
+                "rodada": "Oitavas (R32)"
             },
             "Países Baixos × Marrocos": {
                 "time_a": "Países Baixos",
                 "time_b": "Marrocos",
-                "query": "Netherlands Morocco World Cup 2026 result score"
+                "rodada": "Oitavas (R32)"
             }
         }
 
         jogo = jogos.get(jogo_input)
         if not jogo:
             print(f"❌ Jogo '{jogo_input}' não encontrado")
-            exit(1)
+            sys.exit(1)
 
-        # SIMULAÇÃO: Em produção real, isso faria scraping de site de esportes
-        # Por enquanto, vamos deixar o workflow rodar mas pedir entrada manual
+        # Executar script de busca
+        resultado = os.popen(f"python3 buscar_resultado.py '{jogo['time_a']}' '{jogo['time_b']}'").read()
+        print(resultado)
 
-        print(f"⚠️  Workflow agendado com sucesso!")
-        print(f"📋 Jogo: {jogo['time_a']} × {jogo['time_b']}")
-        print(f"")
-        print(f"🔔 ATENÇÃO: Para adicionar o resultado real:")
-        print(f"   1. Vá em Actions → 'Atualizar Resultados da Copa'")
-        print(f"   2. Clique em 'Run workflow'")
-        print(f"   3. Preencha os dados do jogo")
-        print(f"")
-        print(f"💡 Este workflow serve como lembrete automático!")
+        # Verificar se encontrou resultado
+        import json
+        try:
+            resultado_json = json.loads(resultado)
+            if "erro" in resultado_json:
+                print(f"⚠️  Resultado não encontrado automaticamente")
+                print(f"🔔 Será necessário adicionar manualmente via workflow 'Atualizar Resultados da Copa'")
+                sys.exit(0)  # Exit 0 para não falhar o workflow
 
-        # Salvar info no output
-        with open('GITHUB_OUTPUT', 'a') if 'GITHUB_OUTPUT' in os.environ else open('/dev/null', 'w') as f:
-            f.write(f"time_a={jogo['time_a']}\n")
-            f.write(f"time_b={jogo['time_b']}\n")
-            f.write(f"jogo_nome={jogo_input}\n")
+            # Salvar nos outputs do GitHub
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                f.write(f"placar={resultado_json['placar']}\n")
+                f.write(f"vencedor={resultado_json['vencedor']}\n")
+                f.write(f"time_a={jogo['time_a']}\n")
+                f.write(f"time_b={jogo['time_b']}\n")
+                f.write(f"rodada={jogo['rodada']}\n")
+                f.write(f"encontrado=true\n")
 
+            print(f"✅ Resultado encontrado: {resultado_json['placar']} - Vencedor: {resultado_json['vencedor']}")
+
+        except json.JSONDecodeError:
+            print(f"❌ Erro ao processar resultado")
+            sys.exit(1)
         EOF
 
-    - name: Notificação
+    - name: Atualizar resultado no JSON
+      if: steps.buscar.outputs.encontrado == 'true'
       run: |
-        echo "⚽ Lembrete: Atualizar resultado de ${{ steps.buscar.outputs.jogo_nome }}"
-        echo "📍 Use o workflow 'Atualizar Resultados da Copa' para registrar o placar"
+        python3 << 'EOF'
+        import json
+        import math
+        from datetime import date
+
+        # Carregar dados
+        with open('resultados_copa2026.json', 'r', encoding='utf-8') as f:
+            dados = json.load(f)
+
+        # Scores do modelo
+        SCORES = {
+            "Espanha": 1.51, "Alemanha": 1.38, "França": 1.29, "Argentina": 1.27,
+            "Brasil": 1.24, "Inglaterra": 1.21, "Países Baixos": 1.18, "Canadá": 1.15,
+            "Portugal": 1.13, "Colômbia": 1.10, "Bélgica": 1.08, "Marrocos": 1.05,
+            "Estados Unidos": 1.02, "México": 0.99, "Uruguai": 0.96, "Senegal": 0.93,
+            "Croácia": 0.90, "Suíça": 0.88, "Japão": 0.85, "Turquia": 0.82,
+            "Dinamarca": 0.79, "Equador": 0.76, "Áustria": 0.73, "Polônia": 0.70,
+            "Coreia do Sul": 0.24, "Austrália": 0.21, "Costa do Marfim": 0.18,
+            "Argélia": 0.15, "Gana": 0.12, "Egito": 0.09, "Bósnia e Herz.": 0.06,
+            "Suécia": 0.03, "Noruega": 0.00,
+            "África do Sul": -0.38, "Paraguai": -1.06, "Cabo Verde": -0.45,
+            "RD Congo": -0.52,
+        }
+
+        def p_vitoria(time_a, time_b, k=1.5):
+            sa = SCORES.get(time_a, 0.0)
+            sb = SCORES.get(time_b, 0.0)
+            return round(1 / (1 + math.exp(-k * (sa - sb))), 3)
+
+        # Inputs do workflow
+        time_a = "${{ steps.buscar.outputs.time_a }}"
+        time_b = "${{ steps.buscar.outputs.time_b }}"
+        placar = "${{ steps.buscar.outputs.placar }}".replace("-", " – ")
+        vencedor = "${{ steps.buscar.outputs.vencedor }}"
+        rodada = "${{ steps.buscar.outputs.rodada }}"
+
+        # Calcular favorito
+        p = p_vitoria(time_a, time_b)
+        if p >= 0.5:
+            favorito = time_a
+            prob = p
+        else:
+            favorito = time_b
+            prob = round(1 - p, 3)
+
+        # Adicionar novo jogo
+        dados["jogos"].append({
+            "data": str(date.today()),
+            "rodada": rodada,
+            "time_a": time_a,
+            "time_b": time_b,
+            "placar": placar,
+            "vencedor": vencedor,
+            "favorito_modelo": favorito,
+            "prob_favorito": prob,
+        })
+
+        # Salvar
+        with open('resultados_copa2026.json', 'w', encoding='utf-8') as f:
+            json.dump(dados, f, ensure_ascii=False, indent=2)
+
+        print(f"✅ JSON atualizado: {time_a} {placar} {time_b} → {vencedor}")
+        EOF
+
+    - name: Atualizar HTML
+      if: steps.buscar.outputs.encontrado == 'true'
+      run: |
+        python3 acompanhar_copa.py --html 2>&1 | grep -v "UnicodeEncodeError" || true
+
+    - name: Commit e Push
+      if: steps.buscar.outputs.encontrado == 'true'
+      run: |
+        git add resultados_copa2026.json index.html
+        git commit -m "🤖 Atualização automática: ${{ steps.buscar.outputs.time_a }} ${{ steps.buscar.outputs.placar }} ${{ steps.buscar.outputs.time_b }}
+
+Vencedor: ${{ steps.buscar.outputs.vencedor }}
+Resultado encontrado automaticamente via web scraping
+
+🤖 Atualizado via GitHub Actions (scheduled)"
+        git push origin main
+
+    - name: Resumo
+      if: steps.buscar.outputs.encontrado == 'true'
+      run: |
+        echo "✅ Resultado registrado e publicado automaticamente!"
+        echo "📊 Jogo: ${{ steps.buscar.outputs.time_a }} ${{ steps.buscar.outputs.placar }} ${{ steps.buscar.outputs.time_b }}"
+        echo "🏆 Vencedor: ${{ steps.buscar.outputs.vencedor }}"
+        echo "🔄 GitHub Pages atualizado em ~1 minuto"
