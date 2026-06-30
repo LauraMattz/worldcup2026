@@ -19,6 +19,17 @@
       "vencedor": "Brasil",
       "favorito_modelo": "Brasil",
       "prob_favorito": 0.642
+    },
+    {
+      "data": "2026-06-29",
+      "rodada": "Oitavas (R32)",
+      "time_a": "Alemanha",
+      "time_b": "Paraguai",
+      "placar": "1 – 1",
+      "vencedor": "Paraguai",
+      "favorito_modelo": "Alemanha",
+      "prob_favorito": 0.995,
+      "nota": "Paraguai venceu nos pênaltis (4-3)"
     }
   ]
 }
