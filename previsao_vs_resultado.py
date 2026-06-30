@@ -89,7 +89,7 @@ RESULTADOS = {
     "Canadá × África do Sul": "1×0",  # confirmado
     "Brasil × Japão": "2×1",  # confirmado - gols: Casemiro, Martinelli (BRA); Sano (JPN)
     "Alemanha × Paraguai": "1×1",  # 90min: Enciso (PAR); Paraguai venceu pênaltis 4×3 — ZEBRA (modelo: Alemanha 66%)
-    # "Países Baixos × Marrocos": "?×?",
+    "Países Baixos × Marrocos": "1×1",  # 90min: Gakpo (NED), Diop (MAR); Marrocos venceu pênaltis 3×2 — ZEBRA
     # "Costa do Marfim × Noruega": "?×?",
     # "França × Suécia": "?×?",
     # "México × Equador": "?×?",
