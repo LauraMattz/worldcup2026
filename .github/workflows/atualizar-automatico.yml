@@ -186,12 +186,12 @@ jobs:
       if: steps.buscar.outputs.encontrado == 'true'
       run: |
         git add resultados_copa2026.json index.html
-        git commit -m "🤖 Atualização automática: ${{ steps.buscar.outputs.time_a }} ${{ steps.buscar.outputs.placar }} ${{ steps.buscar.outputs.time_b }}
+        git commit -m "Atualização automática: ${{ steps.buscar.outputs.time_a }} ${{ steps.buscar.outputs.placar }} ${{ steps.buscar.outputs.time_b }}
 
 Vencedor: ${{ steps.buscar.outputs.vencedor }}
 Resultado encontrado automaticamente via web scraping
 
-🤖 Atualizado via GitHub Actions (scheduled)"
+Atualizado via GitHub Actions (scheduled)"
         git push origin main
 
     - name: Resumo

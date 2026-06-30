@@ -2,7 +2,7 @@
 
 **Relatório interativo de análise estatística e acompanhamento ao vivo da Copa do Mundo 2026**
 
-![Status](https://img.shields.io/badge/status-ao%20vivo-brightgreen) ![Acurácia](https://img.shields.io/badge/acur%C3%A1cia-100%25-success) ![Jogos](https://img.shields.io/badge/jogos-2%2F16-blue)
+![Status](https://img.shields.io/badge/status-ao%20vivo-brightgreen) ![Acurácia](https://img.shields.io/badge/acur%C3%A1cia-67%25-orange) ![Jogos](https://img.shields.io/badge/jogos-3%2F16-blue) ![Surpresas](https://img.shields.io/badge/surpresas-1-red)
 
 ## 📊 Sobre o Projeto
 
@@ -30,10 +30,15 @@ O objetivo é avaliar a acurácia de modelos probabilísticos confrontando previ
 
 ```
 worldcup2026/
+├── .github/workflows/
+│   ├── atualizar-automatico.yml    # Workflow agendado (cron)
+│   └── atualizar-resultados.yml    # Workflow manual
 ├── index.html                      # Relatório web interativo (standalone)
 ├── acompanhar_copa.py              # Script de registro e atualização de resultados
+├── buscar_resultado.py             # Web scraping automático de resultados
 ├── previsao_vs_resultado.py        # Validação de previsões Poisson
 ├── resultados_copa2026.json        # Base de dados dos jogos disputados
+├── analise_copa_2026_machine_learning.ipynb  # Análise completa em Python
 └── README.md                       # Este arquivo
 ```
 
@@ -188,25 +193,36 @@ Fonte de dados: [FootyStats.org](https://footystats.org)
 
 | Métrica | Valor |
 |---------|-------|
-| **Jogos disputados** | 2/16 |
-| **Favoritos que passaram** | 2/2 (100%) |
-| **Acurácia do modelo** | 100% |
-| **Placares exatos (Poisson)** | 1/2 (50%) |
+| **Jogos disputados** | 3/16 |
+| **Favoritos que passaram** | 2/3 (67%) |
+| **Acurácia do modelo** | 67% |
+| **Placares exatos (Poisson)** | 1/3 (33%) |
+| **Surpresas** | 1 🚨 |
 
 **Jogos registrados:**
 - ✅ **Canadá 1×0 África do Sul** — Favorito: Canadá (91%) ✓
 - ✅ **Brasil 2×1 Japão** — Favorito: Brasil (64%) ✓
+- 🚨 **Alemanha 1(3)×1(4) Paraguai** — Favorito: Alemanha (99.5%) ✗ **ZEBRA!**
 
 ---
 
 ## 🔄 Atualização
 
-Os resultados são atualizados **manualmente após cada jogo** usando:
+Os resultados são atualizados **automaticamente via GitHub Actions**:
+
+### 🤖 Atualização Automática (Recomendado)
+O workflow `atualizar-automatico.yml` roda automaticamente após cada jogo:
+- Busca resultados via web scraping (Google, Olympics.com)
+- Atualiza JSON, Python e HTML automaticamente
+- Faz commit e push sem intervenção manual
+
+### 💻 Atualização Manual (Fallback)
+Se necessário, use:
 ```bash
 python acompanhar_copa.py --add
 python acompanhar_copa.py --html
 git add . && git commit -m "Atualizar resultado Jogo X"
-git push origin master
+git push origin main
 ```
 
 O GitHub Pages reflete as mudanças automaticamente em ~1 minuto.
@@ -233,4 +249,4 @@ Este projeto é de código aberto para fins educacionais e de pesquisa.
 
 ---
 
-**Última atualização:** 29/06/2026 — Brasil 2×1 Japão registrado ✅
+**Última atualização:** 29/06/2026 — 🚨 Paraguai elimina Alemanha nos pênaltis (1ª surpresa do torneio!)
