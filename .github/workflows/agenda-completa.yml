@@ -1,11 +1,45 @@
-name: Atualização Automática (Scheduled)
+name: Agenda Completa - Todos os Jogos das Oitavas
 
 on:
   schedule:
-    # 19h40 BRT = 22h40 UTC (após Alemanha × Paraguai)
-    - cron: '40 22 29 6 *'
-    # 00h10 BRT = 03h10 UTC (após Países Baixos × Marrocos)
+    # 29/06 - 22h Países Baixos × Marrocos (00h10 BRT = 03h10 UTC)
     - cron: '10 3 30 6 *'
+
+    # 30/06 - 14h Costa do Marfim × Noruega (16h10 BRT = 19h10 UTC)
+    - cron: '10 19 30 6 *'
+
+    # 30/06 - 18h França × Suécia (20h10 BRT = 23h10 UTC)
+    - cron: '10 23 30 6 *'
+
+    # 30/06 - 22h México × Equador (00h10 BRT = 03h10 UTC do dia 01/07)
+    - cron: '10 3 1 7 *'
+
+    # 01/07 - 14h Inglaterra × RD Congo (16h10 BRT = 19h10 UTC)
+    - cron: '10 19 1 7 *'
+
+    # 01/07 - 18h Bélgica × Senegal (20h10 BRT = 23h10 UTC)
+    - cron: '10 23 1 7 *'
+
+    # 01/07 - 22h EUA × Bósnia (00h10 BRT = 03h10 UTC do dia 02/07)
+    - cron: '10 3 2 7 *'
+
+    # 02/07 - 14h Espanha × Áustria (16h10 BRT = 19h10 UTC)
+    - cron: '10 19 2 7 *'
+
+    # 02/07 - 18h Portugal × Croácia (20h10 BRT = 23h10 UTC)
+    - cron: '10 23 2 7 *'
+
+    # 02/07 - 22h Suíça × Argélia (00h10 BRT = 03h10 UTC do dia 03/07)
+    - cron: '10 3 3 7 *'
+
+    # 03/07 - 14h Austrália × Egito (16h10 BRT = 19h10 UTC)
+    - cron: '10 19 3 7 *'
+
+    # 03/07 - 18h Argentina × Cabo Verde (20h10 BRT = 23h10 UTC)
+    - cron: '10 23 3 7 *'
+
+    # 03/07 - 22h Colômbia × Gana (00h10 BRT = 03h10 UTC do dia 04/07)
+    - cron: '10 3 4 7 *'
 
   workflow_dispatch:
     inputs:
@@ -14,8 +48,19 @@ on:
         required: true
         type: choice
         options:
-          - 'Alemanha × Paraguai'
           - 'Países Baixos × Marrocos'
+          - 'Costa do Marfim × Noruega'
+          - 'França × Suécia'
+          - 'México × Equador'
+          - 'Inglaterra × RD Congo'
+          - 'Bélgica × Senegal'
+          - 'EUA × Bósnia'
+          - 'Espanha × Áustria'
+          - 'Portugal × Croácia'
+          - 'Suíça × Argélia'
+          - 'Austrália × Egito'
+          - 'Argentina × Cabo Verde'
+          - 'Colômbia × Gana'
 
 jobs:
   buscar-e-atualizar:
@@ -41,7 +86,7 @@ jobs:
         git config user.name "LauraMattz"
         git config user.email "lmattos@users.noreply.github.com"
 
-    - name: Buscar resultado e atualizar automaticamente
+    - name: Determinar jogo e buscar resultado
       id: buscar
       run: |
         python3 << 'EOF'
@@ -52,28 +97,52 @@ jobs:
         # Determinar qual jogo buscar
         jogo_input = "${{ github.event.inputs.jogo }}"
 
-        # Se for schedule, determina pelo horário
+        # Se for schedule, determina pelo horário e data
         if not jogo_input:
-            hora_atual = datetime.utcnow().hour
-            if hora_atual == 22:  # 22h40 UTC = após Alemanha × Paraguai
-                jogo_input = "Alemanha × Paraguai"
-            else:  # 03h10 UTC = após Países Baixos × Marrocos
-                jogo_input = "Países Baixos × Marrocos"
+            agora = datetime.utcnow()
+            dia = agora.day
+            mes = agora.month
+            hora = agora.hour
+
+            # Mapear cron para jogo (baseado em dia, mês e hora UTC)
+            mapa_jogos = {
+                (30, 6, 3): "Países Baixos × Marrocos",
+                (30, 6, 19): "Costa do Marfim × Noruega",
+                (30, 6, 23): "França × Suécia",
+                (1, 7, 3): "México × Equador",
+                (1, 7, 19): "Inglaterra × RD Congo",
+                (1, 7, 23): "Bélgica × Senegal",
+                (2, 7, 3): "EUA × Bósnia",
+                (2, 7, 19): "Espanha × Áustria",
+                (2, 7, 23): "Portugal × Croácia",
+                (3, 7, 3): "Suíça × Argélia",
+                (3, 7, 19): "Austrália × Egito",
+                (3, 7, 23): "Argentina × Cabo Verde",
+                (4, 7, 3): "Colômbia × Gana",
+            }
+
+            jogo_input = mapa_jogos.get((dia, mes, hora))
+            if not jogo_input:
+                print(f"⚠️  Nenhum jogo agendado para {dia}/{mes} às {hora}h UTC")
+                sys.exit(0)
 
         print(f"🔍 Buscando resultado de: {jogo_input}")
 
         # Mapear jogos
         jogos = {
-            "Alemanha × Paraguai": {
-                "time_a": "Alemanha",
-                "time_b": "Paraguai",
-                "rodada": "Oitavas (R32)"
-            },
-            "Países Baixos × Marrocos": {
-                "time_a": "Países Baixos",
-                "time_b": "Marrocos",
-                "rodada": "Oitavas (R32)"
-            }
+            "Países Baixos × Marrocos": {"time_a": "Países Baixos", "time_b": "Marrocos", "rodada": "Oitavas (R32)"},
+            "Costa do Marfim × Noruega": {"time_a": "Costa do Marfim", "time_b": "Noruega", "rodada": "Oitavas (R32)"},
+            "França × Suécia": {"time_a": "França", "time_b": "Suécia", "rodada": "Oitavas (R32)"},
+            "México × Equador": {"time_a": "México", "time_b": "Equador", "rodada": "Oitavas (R32)"},
+            "Inglaterra × RD Congo": {"time_a": "Inglaterra", "time_b": "RD Congo", "rodada": "Oitavas (R32)"},
+            "Bélgica × Senegal": {"time_a": "Bélgica", "time_b": "Senegal", "rodada": "Oitavas (R32)"},
+            "EUA × Bósnia": {"time_a": "EUA", "time_b": "Bósnia", "rodada": "Oitavas (R32)"},
+            "Espanha × Áustria": {"time_a": "Espanha", "time_b": "Áustria", "rodada": "Oitavas (R32)"},
+            "Portugal × Croácia": {"time_a": "Portugal", "time_b": "Croácia", "rodada": "Oitavas (R32)"},
+            "Suíça × Argélia": {"time_a": "Suíça", "time_b": "Argélia", "rodada": "Oitavas (R32)"},
+            "Austrália × Egito": {"time_a": "Austrália", "time_b": "Egito", "rodada": "Oitavas (R32)"},
+            "Argentina × Cabo Verde": {"time_a": "Argentina", "time_b": "Cabo Verde", "rodada": "Oitavas (R32)"},
+            "Colômbia × Gana": {"time_a": "Colômbia", "time_b": "Gana", "rodada": "Oitavas (R32)"},
         }
 
         jogo = jogos.get(jogo_input)
@@ -92,7 +161,7 @@ jobs:
             if "erro" in resultado_json:
                 print(f"⚠️  Resultado não encontrado automaticamente")
                 print(f"🔔 Será necessário adicionar manualmente via workflow 'Atualizar Resultados da Copa'")
-                sys.exit(0)  # Exit 0 para não falhar o workflow
+                sys.exit(0)
 
             # Salvar nos outputs do GitHub
             with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
@@ -134,7 +203,7 @@ jobs:
             "Argélia": 0.15, "Gana": 0.12, "Egito": 0.09, "Bósnia e Herz.": 0.06,
             "Suécia": 0.03, "Noruega": 0.00,
             "África do Sul": -0.38, "Paraguai": -1.06, "Cabo Verde": -0.45,
-            "RD Congo": -0.52,
+            "RD Congo": -0.52, "EUA": 1.02, "Bósnia": 0.06,
         }
 
         def p_vitoria(time_a, time_b, k=1.5):
