@@ -1,0 +1,104 @@
+name: Atualização Automática (Scheduled)
+
+on:
+  schedule:
+    # 19h40 BRT = 22h40 UTC (após Alemanha × Paraguai)
+    - cron: '40 22 29 6 *'
+    # 00h10 BRT = 03h10 UTC (após Países Baixos × Marrocos)
+    - cron: '10 3 30 6 *'
+
+  workflow_dispatch:
+    inputs:
+      jogo:
+        description: 'Qual jogo atualizar?'
+        required: true
+        type: choice
+        options:
+          - 'Alemanha × Paraguai'
+          - 'Países Baixos × Marrocos'
+
+jobs:
+  buscar-resultado:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do repositório
+      uses: actions/checkout@v4
+      with:
+        ref: main
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Instalar dependências
+      run: |
+        pip install requests beautifulsoup4
+
+    - name: Buscar resultado na web
+      id: buscar
+      run: |
+        python3 << 'EOF'
+        import requests
+        import json
+        import re
+        from datetime import datetime
+
+        # Determinar qual jogo buscar
+        jogo_input = "${{ github.event.inputs.jogo }}"
+
+        # Se for schedule, determina pelo horário
+        if not jogo_input:
+            hora_atual = datetime.utcnow().hour
+            if hora_atual == 22:  # 22h40 UTC = após Alemanha × Paraguai
+                jogo_input = "Alemanha × Paraguai"
+            else:  # 03h10 UTC = após Países Baixos × Marrocos
+                jogo_input = "Países Baixos × Marrocos"
+
+        print(f"🔍 Buscando resultado de: {jogo_input}")
+
+        # Mapear jogos
+        jogos = {
+            "Alemanha × Paraguai": {
+                "time_a": "Alemanha",
+                "time_b": "Paraguai",
+                "query": "Germany Paraguay World Cup 2026 result score"
+            },
+            "Países Baixos × Marrocos": {
+                "time_a": "Países Baixos",
+                "time_b": "Marrocos",
+                "query": "Netherlands Morocco World Cup 2026 result score"
+            }
+        }
+
+        jogo = jogos.get(jogo_input)
+        if not jogo:
+            print(f"❌ Jogo '{jogo_input}' não encontrado")
+            exit(1)
+
+        # SIMULAÇÃO: Em produção real, isso faria scraping de site de esportes
+        # Por enquanto, vamos deixar o workflow rodar mas pedir entrada manual
+
+        print(f"⚠️  Workflow agendado com sucesso!")
+        print(f"📋 Jogo: {jogo['time_a']} × {jogo['time_b']}")
+        print(f"")
+        print(f"🔔 ATENÇÃO: Para adicionar o resultado real:")
+        print(f"   1. Vá em Actions → 'Atualizar Resultados da Copa'")
+        print(f"   2. Clique em 'Run workflow'")
+        print(f"   3. Preencha os dados do jogo")
+        print(f"")
+        print(f"💡 Este workflow serve como lembrete automático!")
+
+        # Salvar info no output
+        with open('GITHUB_OUTPUT', 'a') if 'GITHUB_OUTPUT' in os.environ else open('/dev/null', 'w') as f:
+            f.write(f"time_a={jogo['time_a']}\n")
+            f.write(f"time_b={jogo['time_b']}\n")
+            f.write(f"jogo_nome={jogo_input}\n")
+
+        EOF
+
+    - name: Notificação
+      run: |
+        echo "⚽ Lembrete: Atualizar resultado de ${{ steps.buscar.outputs.jogo_nome }}"
+        echo "📍 Use o workflow 'Atualizar Resultados da Copa' para registrar o placar"
