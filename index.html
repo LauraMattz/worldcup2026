@@ -281,9 +281,187 @@ tr.hide{display:none}
   </div></div>
 </header>
 <main class="container"><nav class="nav">
-<a href="#resumo">Resumo</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
+<a href="#resultados">Resultados</a><a href="#resumo">Resumo</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
 <a href="#pca">Mapa PCA</a><a href="#quadrante">Ataque × Defesa</a><a href="#rede">Rede</a>
 <a href="#merito">Mérito</a><a href="#simulacao">Simulação</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
+
+<section id="resultados">
+  <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span> <span class="tag" style="background:#e0e7ff;color:#4338ca">Modelo v2.1</span></h2>
+  <p class="section-intro">Resultados reais confrontados com simulação Monte Carlo v2.1. 🟢 Verde = favorito claro venceu. 🔴 Vermelho = surpresa. 🟠 Laranja = jogo equilibrado (55-65%). ⚪ Cinza = cara ou coroa (&lt;55%, sem convicção).</p>
+
+  <div id="resultados-lista" style="display:flex;flex-direction:column;gap:10px">
+
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 8px">Oitavas (R32)</div>
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">África do Sul</div>
+              <div style="font-size:11px;color:#9ca3af">score -0.38</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">0 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Canadá ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.15</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#15803d;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Favorito venceu</span>
+            <span style="font-size:10px;color:#5b6b82">Favorito Canadá (80%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fef3c7;border:1.5px solid #fbbf24;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Brasil ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.24</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">2 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Japão</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.85</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">↗️ Jogo equilibrado (acertou)</span>
+            <span style="font-size:10px;color:#5b6b82">Favorito Brasil (58%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff1f2;border:1.5px solid #fecaca;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Alemanha</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.38</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">1 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Paraguai ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score -1.06</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✗ Surpresa</span>
+            <span style="font-size:10px;color:#5b6b82">Favorito Alemanha (88%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#f9fafb;border:1.5px solid #d1d5db;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Países Baixos</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.18</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">1 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Marrocos ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.05</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#6b7280;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">⚖️ Cara ou coroa (sem convicção)</span>
+            <span style="font-size:10px;color:#5b6b82">Estatísticas muito próximas (53%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#f9fafb;border:1.5px solid #d1d5db;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Costa do Marfim</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.18</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">1 – 2</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Noruega ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.00</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#6b7280;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">⚖️ Cara ou coroa (sem convicção)</span>
+            <span style="font-size:10px;color:#5b6b82">Estatísticas muito próximas (54%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">França ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.29</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">3 – 0</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Suécia</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.03</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#15803d;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Favorito venceu</span>
+            <span style="font-size:10px;color:#5b6b82">Favorito França (76%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fef3c7;border:1.5px solid #fbbf24;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">México ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.99</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">2 – 0</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">Equador</div>
+              <div style="font-size:11px;color:#9ca3af">score +0.76</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">↗️ Jogo equilibrado (acertou)</span>
+            <span style="font-size:10px;color:#5b6b82">Favorito México (55%)</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+            <div style="text-align:right;flex:1">
+              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Inglaterra ✓</div>
+              <div style="font-size:11px;color:#9ca3af">score +1.21</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">2 – 1</div>
+            <div style="text-align:left;flex:1">
+              <div style="font-size:13px;color:#0a1a3f">RD Congo</div>
+              <div style="font-size:11px;color:#9ca3af">score -0.52</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:#15803d;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Favorito venceu</span>
+            <span style="font-size:10px;color:#5b6b82">Favorito Inglaterra (82%)</span>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="resultados-resumo" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
+      <div style="font-size:28px;font-weight:800;color:#15803d">8</div>
+      <div style="font-size:12px;color:#5b6b82">Jogos disputados</div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
+      <div style="font-size:28px;font-weight:800;color:#15803d">5/6</div>
+      <div style="font-size:12px;color:#5b6b82">Acertos (excl. cara ou coroa)</div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
+      <div style="font-size:28px;font-weight:800;color:#15803d">83%</div>
+      <div style="font-size:12px;color:#5b6b82">Acurácia</div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:14px">⚡ Surpresas do torneio: <b>Paraguai</b> eliminaram os favoritos do modelo.</p>
+</section>
 <section id="resumo">
   <h2>⚽ Resumo executivo <span class="tag t-v">visão geral</span></h2>
   <p class="section-intro">Os indicadores combinam desempenho observado, qualidade das chances criadas e cedidas, força relativa dos adversários e ranking FIFA. A fase prevista é a <b>passagem do mata-mata</b>.</p>
@@ -465,183 +643,6 @@ tr.hide{display:none}
 </div>
   <div class="insight"><b>Casos mais gritantes:</b> <b>Turquia</b> (score 0,79 — Elite) e <b>Uruguai</b> (0,70 — Elite) saíram com scores melhores que vários classificados. Do outro lado, <b>Paraguai</b> (−1,06), <b>Cabo Verde</b> (−0,96) e <b>Gana</b> (−1,02) passaram com os piores processos entre os 32 classificados — eles estão na Copa, mas o futebol que mostraram diz outra coisa.</div>
   <p class="note">Score Ajustado combina xGD, ranking relativo dos adversários e desempenho versus o esperado pelo FIFA Rank. Threshold zero = média do torneio. Acima de zero: processo acima da média; abaixo de zero: abaixo da média.</p>
-</section>
-<section id="resultados">
-  <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span> <span class="tag" style="background:#e0e7ff;color:#4338ca">Modelo v2.1</span></h2>
-  <p class="section-intro">Resultados reais confrontados com simulação Monte Carlo v2.1. 🟢 Verde = favorito claro venceu. 🔴 Vermelho = surpresa. 🟠 Laranja = jogo equilibrado (55-65%). ⚪ Cinza = cara ou coroa (&lt;55%, sem convicção).</p>
-
-  <div id="resultados-lista" style="display:flex;flex-direction:column;gap:10px">
-
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 8px">Oitavas (R32)</div>
-      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">África do Sul</div>
-              <div style="font-size:11px;color:#9ca3af">score -0.38</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">0 – 1</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Canadá ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.15</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#15803d;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Favorito venceu</span>
-            <span style="font-size:10px;color:#5b6b82">Favorito Canadá (80%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#fef3c7;border:1.5px solid #fbbf24;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Brasil ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.24</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">2 – 1</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">Japão</div>
-              <div style="font-size:11px;color:#9ca3af">score +0.85</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">↗️ Jogo equilibrado (acertou)</span>
-            <span style="font-size:10px;color:#5b6b82">Favorito Brasil (58%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#fff1f2;border:1.5px solid #fecaca;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">Alemanha</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.38</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">1 – 1</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Paraguai ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score -1.06</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✗ Surpresa</span>
-            <span style="font-size:10px;color:#5b6b82">Favorito Alemanha (88%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#f9fafb;border:1.5px solid #d1d5db;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">Países Baixos</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.18</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">1 – 1</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Marrocos ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.05</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#6b7280;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">⚖️ Cara ou coroa (sem convicção)</span>
-            <span style="font-size:10px;color:#5b6b82">Estatísticas muito próximas (53%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#f9fafb;border:1.5px solid #d1d5db;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">Costa do Marfim</div>
-              <div style="font-size:11px;color:#9ca3af">score +0.18</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">1 – 2</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Noruega ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +0.00</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#6b7280;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">⚖️ Cara ou coroa (sem convicção)</span>
-            <span style="font-size:10px;color:#5b6b82">Estatísticas muito próximas (54%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">França ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.29</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">3 – 0</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">Suécia</div>
-              <div style="font-size:11px;color:#9ca3af">score +0.03</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#15803d;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Favorito venceu</span>
-            <span style="font-size:10px;color:#5b6b82">Favorito França (76%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#fef3c7;border:1.5px solid #fbbf24;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">México ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +0.99</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">2 – 0</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">Equador</div>
-              <div style="font-size:11px;color:#9ca3af">score +0.76</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">↗️ Jogo equilibrado (acertou)</span>
-            <span style="font-size:10px;color:#5b6b82">Favorito México (55%)</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:10px 14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
-            <div style="text-align:right;flex:1">
-              <div style="font-size:13px;font-weight:700;color:#0a1a3f">Inglaterra ✓</div>
-              <div style="font-size:11px;color:#9ca3af">score +1.21</div>
-            </div>
-            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">2 – 1</div>
-            <div style="text-align:left;flex:1">
-              <div style="font-size:13px;color:#0a1a3f">RD Congo</div>
-              <div style="font-size:11px;color:#9ca3af">score -0.52</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <span style="background:#15803d;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Favorito venceu</span>
-            <span style="font-size:10px;color:#5b6b82">Favorito Inglaterra (82%)</span>
-          </div>
-        </div>
-      </div>
-  </div>
-
-  <div id="resultados-resumo" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
-      <div style="font-size:28px;font-weight:800;color:#15803d">8</div>
-      <div style="font-size:12px;color:#5b6b82">Jogos disputados</div>
-    </div>
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
-      <div style="font-size:28px;font-weight:800;color:#15803d">5/6</div>
-      <div style="font-size:12px;color:#5b6b82">Acertos (excl. cara ou coroa)</div>
-    </div>
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
-      <div style="font-size:28px;font-weight:800;color:#15803d">83%</div>
-      <div style="font-size:12px;color:#5b6b82">Acurácia</div>
-    </div>
-  </div>
-  <p class="note" style="margin-top:14px">⚡ Surpresas do torneio: <b>Paraguai</b> eliminaram os favoritos do modelo.</p>
 </section>
 
 <section id="simulacao">
