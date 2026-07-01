@@ -67,6 +67,17 @@
       "favorito_modelo": "França",
       "prob_favorito": 0.756,
       "categoria": "favorito"
+    },
+    {
+      "data": "2026-06-30",
+      "rodada": "Oitavas (R32)",
+      "time_a": "México",
+      "time_b": "Equador",
+      "placar": "2 – 0",
+      "vencedor": "México",
+      "favorito_modelo": "México",
+      "prob_favorito": 0.55,
+      "categoria": "jogo_equilibrado"
     }
   ]
 }
