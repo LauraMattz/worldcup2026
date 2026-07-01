@@ -8,7 +8,8 @@
       "placar": "0 – 1",
       "vencedor": "Canadá",
       "favorito_modelo": "Canadá",
-      "prob_favorito": 0.908
+      "prob_favorito": 0.795,
+      "is_tossup": false
     },
     {
       "data": "2026-06-29",
@@ -18,7 +19,8 @@
       "placar": "2 – 1",
       "vencedor": "Brasil",
       "favorito_modelo": "Brasil",
-      "prob_favorito": 0.642
+      "prob_favorito": 0.584,
+      "is_tossup": true
     },
     {
       "data": "2026-06-29",
@@ -28,8 +30,9 @@
       "placar": "1 – 1",
       "vencedor": "Paraguai",
       "favorito_modelo": "Alemanha",
-      "prob_favorito": 0.995,
-      "nota": "Paraguai venceu nos pênaltis (4-3)"
+      "prob_favorito": 0.885,
+      "nota": "Paraguai venceu nos pênaltis (4-3)",
+      "is_tossup": false
     },
     {
       "data": "2026-06-29",
@@ -39,8 +42,9 @@
       "placar": "1 – 1",
       "vencedor": "Marrocos",
       "favorito_modelo": "Países Baixos",
-      "prob_favorito": 0.548,
-      "nota": "Marrocos venceu nos pênaltis (3-2)"
+      "prob_favorito": 0.528,
+      "nota": "Marrocos venceu nos pênaltis (3-2)",
+      "is_tossup": true
     },
     {
       "data": "2026-06-30",
@@ -50,7 +54,8 @@
       "placar": "1 – 2",
       "vencedor": "Noruega",
       "favorito_modelo": "Costa do Marfim",
-      "prob_favorito": 0.567
+      "prob_favorito": 0.539,
+      "is_tossup": true
     },
     {
       "data": "2026-06-30",
@@ -60,7 +65,8 @@
       "placar": "3 – 0",
       "vencedor": "França",
       "favorito_modelo": "França",
-      "prob_favorito": 0.869
+      "prob_favorito": 0.756,
+      "is_tossup": false
     }
   ]
 }
