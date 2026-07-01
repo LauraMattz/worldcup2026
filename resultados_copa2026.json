@@ -20,7 +20,7 @@
       "vencedor": "Brasil",
       "favorito_modelo": "Brasil",
       "prob_favorito": 0.584,
-      "categoria": "toss_up"
+      "categoria": "jogo_equilibrado"
     },
     {
       "data": "2026-06-29",
@@ -44,7 +44,7 @@
       "favorito_modelo": "Países Baixos",
       "prob_favorito": 0.528,
       "nota": "Marrocos venceu nos pênaltis (3-2)",
-      "categoria": "coin_flip"
+      "categoria": "cara_ou_coroa"
     },
     {
       "data": "2026-06-30",
@@ -55,7 +55,7 @@
       "vencedor": "Noruega",
       "favorito_modelo": "Costa do Marfim",
       "prob_favorito": 0.539,
-      "categoria": "coin_flip"
+      "categoria": "cara_ou_coroa"
     },
     {
       "data": "2026-06-30",

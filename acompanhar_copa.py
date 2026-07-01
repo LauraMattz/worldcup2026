@@ -143,11 +143,11 @@ def favorito(time_a, time_b):
 
     # Classificar por nível de convicção
     if prob < 0.55:
-        categoria = "coin_flip"  # Sem convicção, não conta para acurácia
+        categoria = "cara_ou_coroa"  # Sem convicção, não conta para acurácia
     elif prob < 0.65:
-        categoria = "toss_up"     # Jogo equilibrado
+        categoria = "jogo_equilibrado"  # Jogo equilibrado
     else:
-        categoria = "favorito"    # Favorito claro
+        categoria = "favorito"          # Favorito claro
 
     return fav, prob, categoria
 
@@ -211,12 +211,12 @@ def adicionar_jogo(dados):
     fav, prob, categoria = favorito(time_a, time_b)
 
     # Tags por categoria
-    if categoria == "coin_flip":
-        cat_tag = " [COIN FLIP - SEM CONVICÇÃO]"
-        acertou = "~ Coin flip"
-    elif categoria == "toss_up":
-        cat_tag = " [TOSS-UP]"
-        acertou = "✓ ACERTOU" if vencedor == fav else "✗ ERROU (mas era toss-up)"
+    if categoria == "cara_ou_coroa":
+        cat_tag = " [CARA OU COROA - SEM CONVICÇÃO]"
+        acertou = "~ Estatísticas muito próximas"
+    elif categoria == "jogo_equilibrado":
+        cat_tag = " [JOGO EQUILIBRADO]"
+        acertou = "✓ ACERTOU" if vencedor == fav else "✗ ERROU (mas era jogo equilibrado)"
     else:
         cat_tag = ""
         acertou = "✓ ACERTOU" if vencedor == fav else "✗ SURPRESA!"
@@ -245,25 +245,25 @@ def gerar_html_card(jogo):
     categoria = jogo.get("categoria", "favorito")  # backward compatibility
 
     # Cores e badges por categoria
-    if categoria == "coin_flip":
-        # Coin flip: cinza neutro (sem convicção)
+    if categoria == "cara_ou_coroa":
+        # Cara ou coroa: cinza neutro (sem convicção)
         cor_borda = "#d1d5db"
         cor_bg    = "#f9fafb"
         badge_bg  = "#6b7280"
-        badge_txt = "⚖️ Coin flip (sem convicção)"
+        badge_txt = "⚖️ Cara ou coroa (sem convicção)"
         fav_text  = f"Estatísticas muito próximas ({jogo['prob_favorito']*100:.0f}%)"
-    elif categoria == "toss_up":
-        # Toss-up: laranja (jogo equilibrado)
+    elif categoria == "jogo_equilibrado":
+        # Jogo equilibrado: laranja
         if acertou:
             cor_borda = "#fbbf24"
             cor_bg    = "#fef3c7"
             badge_bg  = "#d97706"
-            badge_txt = "↗️ Toss-up (acertou)"
+            badge_txt = "↗️ Jogo equilibrado (acertou)"
         else:
             cor_borda = "#fb923c"
             cor_bg    = "#fed7aa"
             badge_bg  = "#ea580c"
-            badge_txt = "↘️ Toss-up (errou)"
+            badge_txt = "↘️ Jogo equilibrado (errou)"
         fav_text = f"Favorito {jogo['favorito_modelo']} ({jogo['prob_favorito']*100:.0f}%)"
     else:  # favorito
         # Favorito claro: verde/vermelho
@@ -285,16 +285,16 @@ def gerar_html_card(jogo):
               <div style="font-size:11px;color:#9ca3af">{score_str}</div>
             </div>'''
 
-    return f'''      <div style="background:{cor_bg};border:1.5px solid {cor_borda};border-radius:14px;padding:14px 16px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:200px">
+    return f'''      <div style="background:{cor_bg};border:1.5px solid {cor_borda};border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
             {time_html(jogo["time_a"], "a")}
-            <div style="font-size:22px;font-weight:800;color:#0a1a3f;min-width:60px;text-align:center">{placar}</div>
+            <div style="font-size:20px;font-weight:800;color:#0a1a3f;min-width:55px;text-align:center">{placar}</div>
             {time_html(jogo["time_b"], "b")}
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-            <span style="background:{badge_bg};color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">{badge_txt}</span>
-            <span style="font-size:11px;color:#5b6b82">{fav_text}</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="background:{badge_bg};color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">{badge_txt}</span>
+            <span style="font-size:10px;color:#5b6b82">{fav_text}</span>
           </div>
         </div>
       </div>'''
@@ -311,10 +311,10 @@ def atualizar_html(dados):
     jogos  = dados["jogos"]
 
     # Separar jogos por categoria
-    coin_flips = [j for j in jogos if j.get("categoria") == "coin_flip"]
-    jogos_com_conviccao = [j for j in jogos if j.get("categoria") != "coin_flip"]
+    cara_ou_coroas = [j for j in jogos if j.get("categoria") == "cara_ou_coroa"]
+    jogos_com_conviccao = [j for j in jogos if j.get("categoria") != "cara_ou_coroa"]
 
-    # Acurácia APENAS de jogos com convicção (exclui coin flips)
+    # Acurácia APENAS de jogos com convicção (exclui cara ou coroa)
     total_conviccao = len(jogos_com_conviccao)
     acertos = sum(1 for j in jogos_com_conviccao if j["vencedor"] == j["favorito_modelo"])
     pct = f"{100*acertos//total_conviccao}%" if total_conviccao else "—"
@@ -344,7 +344,7 @@ def atualizar_html(dados):
 
     novo_conteudo = f'''<section id="resultados">
   <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span> <span class="tag" style="background:#e0e7ff;color:#4338ca">Modelo v2.1</span></h2>
-  <p class="section-intro">Resultados reais confrontados com simulação Monte Carlo v2.1. 🟢 Verde = favorito claro venceu. 🔴 Vermelho = surpresa. 🟠 Laranja = toss-up (55-65%). ⚪ Cinza = coin flip (&lt;55%, sem convicção).</p>
+  <p class="section-intro">Resultados reais confrontados com simulação Monte Carlo v2.1. 🟢 Verde = favorito claro venceu. 🔴 Vermelho = surpresa. 🟠 Laranja = jogo equilibrado (55-65%). ⚪ Cinza = cara ou coroa (&lt;55%, sem convicção).</p>
 
   <div id="resultados-lista" style="display:flex;flex-direction:column;gap:10px">
 {cards_html}  </div>
@@ -356,7 +356,7 @@ def atualizar_html(dados):
     </div>
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
       <div style="font-size:28px;font-weight:800;color:#15803d">{acertos}/{total_conviccao}</div>
-      <div style="font-size:12px;color:#5b6b82">Acertos (excl. coin flips)</div>
+      <div style="font-size:12px;color:#5b6b82">Acertos (excl. cara ou coroa)</div>
     </div>
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
       <div style="font-size:28px;font-weight:800;color:#15803d">{pct}</div>
