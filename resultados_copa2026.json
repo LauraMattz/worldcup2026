@@ -41,6 +41,26 @@
       "favorito_modelo": "Países Baixos",
       "prob_favorito": 0.548,
       "nota": "Marrocos venceu nos pênaltis (3-2)"
+    },
+    {
+      "data": "2026-06-30",
+      "rodada": "Oitavas (R32)",
+      "time_a": "Costa do Marfim",
+      "time_b": "Noruega",
+      "placar": "1 – 2",
+      "vencedor": "Noruega",
+      "favorito_modelo": "Costa do Marfim",
+      "prob_favorito": 0.567
+    },
+    {
+      "data": "2026-06-30",
+      "rodada": "Oitavas (R32)",
+      "time_a": "França",
+      "time_b": "Suécia",
+      "placar": "3 – 0",
+      "vencedor": "França",
+      "favorito_modelo": "França",
+      "prob_favorito": 0.869
     }
   ]
 }
