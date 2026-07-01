@@ -78,6 +78,17 @@
       "favorito_modelo": "México",
       "prob_favorito": 0.55,
       "categoria": "jogo_equilibrado"
+    },
+    {
+      "data": "2026-07-01",
+      "rodada": "Oitavas (R32)",
+      "time_a": "Inglaterra",
+      "time_b": "RD Congo",
+      "placar": "2 – 1",
+      "vencedor": "Inglaterra",
+      "favorito_modelo": "Inglaterra",
+      "prob_favorito": 0.82,
+      "categoria": "favorito"
     }
   ]
 }
