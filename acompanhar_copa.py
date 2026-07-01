@@ -379,7 +379,7 @@ def atualizar_html(dados):
 
     with open(HTML_FILE, "w", encoding="utf-8") as f:
         f.write(html_novo)
-    print(f"  ✓ {HTML_FILE} atualizado com {total} jogo(s).")
+    print(f"  OK: {HTML_FILE} atualizado com {total_geral} jogo(s).")
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
