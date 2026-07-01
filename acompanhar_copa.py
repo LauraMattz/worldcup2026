@@ -124,10 +124,15 @@ def p_vitoria(time_a, time_b, rodada="mata-mata"):
 
 def favorito(time_a, time_b):
     """
-    Retorna o favorito do modelo, probabilidade e se é toss-up.
+    Retorna o favorito do modelo, probabilidade e categoria do jogo.
+
+    Categorias:
+    - "coin_flip": prob < 55% → Sem convicção, estatísticas muito próximas
+    - "toss_up": prob 55-65% → Jogo equilibrado, leve favorito
+    - "favorito": prob ≥ 65% → Favorito claro
 
     Returns:
-        (nome_favorito, probabilidade, is_tossup)
+        (nome_favorito, probabilidade, categoria)
     """
     p = p_vitoria(time_a, time_b)
 
@@ -136,10 +141,15 @@ def favorito(time_a, time_b):
     else:
         fav, prob = time_b, round(1 - p, 3)
 
-    # Classificar como toss-up se prob < 60% (honestidade estatística)
-    is_tossup = prob < 0.60
+    # Classificar por nível de convicção
+    if prob < 0.55:
+        categoria = "coin_flip"  # Sem convicção, não conta para acurácia
+    elif prob < 0.65:
+        categoria = "toss_up"     # Jogo equilibrado
+    else:
+        categoria = "favorito"    # Favorito claro
 
-    return fav, prob, is_tossup
+    return fav, prob, categoria
 
 
 def carregar_resultados():
@@ -198,11 +208,20 @@ def adicionar_jogo(dados):
     placar  = input("Placar (ex: 2-1): ").strip()
     vencedor = input(f"Vencedor ({time_a} ou {time_b}): ").strip()
 
-    fav, prob, is_tossup = favorito(time_a, time_b)
-    acertou   = "✓ ACERTOU" if vencedor == fav else "✗ SURPRESA"
-    tossup_tag = " [TOSS-UP]" if is_tossup else ""
+    fav, prob, categoria = favorito(time_a, time_b)
 
-    print(f"\n  Favorito do modelo: {fav} ({prob*100:.0f}%){tossup_tag}")
+    # Tags por categoria
+    if categoria == "coin_flip":
+        cat_tag = " [COIN FLIP - SEM CONVICÇÃO]"
+        acertou = "~ Coin flip"
+    elif categoria == "toss_up":
+        cat_tag = " [TOSS-UP]"
+        acertou = "✓ ACERTOU" if vencedor == fav else "✗ ERROU (mas era toss-up)"
+    else:
+        cat_tag = ""
+        acertou = "✓ ACERTOU" if vencedor == fav else "✗ SURPRESA!"
+
+    print(f"\n  Favorito do modelo: {fav} ({prob*100:.0f}%){cat_tag}")
     print(f"  Resultado: {acertou}")
 
     dados["jogos"].append({
@@ -214,7 +233,7 @@ def adicionar_jogo(dados):
         "vencedor"         : vencedor,
         "favorito_modelo"  : fav,
         "prob_favorito"    : prob,
-        "is_tossup"        : is_tossup,
+        "categoria"        : categoria,
     })
     salvar_resultados(dados)
     print(f"\n  Jogo salvo em {RESULTADOS_FILE}")
@@ -222,28 +241,39 @@ def adicionar_jogo(dados):
 
 def gerar_html_card(jogo):
     """Gera o HTML de um card de resultado."""
-    acertou    = jogo["vencedor"] == jogo["favorito_modelo"]
-    is_tossup  = jogo.get("is_tossup", False)
+    acertou   = jogo["vencedor"] == jogo["favorito_modelo"]
+    categoria = jogo.get("categoria", "favorito")  # backward compatibility
 
-    # Cores do card
-    if is_tossup:
-        # Jogos toss-up: laranja/amarelo (nem verde nem vermelho)
-        cor_borda = "#fbbf24" if acertou else "#f59e0b"
-        cor_bg    = "#fef3c7" if acertou else "#fef3c7"
-        badge_bg  = "#d97706" if acertou else "#b45309"
-    else:
+    # Cores e badges por categoria
+    if categoria == "coin_flip":
+        # Coin flip: cinza neutro (sem convicção)
+        cor_borda = "#d1d5db"
+        cor_bg    = "#f9fafb"
+        badge_bg  = "#6b7280"
+        badge_txt = "⚖️ Coin flip (sem convicção)"
+        fav_text  = f"Estatísticas muito próximas ({jogo['prob_favorito']*100:.0f}%)"
+    elif categoria == "toss_up":
+        # Toss-up: laranja (jogo equilibrado)
+        if acertou:
+            cor_borda = "#fbbf24"
+            cor_bg    = "#fef3c7"
+            badge_bg  = "#d97706"
+            badge_txt = "↗️ Toss-up (acertou)"
+        else:
+            cor_borda = "#fb923c"
+            cor_bg    = "#fed7aa"
+            badge_bg  = "#ea580c"
+            badge_txt = "↘️ Toss-up (errou)"
+        fav_text = f"Favorito {jogo['favorito_modelo']} ({jogo['prob_favorito']*100:.0f}%)"
+    else:  # favorito
+        # Favorito claro: verde/vermelho
         cor_borda  = "#bbf7d0" if acertou else "#fecaca"
         cor_bg     = "#f0fdf4" if acertou else "#fff1f2"
         badge_bg   = "#15803d" if acertou else "#dc2626"
+        badge_txt  = "✓ Favorito venceu" if acertou else "✗ Surpresa"
+        fav_text   = f"Favorito {jogo['favorito_modelo']} ({jogo['prob_favorito']*100:.0f}%)"
 
-    # Badge text
-    if is_tossup:
-        badge_txt = "⚖️ Toss-up (jogo equilibrado)"
-    else:
-        badge_txt = "✓ Favorito venceu" if acertou else "✗ Surpresa"
-
-    placar     = jogo.get("placar", "? – ?").replace("-", " – ")
-    prob_pct   = f"{jogo['prob_favorito']*100:.0f}%"
+    placar = jogo.get("placar", "? – ?").replace("-", " – ")
 
     def time_html(nome, lado):
         score_str = f"score {SCORES.get(nome, '?'):+.2f}" if nome in SCORES else ""
@@ -264,7 +294,7 @@ def gerar_html_card(jogo):
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
             <span style="background:{badge_bg};color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">{badge_txt}</span>
-            <span style="font-size:11px;color:#5b6b82">Favorito {jogo["favorito_modelo"]} ({prob_pct})</span>
+            <span style="font-size:11px;color:#5b6b82">{fav_text}</span>
           </div>
         </div>
       </div>'''
@@ -279,9 +309,18 @@ def atualizar_html(dados):
         html = f.read()
 
     jogos  = dados["jogos"]
-    total  = len(jogos)
-    acertos = sum(1 for j in jogos if j["vencedor"] == j["favorito_modelo"])
-    pct    = f"{100*acertos//total}%" if total else "—"
+
+    # Separar jogos por categoria
+    coin_flips = [j for j in jogos if j.get("categoria") == "coin_flip"]
+    jogos_com_conviccao = [j for j in jogos if j.get("categoria") != "coin_flip"]
+
+    # Acurácia APENAS de jogos com convicção (exclui coin flips)
+    total_conviccao = len(jogos_com_conviccao)
+    acertos = sum(1 for j in jogos_com_conviccao if j["vencedor"] == j["favorito_modelo"])
+    pct = f"{100*acertos//total_conviccao}%" if total_conviccao else "—"
+
+    # Total geral (para display)
+    total_geral = len(jogos)
 
     # Gerar cards agrupados por rodada
     rodadas = {}
@@ -304,24 +343,24 @@ def atualizar_html(dados):
         nota = '<p class="note" style="margin-top:14px">💡 Até agora o modelo acertou todos os vencedores — os times com maior score ajustado avançaram como esperado.</p>'
 
     novo_conteudo = f'''<section id="resultados">
-  <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span> <span class="tag" style="background:#e0e7ff;color:#4338ca">Modelo v2.0</span></h2>
-  <p class="section-intro">Resultados reais confrontados com a simulação Monte Carlo v2.0 (recalibrada 30/06). Verde = acertou favorito claro. Vermelho = erro. Laranja = toss-up (jogo equilibrado &lt;60%).</p>
+  <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span> <span class="tag" style="background:#e0e7ff;color:#4338ca">Modelo v2.1</span></h2>
+  <p class="section-intro">Resultados reais confrontados com simulação Monte Carlo v2.1. 🟢 Verde = favorito claro venceu. 🔴 Vermelho = surpresa. 🟠 Laranja = toss-up (55-65%). ⚪ Cinza = coin flip (&lt;55%, sem convicção).</p>
 
   <div id="resultados-lista" style="display:flex;flex-direction:column;gap:10px">
 {cards_html}  </div>
 
   <div id="resultados-resumo" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
-      <div style="font-size:28px;font-weight:800;color:#15803d">{total}</div>
+      <div style="font-size:28px;font-weight:800;color:#15803d">{total_geral}</div>
       <div style="font-size:12px;color:#5b6b82">Jogos disputados</div>
     </div>
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
-      <div style="font-size:28px;font-weight:800;color:#15803d">{acertos}/{total}</div>
-      <div style="font-size:12px;color:#5b6b82">Favoritos passaram</div>
+      <div style="font-size:28px;font-weight:800;color:#15803d">{acertos}/{total_conviccao}</div>
+      <div style="font-size:12px;color:#5b6b82">Acertos (excl. coin flips)</div>
     </div>
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px 18px;text-align:center;flex:1;min-width:110px">
       <div style="font-size:28px;font-weight:800;color:#15803d">{pct}</div>
-      <div style="font-size:12px;color:#5b6b82">Acurácia do modelo</div>
+      <div style="font-size:12px;color:#5b6b82">Acurácia</div>
     </div>
   </div>
   {nota}
