@@ -281,10 +281,26 @@ tr.hide{display:none}
   </div></div>
 </header>
 <main class="container"><nav class="nav">
-<a href="#resultados">Resultados</a><a href="#resumo">Resumo</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
-<a href="#pca">Mapa PCA</a><a href="#quadrante">Ataque × Defesa</a><a href="#rede">Rede</a>
-<a href="#merito">Mérito</a><a href="#simulacao">Simulação</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
-
+<a href="#resumo">Resumo</a><a href="#resultados">Resultados</a><a href="#simulacao">Simulação</a><a href="#merito">Mérito</a>
+<a href="#quadrante">Ataque × Defesa</a><a href="#rede">Rede</a><a href="#correlacao">Correlação</a><a href="#clusters">Perfis</a>
+<a href="#pca">Mapa PCA</a><a href="#tabela">Tabela</a><a href="#conclusoes">Conclusões</a></nav>
+<section id="resumo">
+  <h2>⚽ Resumo executivo <span class="tag t-v">visão geral</span></h2>
+  <p class="section-intro">Os indicadores combinam desempenho observado, qualidade das chances criadas e cedidas, força relativa dos adversários e ranking FIFA. A fase prevista é a <b>passagem do mata-mata</b>.</p>
+  <div class="cards">
+    <div class="card accent-a"><div class="ic">🌎</div><div class="metric-label">Seleções</div><div class="metric-value">48</div><div class="metric-sub">equipes analisadas</div></div>
+    <div class="card accent-v"><div class="ic">✅</div><div class="metric-label">Classificadas</div><div class="metric-value">32</div><div class="metric-sub">avançam segundo o modelo</div></div>
+    <div class="card accent-o"><div class="ic">🧩</div><div class="metric-label">Perfis</div><div class="metric-value">4</div><div class="metric-sub">grupos identificados</div></div>
+    <div class="card accent-r"><div class="ic">🍀</div><div class="metric-label">Maior sorte</div><div class="metric-value">Paraguai</div><div class="metric-sub">classificou com score −1,06</div></div>
+  </div>
+  <div class="cards">
+    <div class="card accent-v"><div class="ic">🏆</div><div class="metric-label">Melhor score ajustado</div><div class="metric-value">Espanha</div><div class="metric-sub">1,51 de score</div></div>
+    <div class="card accent-a"><div class="ic">🔥</div><div class="metric-label">Melhor ataque</div><div class="metric-value">Bélgica</div><div class="metric-sub">2,55 xG por jogo</div></div>
+    <div class="card accent-r"><div class="ic">🛡️</div><div class="metric-label">Melhor defesa</div><div class="metric-value">Espanha</div><div class="metric-sub">0,55 xGA por jogo</div></div>
+    <div class="card accent-o"><div class="ic">⭐</div><div class="metric-label">Perfil de Elite</div><div class="metric-value">18</div><div class="metric-sub">seleções no topo</div></div>
+  </div>
+  <div class="insight"><b>Leitura rápida:</b> o grupo de <b>Elite</b> reúne seleções com maior score ajustado, forte produção ofensiva e bons indicadores defensivos. Entre os nomes mais fortes aparecem Espanha, Bélgica, Inglaterra, França e Alemanha.</div>
+</section>
 <section id="resultados">
   <h2>🏆 Resultados do Mata-Mata <span class="tag t-v">ao vivo</span> <span class="tag" style="background:#e0e7ff;color:#4338ca">Modelo v2.1</span></h2>
   <p class="section-intro">Resultados reais confrontados com simulação Monte Carlo v2.1. 🟢 Verde = favorito claro venceu. 🔴 Vermelho = surpresa. 🟠 Laranja = jogo equilibrado (55-65%). ⚪ Cinza = cara ou coroa (&lt;55%, sem convicção).</p>
@@ -462,22 +478,104 @@ tr.hide{display:none}
   </div>
   <p class="note" style="margin-top:14px">⚡ Surpresas do torneio: <b>Paraguai</b> eliminaram os favoritos do modelo.</p>
 </section>
-<section id="resumo">
-  <h2>⚽ Resumo executivo <span class="tag t-v">visão geral</span></h2>
-  <p class="section-intro">Os indicadores combinam desempenho observado, qualidade das chances criadas e cedidas, força relativa dos adversários e ranking FIFA. A fase prevista é a <b>passagem do mata-mata</b>.</p>
-  <div class="cards">
-    <div class="card accent-a"><div class="ic">🌎</div><div class="metric-label">Seleções</div><div class="metric-value">48</div><div class="metric-sub">equipes analisadas</div></div>
-    <div class="card accent-v"><div class="ic">✅</div><div class="metric-label">Classificadas</div><div class="metric-value">32</div><div class="metric-sub">avançam segundo o modelo</div></div>
-    <div class="card accent-o"><div class="ic">🧩</div><div class="metric-label">Perfis</div><div class="metric-value">4</div><div class="metric-sub">grupos identificados</div></div>
-    <div class="card accent-r"><div class="ic">🍀</div><div class="metric-label">Maior sorte</div><div class="metric-value">Paraguai</div><div class="metric-sub">classificou com score −1,06</div></div>
+<section id="simulacao">
+  <h2>🎲 Simulação do mata-mata <span class="tag t-r">predição real</span></h2>
+  <p class="section-intro">Agora sim: uma predição de verdade. O mata-mata ainda não aconteceu. O modelo roda <b>10.000 simulações</b> do chaveamento completo (R32 → Oitavas → Quartas → Semi → Final) e estima a probabilidade de cada seleção ser campeã. A chance de vencer cada partida segue uma função logística baseada no Score Ajustado — quanto maior a diferença de score, maior a probabilidade de vitória.</p>
+  <div id="plot_sim" style="width:100%;height:560px"></div>
+  <div class="insight"><b>Como ler:</b> a probabilidade é a frequência com que cada seleção venceu o torneio nas 10.000 simulações. Espanha e Bélgica lideram por terem os maiores Scores Ajustados. O chaveamento cria assimetrias — uma seleção forte pode cruzar o caminho de outra forte no R32 e ser eliminada cedo.</div>
+  <p class="note">Chaveamento ilustrativo baseado em grupos cruzados (sem times do mesmo grupo no R32). Sensibilidade k=1,5: diferença de +1,0 no score implica ~82% de chance de vitória. Para previsões mais refinadas, combinar com xG jogo a jogo e histórico de confrontos diretos é recomendado.</p>
+</section>
+<section id="merito">
+  <h2>🔍 Mérito da classificação <span class="tag t-o">processo × resultado</span></h2>
+  <p class="section-intro">Em vez de "probabilidade de classificar" — que já sabemos — o gráfico mostra <b>o quão merecida foi a passagem de cada seleção</b> com base no seu processo (Score Ajustado). Quatro quadrantes revelam quem jogou bem e se classificou, quem teve sorte, quem foi injustiçado e quem caiu como esperado.</p>
+  <div class="cl-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+    <div class="cl-card" style="--c:#16a34a"><div class="cl-head"><span class="cl-dot big" style="background:#16a34a"></span><b>Merecida</b></div><div class="cl-ex">Bom processo + classificou. A grande maioria das 32 classificadas.</div></div>
+    <div class="cl-card" style="--c:#f59e0b"><div class="cl-head"><span class="cl-dot big" style="background:#f59e0b"></span><b>Com sorte</b></div><div class="cl-ex">Processo fraco mas passou. Destaque: Paraguai (−1,06), Cabo Verde (−0,96), Gana (−1,02).</div></div>
+    <div class="cl-card" style="--c:#e11d48"><div class="cl-head"><span class="cl-dot big" style="background:#e11d48"></span><b>Injustiçada</b></div><div class="cl-ex">Jogou bem mas caiu. Turquia (0,79) e Uruguai (0,70) são os casos mais gritantes.</div></div>
+    <div class="cl-card" style="--c:#94a3b8"><div class="cl-head"><span class="cl-dot big" style="background:#94a3b8"></span><b>Esperada</b></div><div class="cl-ex">Processo fraco e foi eliminada. Resultado alinhado com o futebol mostrado.</div></div>
   </div>
-  <div class="cards">
-    <div class="card accent-v"><div class="ic">🏆</div><div class="metric-label">Melhor score ajustado</div><div class="metric-value">Espanha</div><div class="metric-sub">1,51 de score</div></div>
-    <div class="card accent-a"><div class="ic">🔥</div><div class="metric-label">Melhor ataque</div><div class="metric-value">Bélgica</div><div class="metric-sub">2,55 xG por jogo</div></div>
-    <div class="card accent-r"><div class="ic">🛡️</div><div class="metric-label">Melhor defesa</div><div class="metric-value">Espanha</div><div class="metric-sub">0,55 xGA por jogo</div></div>
-    <div class="card accent-o"><div class="ic">⭐</div><div class="metric-label">Perfil de Elite</div><div class="metric-value">18</div><div class="metric-sub">seleções no topo</div></div>
+  <div id="plot_merito" style="width:100%;height:580px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+    <div style="background:#fff1f2;border-radius:12px;padding:12px;border-left:4px solid #e11d48">
+      <div style="font-weight:800;color:#e11d48;font-size:13px;margin-bottom:6px">❌ Injustiçadas</div>
+      <div style="font-size:12px;color:#0a1a3f;line-height:2">
+        <span style="font-weight:700">Turquia</span> <span style="color:#5b6b82">0,79</span><br>
+        <span style="font-weight:700">Uruguai</span> <span style="color:#5b6b82">0,70</span><br>
+        <span style="font-weight:700">Coreia do Sul</span> <span style="color:#5b6b82">0,24</span>
+      </div>
+    </div>
+    <div style="background:#fffbeb;border-radius:12px;padding:12px;border-left:4px solid #f59e0b">
+      <div style="font-weight:800;color:#d97706;font-size:13px;margin-bottom:6px">🍀 Com sorte</div>
+      <div style="font-size:12px;color:#0a1a3f;line-height:2">
+        <span style="font-weight:700">Paraguai</span> <span style="color:#5b6b82">−1,06</span><br>
+        <span style="font-weight:700">Gana</span> <span style="color:#5b6b82">−1,02</span><br>
+        <span style="font-weight:700">Cabo Verde</span> <span style="color:#5b6b82">−0,96</span><br>
+        <span style="font-weight:700">Bósnia</span> <span style="color:#5b6b82">−0,50</span><br>
+        <span style="font-weight:700">África do Sul</span> <span style="color:#5b6b82">−0,38</span>
+      </div>
+    </div>
   </div>
-  <div class="insight"><b>Leitura rápida:</b> o grupo de <b>Elite</b> reúne seleções com maior score ajustado, forte produção ofensiva e bons indicadores defensivos. Entre os nomes mais fortes aparecem Espanha, Bélgica, Inglaterra, França e Alemanha.</div>
+  <p class="note">Score Ajustado: combina xGD, força dos adversários e desempenho vs. esperado pelo FIFA Rank. Acima de 0 = processo acima da média.</p>
+</div>
+  <div class="insight"><b>Casos mais gritantes:</b> <b>Turquia</b> (score 0,79 — Elite) e <b>Uruguai</b> (0,70 — Elite) saíram com scores melhores que vários classificados. Do outro lado, <b>Paraguai</b> (−1,06), <b>Cabo Verde</b> (−0,96) e <b>Gana</b> (−1,02) passaram com os piores processos entre os 32 classificados — eles estão na Copa, mas o futebol que mostraram diz outra coisa.</div>
+  <p class="note">Score Ajustado combina xGD, ranking relativo dos adversários e desempenho versus o esperado pelo FIFA Rank. Threshold zero = média do torneio. Acima de zero: processo acima da média; abaixo de zero: abaixo da média.</p>
+</section>
+<section id="quadrante">
+  <h2>🎯 Ataque × Defesa <span class="tag t-r">novo</span></h2>
+  <p class="section-intro">Cada seleção posicionada pelo que cria (xG, eixo horizontal) e pelo que cede (xGA, eixo vertical). O quadrante inferior direito reúne as mais completas: criam muito e sofrem pouco. O tamanho da bolha reflete a probabilidade de avançar.</p>
+  <div id="plot_quad" style="width:100%;height:560px" class="desk-only"></div>
+<div class="mob-only">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0">
+    <div style="border-radius:12px;padding:12px;background:linear-gradient(135deg,#ecfdf3,#eff6ff);border:1px solid #16a34a33">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#16a34a">Completas:</b><br>Espanha · Canadá<br>Colômbia · Marrocos<br>Argentina · México</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#fffbeb;border:1px solid #f59e0b33">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#d97706">Defensivas:</b><br>Gana · Paraguai<br>Jordânia · Arábia<br>Tunísia · Catar</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#fff7ed;border:1px solid #f97316aa">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#ea580c">Ofensivas:</b><br>Bélgica · Turquia<br>Alemanha · França<br>Inglaterra · Senegal</div>
+    </div>
+    <div style="border-radius:12px;padding:12px;background:#f8fafc;border:1px solid #94a3b844">
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
+      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
+      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#64748b">Frágeis:</b><br>Qatar · Curacao<br>Iraque · N. Zelândia<br>Arábia Saudita</div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:10px">No desktop, o gráfico scatter mostra cada seleção posicionada por xG × xGA por jogo.</p>
+</div>
+  <p class="note">As linhas tracejadas marcam a mediana do torneio em cada eixo, separando os quatro quadrantes de leitura.</p>
+</section>
+<section id="rede">
+  <h2>🕸️ Rede de similaridade <span class="tag t-a">conexões fortes</span></h2>
+  <p class="section-intro">As 18 seleções mais fortes. Uma linha liga duas seleções estatisticamente muito parecidas. Bolhas maiores têm mais conexões. Use os botões para alternar entre o desenho livre (físico) e o agrupamento por perfil, bem mais organizado.</p>
+  <div class="net-ctrl">
+    <button id="btn-force" class="active" onclick="setNetMode('force')">Desenho livre</button>
+    <button id="btn-circular" onclick="setNetMode('circular')">Agrupado por perfil</button>
+  </div>
+  <div id="plot_net" style="width:100%;height:640px" class="desk-only"></div>
+<div class="mob-only">
+  <p style="font-size:13px;color:#5b6b82;margin-bottom:10px">Seleções com <b>mais conexões fortes</b> (similaridade ≥ 0,88) entre as 18 da Elite:</p>
+  <ul class="mob-list">
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">França · Suíça · Marrocos</div><div class="ml-sub">8 conexões — hub central da Elite</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">8</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Alemanha · Inglaterra</div><div class="ml-sub">7 conexões cada</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">7</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Bélgica · EUA · Argentina</div><div class="ml-sub">5–6 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#2563eb">6</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Espanha · Colômbia</div><div class="ml-sub">4–5 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#f59e0b">5</div></div></li>
+    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Turquia</div><div class="ml-sub">0 conexões — perfil estatístico isolado</div></div><div class="ml-right"><div class="ml-score" style="color:#e11d48">0</div></div></li>
+  </ul>
+  <p class="note" style="margin-top:10px">No desktop, o grafo interativo mostra as linhas de similaridade entre todas as seleções.</p>
+</div>
+  <div class="legend-net">
+    <span><b style="color:#16a34a">●</b> Elite</span><span><b style="color:#2563eb">●</b> Competitivas</span>
+    <span><b style="color:#f59e0b">●</b> Intermediárias</span><span><b style="color:#e11d48">●</b> Baixo desempenho</span>
+    <span>📏 Tamanho = número de conexões fortes • 🖱️ arraste para explorar</span>
+  </div>
 </section>
 <section id="correlacao">
   <h2>🔗 Mapa de correlação <span class="tag t-a">variáveis</span></h2>
@@ -551,106 +649,6 @@ tr.hide{display:none}
   </div>
 </div>
   <p class="note">Os dois eixos resumem oito variáveis em um plano só, preservando o máximo de informação possível. Seleções próximas têm desempenho parecido.</p>
-</section>
-<section id="quadrante">
-  <h2>🎯 Ataque × Defesa <span class="tag t-r">novo</span></h2>
-  <p class="section-intro">Cada seleção posicionada pelo que cria (xG, eixo horizontal) e pelo que cede (xGA, eixo vertical). O quadrante inferior direito reúne as mais completas: criam muito e sofrem pouco. O tamanho da bolha reflete a probabilidade de avançar.</p>
-  <div id="plot_quad" style="width:100%;height:560px" class="desk-only"></div>
-<div class="mob-only">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0">
-    <div style="border-radius:12px;padding:12px;background:linear-gradient(135deg,#ecfdf3,#eff6ff);border:1px solid #16a34a33">
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
-      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#16a34a">Completas:</b><br>Espanha · Canadá<br>Colômbia · Marrocos<br>Argentina · México</div>
-    </div>
-    <div style="border-radius:12px;padding:12px;background:#fffbeb;border:1px solid #f59e0b33">
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬇️ xGA (defensivo)</div>
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
-      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#d97706">Defensivas:</b><br>Gana · Paraguai<br>Jordânia · Arábia<br>Tunísia · Catar</div>
-    </div>
-    <div style="border-radius:12px;padding:12px;background:#fff7ed;border:1px solid #f97316aa">
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬆️ xG (ofensivo)</div>
-      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#ea580c">Ofensivas:</b><br>Bélgica · Turquia<br>Alemanha · França<br>Inglaterra · Senegal</div>
-    </div>
-    <div style="border-radius:12px;padding:12px;background:#f8fafc;border:1px solid #94a3b844">
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;text-transform:uppercase;letter-spacing:.05em">⬆️ xGA (vulnerável)</div>
-      <div style="font-size:11px;font-weight:800;color:#5b6b82;margin-bottom:6px">⬇️ xG (ofensivo)</div>
-      <div style="font-size:11px;color:#0a1a3f;line-height:1.7"><b style="color:#64748b">Frágeis:</b><br>Qatar · Curacao<br>Iraque · N. Zelândia<br>Arábia Saudita</div>
-    </div>
-  </div>
-  <p class="note" style="margin-top:10px">No desktop, o gráfico scatter mostra cada seleção posicionada por xG × xGA por jogo.</p>
-</div>
-  <p class="note">As linhas tracejadas marcam a mediana do torneio em cada eixo, separando os quatro quadrantes de leitura.</p>
-</section>
-<section id="rede">
-  <h2>🕸️ Rede de similaridade <span class="tag t-a">conexões fortes</span></h2>
-  <p class="section-intro">As 18 seleções mais fortes. Uma linha liga duas seleções estatisticamente muito parecidas. Bolhas maiores têm mais conexões. Use os botões para alternar entre o desenho livre (físico) e o agrupamento por perfil, bem mais organizado.</p>
-  <div class="net-ctrl">
-    <button id="btn-force" class="active" onclick="setNetMode('force')">Desenho livre</button>
-    <button id="btn-circular" onclick="setNetMode('circular')">Agrupado por perfil</button>
-  </div>
-  <div id="plot_net" style="width:100%;height:640px" class="desk-only"></div>
-<div class="mob-only">
-  <p style="font-size:13px;color:#5b6b82;margin-bottom:10px">Seleções com <b>mais conexões fortes</b> (similaridade ≥ 0,88) entre as 18 da Elite:</p>
-  <ul class="mob-list">
-    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">França · Suíça · Marrocos</div><div class="ml-sub">8 conexões — hub central da Elite</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">8</div></div></li>
-    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Alemanha · Inglaterra</div><div class="ml-sub">7 conexões cada</div></div><div class="ml-right"><div class="ml-score" style="color:#16a34a">7</div></div></li>
-    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Bélgica · EUA · Argentina</div><div class="ml-sub">5–6 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#2563eb">6</div></div></li>
-    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Espanha · Colômbia</div><div class="ml-sub">4–5 conexões</div></div><div class="ml-right"><div class="ml-score" style="color:#f59e0b">5</div></div></li>
-    <li><div class="mob-dot" style="background:#16a34a"></div><div><div class="ml-name">Turquia</div><div class="ml-sub">0 conexões — perfil estatístico isolado</div></div><div class="ml-right"><div class="ml-score" style="color:#e11d48">0</div></div></li>
-  </ul>
-  <p class="note" style="margin-top:10px">No desktop, o grafo interativo mostra as linhas de similaridade entre todas as seleções.</p>
-</div>
-  <div class="legend-net">
-    <span><b style="color:#16a34a">●</b> Elite</span><span><b style="color:#2563eb">●</b> Competitivas</span>
-    <span><b style="color:#f59e0b">●</b> Intermediárias</span><span><b style="color:#e11d48">●</b> Baixo desempenho</span>
-    <span>📏 Tamanho = número de conexões fortes • 🖱️ arraste para explorar</span>
-  </div>
-</section>
-<section id="merito">
-  <h2>🔍 Mérito da classificação <span class="tag t-o">processo × resultado</span></h2>
-  <p class="section-intro">Em vez de "probabilidade de classificar" — que já sabemos — o gráfico mostra <b>o quão merecida foi a passagem de cada seleção</b> com base no seu processo (Score Ajustado). Quatro quadrantes revelam quem jogou bem e se classificou, quem teve sorte, quem foi injustiçado e quem caiu como esperado.</p>
-  <div class="cl-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
-    <div class="cl-card" style="--c:#16a34a"><div class="cl-head"><span class="cl-dot big" style="background:#16a34a"></span><b>Merecida</b></div><div class="cl-ex">Bom processo + classificou. A grande maioria das 32 classificadas.</div></div>
-    <div class="cl-card" style="--c:#f59e0b"><div class="cl-head"><span class="cl-dot big" style="background:#f59e0b"></span><b>Com sorte</b></div><div class="cl-ex">Processo fraco mas passou. Destaque: Paraguai (−1,06), Cabo Verde (−0,96), Gana (−1,02).</div></div>
-    <div class="cl-card" style="--c:#e11d48"><div class="cl-head"><span class="cl-dot big" style="background:#e11d48"></span><b>Injustiçada</b></div><div class="cl-ex">Jogou bem mas caiu. Turquia (0,79) e Uruguai (0,70) são os casos mais gritantes.</div></div>
-    <div class="cl-card" style="--c:#94a3b8"><div class="cl-head"><span class="cl-dot big" style="background:#94a3b8"></span><b>Esperada</b></div><div class="cl-ex">Processo fraco e foi eliminada. Resultado alinhado com o futebol mostrado.</div></div>
-  </div>
-  <div id="plot_merito" style="width:100%;height:580px" class="desk-only"></div>
-<div class="mob-only">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-    <div style="background:#fff1f2;border-radius:12px;padding:12px;border-left:4px solid #e11d48">
-      <div style="font-weight:800;color:#e11d48;font-size:13px;margin-bottom:6px">❌ Injustiçadas</div>
-      <div style="font-size:12px;color:#0a1a3f;line-height:2">
-        <span style="font-weight:700">Turquia</span> <span style="color:#5b6b82">0,79</span><br>
-        <span style="font-weight:700">Uruguai</span> <span style="color:#5b6b82">0,70</span><br>
-        <span style="font-weight:700">Coreia do Sul</span> <span style="color:#5b6b82">0,24</span>
-      </div>
-    </div>
-    <div style="background:#fffbeb;border-radius:12px;padding:12px;border-left:4px solid #f59e0b">
-      <div style="font-weight:800;color:#d97706;font-size:13px;margin-bottom:6px">🍀 Com sorte</div>
-      <div style="font-size:12px;color:#0a1a3f;line-height:2">
-        <span style="font-weight:700">Paraguai</span> <span style="color:#5b6b82">−1,06</span><br>
-        <span style="font-weight:700">Gana</span> <span style="color:#5b6b82">−1,02</span><br>
-        <span style="font-weight:700">Cabo Verde</span> <span style="color:#5b6b82">−0,96</span><br>
-        <span style="font-weight:700">Bósnia</span> <span style="color:#5b6b82">−0,50</span><br>
-        <span style="font-weight:700">África do Sul</span> <span style="color:#5b6b82">−0,38</span>
-      </div>
-    </div>
-  </div>
-  <p class="note">Score Ajustado: combina xGD, força dos adversários e desempenho vs. esperado pelo FIFA Rank. Acima de 0 = processo acima da média.</p>
-</div>
-  <div class="insight"><b>Casos mais gritantes:</b> <b>Turquia</b> (score 0,79 — Elite) e <b>Uruguai</b> (0,70 — Elite) saíram com scores melhores que vários classificados. Do outro lado, <b>Paraguai</b> (−1,06), <b>Cabo Verde</b> (−0,96) e <b>Gana</b> (−1,02) passaram com os piores processos entre os 32 classificados — eles estão na Copa, mas o futebol que mostraram diz outra coisa.</div>
-  <p class="note">Score Ajustado combina xGD, ranking relativo dos adversários e desempenho versus o esperado pelo FIFA Rank. Threshold zero = média do torneio. Acima de zero: processo acima da média; abaixo de zero: abaixo da média.</p>
-</section>
-
-<section id="simulacao">
-  <h2>🎲 Simulação do mata-mata <span class="tag t-r">predição real</span></h2>
-  <p class="section-intro">Agora sim: uma predição de verdade. O mata-mata ainda não aconteceu. O modelo roda <b>10.000 simulações</b> do chaveamento completo (R32 → Oitavas → Quartas → Semi → Final) e estima a probabilidade de cada seleção ser campeã. A chance de vencer cada partida segue uma função logística baseada no Score Ajustado — quanto maior a diferença de score, maior a probabilidade de vitória.</p>
-  <div id="plot_sim" style="width:100%;height:560px"></div>
-  <div class="insight"><b>Como ler:</b> a probabilidade é a frequência com que cada seleção venceu o torneio nas 10.000 simulações. Espanha e Bélgica lideram por terem os maiores Scores Ajustados. O chaveamento cria assimetrias — uma seleção forte pode cruzar o caminho de outra forte no R32 e ser eliminada cedo.</div>
-  <p class="note">Chaveamento ilustrativo baseado em grupos cruzados (sem times do mesmo grupo no R32). Sensibilidade k=1,5: diferença de +1,0 no score implica ~82% de chance de vitória. Para previsões mais refinadas, combinar com xG jogo a jogo e histórico de confrontos diretos é recomendado.</p>
 </section>
 <section id="tabela">
   <h2>📋 Tabela completa <span class="tag t-a">48 seleções</span></h2>
